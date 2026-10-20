@@ -158,4 +158,4 @@ require (
 	modernc.org/memory v1.11.0 // indirect
 )
 
-replace github.com/lucian95511/and => ../
+replace github.com/lucian95511/and => ../AND

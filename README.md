@@ -35,7 +35,7 @@ AND'ın kendisi kapalı olsa bile, bu program kendi ağ kimliğiyle ve kendi lib
 
 AND Arama Motoru, AND'ın P2P forum/sohbet/kişisel-site ağına kendi bağımsız kimliğiyle katılan, ağda dolaşan içeriği topluca indeksleyip Google/Yandex benzeri bir arama deneyimiyle (tam metin arama, alakalılık sıralaması, yazım önerisi, sayfalama) aratmanı sağlayan bir terminal uygulamasıdır (TUI) ve aynı zamanda betiklenebilir bir komut satırı aracıdır (CLI).
 
-AND'ın iç paketlerini kullanmaz, AND'ı bir alt-süreç olarak da çalıştırmaz — protokolleri (imza biçimi, senkronizasyon akışı) bağımsız olarak yeniden uygular; yalnızca konu adları ve protokol kimlikleri AND'la paylaşılan `protokol` paketinden gelir, imza biçimlerinin AND'ınkiyle aynı kaldığı da AND'ın ürettiği örnek iletilerle (`../protokol/testdata/`, bkz. `protokol_altin_test.go`) test edilir ve ağa **gerçek, kendi başına bir eş** olarak katılır. Bu yüzden AND hiç çalışmıyor olsa bile ağdaki içeriği görebilir ve arattırabilirsin.
+AND'ın iç paketlerini kullanmaz, AND'ı bir alt-süreç olarak da çalıştırmaz — protokolleri (imza biçimi, senkronizasyon akışı) bağımsız olarak yeniden uygular; yalnızca konu adları ve protokol kimlikleri AND'la paylaşılan `protokol` paketinden gelir, imza biçimlerinin AND'ınkiyle aynı kaldığı da AND'ın ürettiği örnek iletilerle (`../AND/protokol/testdata/`, bkz. `protokol_altin_test.go`) test edilir ve ağa **gerçek, kendi başına bir eş** olarak katılır. Bu yüzden AND hiç çalışmıyor olsa bile ağdaki içeriği görebilir ve arattırabilirsin.
 
 ---
 
@@ -124,7 +124,7 @@ go build -o and-arama-motoru.exe .
 .\and-arama-motoru.exe
 ```
 
-AND'ın kendisiyle hiçbir bağlantı/ortam değişkeni gerekmez — bağımsız çalışır.
+Derlemek için AND'ın kaynak klasörü yan klasörde (`../AND`) durmalıdır: bu proje yalnızca AND'la paylaşılan küçük `protokol` paketini oradan alır (`go.mod`'daki `replace`). Çalışırken AND'la hiçbir bağlantı/ortam değişkeni gerekmez — bağımsız çalışır.
 
 ### Komut satırı seçenekleri
 
