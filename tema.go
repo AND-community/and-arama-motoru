@@ -17,6 +17,8 @@ import (
 	"path/filepath"
 
 	"github.com/charmbracelet/lipgloss"
+
+	"github.com/lucian95511/and/dil"
 )
 
 const temaDosyaAdi = "tema.json"
@@ -73,19 +75,37 @@ type andTemasi struct {
 	Badge     string `json:"badge"`
 }
 
-// andTemaYolu, AND'ın seçili temasını (Ayarlar → Temalar) yazdığı dosyadır:
-// AND_DATA_DIR ayarlıysa orada, değilse AND'ın kendi varsayılan veri dizininde
-// (os.UserConfigDir()/and — bkz. AND'ın cmd/and/main.go'sundaki appDir).
+// andVeriDizini, AND'ın veri dizinidir: AND_DATA_DIR ayarlıysa o, değilse
+// AND'ın kendi varsayılanı (os.UserConfigDir()/and — bkz. AND'ın
+// cmd/and/main.go'sundaki appDir). Bulunamazsa boş.
+func andVeriDizini() string {
+	if dir := os.Getenv("AND_DATA_DIR"); dir != "" {
+		return dir
+	}
+	cfg, err := os.UserConfigDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(cfg, "and")
+}
+
+// andTemaYolu, AND'ın seçili temasını (Ayarlar → Temalar) yazdığı dosyadır.
 func andTemaYolu() string {
-	dir := os.Getenv("AND_DATA_DIR")
+	dir := andVeriDizini()
 	if dir == "" {
-		cfg, err := os.UserConfigDir()
-		if err != nil {
-			return ""
-		}
-		dir = filepath.Join(cfg, "and")
+		return ""
 	}
 	return filepath.Join(dir, "theme.json")
+}
+
+// diliSec, arayüz dilini AND'ınkiyle aynı yapar: AND_DIL, yoksa AND'da
+// seçilen dil (AND veri dizinindeki dil.json), o da yoksa Türkçe.
+func diliSec() {
+	if dir := andVeriDizini(); dir != "" {
+		dil.Baslat(dir)
+		return
+	}
+	dil.OrtamdanAyarla()
 }
 
 // andTemasiYukle, AND'ın theme.json'unu bu programın TemaAyarlari biçimine

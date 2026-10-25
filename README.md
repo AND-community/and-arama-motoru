@@ -22,6 +22,7 @@ AND'ın kendisi kapalı olsa bile, bu program kendi ağ kimliğiyle ve kendi lib
 - [Site sayfası paylaşımı](#site-sayfası-paylaşımı)
 - [Gelişmiş sorgu sözdizimi](#gelişmiş-sorgu-sözdizimi)
 - [Tema](#tema)
+- [Diller](#diller)
 - [Veri dizini dosyaları](#veri-dizini-dosyaları)
 - [Kapsam ve sınırlar](#kapsam-ve-sınırlar)
 - [Ekosistem](#ekosistem)
@@ -233,6 +234,20 @@ AND'ın yerleşik temalarının değerleri aşağıda; AND'da seçili temadan fa
 | Mono | 255 | 240 | 255 | 252 | 250 |
 
 Değerler lipgloss'un kabul ettiği herhangi bir renk dizgesi olabilir: ANSI 256 kod noktası (`"63"`) ya da `"#RRGGBB"` true-color hex. `tema_adi` doluysa çerçevenin üst kenarında, sürüm numarasının yanında görünür. Program her açılışta bu dosyayı okur; dosya bozuksa sessizce varsayılan temaya döner (hata vermez).
+
+### Diller
+
+Arama Motoru AND'ın altı dilinde açılır: Türkçe, English, Deutsch, Español, Français, Русский. Dili kendisi seçmez, **AND'da seçili dili izler**: önce `AND_DIL` ortam değişkeni, sonra AND'ın veri dizinindeki `dil.json` (AND'da Ayarlar → Dil ya da giriş ekranında `F2`). İkisi de yoksa Türkçe açılır. Dil açılışta okunur; AND'da dil değiştirdiysen Arama Motoru bir sonraki açılışta yeni dille açılır. Belirli bir dili denemek için: `AND_DIL=en and-arama-motoru`.
+
+Çeviriler TUI'yi, `-h` yardımını, `-search`/`-site` çıktısını ve hata mesajlarını kapsar. Şunlar çevrilmez:
+
+- Bayrak adları ve değerleri (`-tip konu`, `-log-level bilgi`), `-json` çıktısının alanları ve `gunluk.log`: bunları betikler ve hata ayıklama okur.
+- Forum kategorileri ağa Türkçe gider, ekranda ise etkin dilde görünür.
+
+Çeviriler AND'ın `dil` paketini kullanır (`replace ../AND` ile). AND'ın kendi kataloğunda olan metinler ("Durum", "Peer ID", kategori ve tema adları) oradan gelir; Arama Motoru'na özgü olanlar `ceviri.json`'dadır. Testler iki şeyi denetler:
+
+- `TestCeviriKapsami`: kullanılan her metnin her dilde çevirisi olduğunu ve biçim fiillerinin (`%s`, `%d`, `%w`) korunduğunu. `DIL_ISKELET=<dosya> go test -run TestCeviriKapsami` eksikleri iskelet olarak yazar.
+- `TestEkranlarHerDilde`: her ekranın her dilde 80×24 ve 120×40 boyutlarında çizildiğini, çevrilmeden kalan Türkçe metin olmadığını ve satırların taşmadığını ya da kırpılmadığını. `ARAMA_EKRAN_DOKUM=<dizin>` ekranları göz ile incelemek için düz metin olarak yazar.
 
 ## Kullanım
 

@@ -12,6 +12,8 @@ import (
 	"os"
 
 	"golang.org/x/sys/windows/registry"
+
+	"github.com/lucian95511/and/dil"
 )
 
 // protokolKaydet, and-site:// bağlantılarının bu programın GEÇERLİ
@@ -22,31 +24,31 @@ import (
 func protokolKaydet() (exeYolu string, err error) {
 	exeYolu, err = os.Executable()
 	if err != nil {
-		return "", fmt.Errorf("çalıştırılabilir dosyanın yolu bulunamadı: %w", err)
+		return "", fmt.Errorf(dil.T("çalıştırılabilir dosyanın yolu bulunamadı: %w"), err)
 	}
 
 	base, _, err := registry.CreateKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme, registry.SET_VALUE)
 	if err != nil {
-		return "", fmt.Errorf("registry anahtarı oluşturulamadı: %w", err)
+		return "", fmt.Errorf(dil.T("registry anahtarı oluşturulamadı: %w"), err)
 	}
 	defer base.Close()
 
 	if err := base.SetStringValue("", "URL:AND Site Bağlantısı"); err != nil {
-		return "", fmt.Errorf("registry değeri yazılamadı: %w", err)
+		return "", fmt.Errorf(dil.T("registry değeri yazılamadı: %w"), err)
 	}
 	if err := base.SetStringValue("URL Protocol", ""); err != nil {
-		return "", fmt.Errorf("registry değeri yazılamadı: %w", err)
+		return "", fmt.Errorf(dil.T("registry değeri yazılamadı: %w"), err)
 	}
 
 	cmdKey, _, err := registry.CreateKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme+`\shell\open\command`, registry.SET_VALUE)
 	if err != nil {
-		return "", fmt.Errorf("registry anahtarı oluşturulamadı: %w", err)
+		return "", fmt.Errorf(dil.T("registry anahtarı oluşturulamadı: %w"), err)
 	}
 	defer cmdKey.Close()
 
 	command := fmt.Sprintf(`"%s" "%%1"`, exeYolu)
 	if err := cmdKey.SetStringValue("", command); err != nil {
-		return "", fmt.Errorf("registry değeri yazılamadı: %w", err)
+		return "", fmt.Errorf(dil.T("registry değeri yazılamadı: %w"), err)
 	}
 
 	return exeYolu, nil
@@ -56,16 +58,16 @@ func protokolKaydet() (exeYolu string, err error) {
 // altındaki her şeyi) siler.
 func protokolKaldir() error {
 	if err := registry.DeleteKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme+`\shell\open\command`); err != nil && err != registry.ErrNotExist {
-		return fmt.Errorf("registry anahtarı silinemedi: %w", err)
+		return fmt.Errorf(dil.T("registry anahtarı silinemedi: %w"), err)
 	}
 	if err := registry.DeleteKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme+`\shell\open`); err != nil && err != registry.ErrNotExist {
-		return fmt.Errorf("registry anahtarı silinemedi: %w", err)
+		return fmt.Errorf(dil.T("registry anahtarı silinemedi: %w"), err)
 	}
 	if err := registry.DeleteKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme+`\shell`); err != nil && err != registry.ErrNotExist {
-		return fmt.Errorf("registry anahtarı silinemedi: %w", err)
+		return fmt.Errorf(dil.T("registry anahtarı silinemedi: %w"), err)
 	}
 	if err := registry.DeleteKey(registry.CURRENT_USER, `Software\Classes\`+siteURIScheme); err != nil && err != registry.ErrNotExist {
-		return fmt.Errorf("registry anahtarı silinemedi: %w", err)
+		return fmt.Errorf(dil.T("registry anahtarı silinemedi: %w"), err)
 	}
 	return nil
 }

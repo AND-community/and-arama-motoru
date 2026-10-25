@@ -54,6 +54,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/core/protocol"
 
+	"github.com/lucian95511/and/dil"
 	"github.com/lucian95511/and/protokol"
 )
 
@@ -166,7 +167,7 @@ const (
 // ttlDenetle, -ttl bayrağının değerini doğrular.
 func ttlDenetle(n int) error {
 	if n < aramaTTLMin || n > aramaTTLMax {
-		return fmt.Errorf("-ttl %d..%d arasında olmalı", aramaTTLMin, aramaTTLMax)
+		return fmt.Errorf(dil.T("-ttl %d..%d arasında olmalı"), aramaTTLMin, aramaTTLMax)
 	}
 	return nil
 }
@@ -546,7 +547,7 @@ func aramaIstekGonderRaw(ctx context.Context, h libp2phost.Host, hedef peer.ID, 
 
 	st, err := h.NewStream(ctx, hedef, aramaProtokolu)
 	if err != nil {
-		return nil, fmt.Errorf("arama isteği: stream açılamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("arama isteği: stream açılamadı: %w"), err)
 	}
 	defer st.Close()
 	if dl, ok := ctx.Deadline(); ok {
@@ -554,13 +555,13 @@ func aramaIstekGonderRaw(ctx context.Context, h libp2phost.Host, hedef peer.ID, 
 	}
 
 	if err := json.NewEncoder(st).Encode(istek); err != nil {
-		return nil, fmt.Errorf("arama isteği gönderilemedi: %w", err)
+		return nil, fmt.Errorf(dil.T("arama isteği gönderilemedi: %w"), err)
 	}
 	st.CloseWrite() //nolint:errcheck
 
 	var yanit aramaYanit
 	if err := json.NewDecoder(io.LimitReader(st, maxAramaYanitBayt)).Decode(&yanit); err != nil {
-		return nil, fmt.Errorf("arama yanıtı okunamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("arama yanıtı okunamadı: %w"), err)
 	}
 
 	// hedef GÜVENİLMEYEN bir eştir (doğrudan yanıtlıyor OLABİLİR ya da
@@ -600,7 +601,7 @@ func aramaIstekGonderRaw(ctx context.Context, h libp2phost.Host, hedef peer.ID, 
 func aramaTekEsIstegi(ctx context.Context, h libp2phost.Host, hedefStr string, sorgu string, tip SonucTip, yazarKey string) ([]AramaSonucu, error) {
 	hedef, err := peer.Decode(hedefStr)
 	if err != nil {
-		return nil, fmt.Errorf("geçersiz eş kimliği: %w", err)
+		return nil, fmt.Errorf(dil.T("geçersiz eş kimliği: %w"), err)
 	}
 	istek := yeniAramaIstegi(sorgu, tip, yazarKey)
 	istek.TTL = 1

@@ -12,11 +12,14 @@ import (
 	"crypto/ed25519"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/tyler-smith/go-bip39"
+
+	"github.com/lucian95511/and/dil"
 )
 
 const kimlikDosyaAdi = "kimlik.json"
@@ -38,7 +41,7 @@ func (k *Kimlik) PubKeyHex() string              { return hex.EncodeToString(k.p
 
 func kimlikFromMnemonic(mnemonic string) (*Kimlik, error) {
 	if !bip39.IsMnemonicValid(mnemonic) {
-		return nil, fmt.Errorf("kimlik: geçersiz mnemonic")
+		return nil, errors.New(dil.T("kimlik: geçersiz mnemonic"))
 	}
 	seed := bip39.NewSeed(mnemonic, "")
 	priv := ed25519.NewKeyFromSeed(seed[:ed25519.SeedSize])
@@ -58,10 +61,10 @@ func kimlikYukleYaOlustur(dataDir string) (k *Kimlik, yeni bool, err error) {
 				return k, false, nil
 			}
 		}
-		return nil, false, fmt.Errorf("kimlik: %s bozuk, elle silip yeniden başlatman gerekebilir", yol)
+		return nil, false, fmt.Errorf(dil.T("kimlik: %s bozuk, elle silip yeniden başlatman gerekebilir"), yol)
 	}
 	if !os.IsNotExist(err) {
-		return nil, false, fmt.Errorf("kimlik dosyası okunamadı: %w", err)
+		return nil, false, fmt.Errorf(dil.T("kimlik dosyası okunamadı: %w"), err)
 	}
 
 	entropy, err := bip39.NewEntropy(mnemonicEntropyBits)

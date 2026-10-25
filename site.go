@@ -27,6 +27,7 @@ import (
 	libp2phost "github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/peer"
 
+	"github.com/lucian95511/and/dil"
 	"github.com/lucian95511/and/protokol"
 )
 
@@ -211,7 +212,7 @@ func siteIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID,
 
 	st, err := h.NewStream(ctx, peerID, siteSyncProtokolu)
 	if err != nil {
-		return fmt.Errorf("site sync: stream açılamadı: %w", err)
+		return fmt.Errorf(dil.T("site sync: stream açılamadı: %w"), err)
 	}
 	defer st.Close()
 	st.SetDeadline(time.Now().Add(siteSyncZamanAsimi)) //nolint:errcheck
@@ -242,16 +243,16 @@ func siteIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID,
 
 	istekVerisi, err := siteSyncIstekKodla(siteSyncIstek{Known: known, KnownVersions: knownVersions, KnownTombstones: silinenIDler}, andSiteSyncIstekSiniri)
 	if err != nil {
-		return fmt.Errorf("site sync: istek hazırlanamadı: %w", err)
+		return fmt.Errorf(dil.T("site sync: istek hazırlanamadı: %w"), err)
 	}
 	if _, err := st.Write(istekVerisi); err != nil {
-		return fmt.Errorf("site sync: istek gönderilemedi: %w", err)
+		return fmt.Errorf(dil.T("site sync: istek gönderilemedi: %w"), err)
 	}
 	st.CloseWrite() //nolint:errcheck
 
 	var resp siteSyncYanit
 	if err := json.NewDecoder(io.LimitReader(st, maxSiteSyncYanitBayt)).Decode(&resp); err != nil {
-		return fmt.Errorf("site sync: yanıt okunamadı: %w", err)
+		return fmt.Errorf(dil.T("site sync: yanıt okunamadı: %w"), err)
 	}
 
 	for _, p := range resp.Pages {

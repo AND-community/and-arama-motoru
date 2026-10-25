@@ -20,6 +20,8 @@ import (
 	golog "github.com/ipfs/go-log/v2"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	"github.com/lucian95511/and/dil"
 )
 
 const gunlukDosyaAdi = "gunluk.log"
@@ -60,7 +62,7 @@ func gunlukSeviyeAyarla(s string) error {
 	case "hata":
 		aktifGunlukSeviyesi = seviyeHata
 	default:
-		return fmt.Errorf("geçersiz -log-level değeri %q (hata|uyari|bilgi olmalı)", s)
+		return fmt.Errorf(dil.T("geçersiz -log-level değeri %q (%s olmalı)"), s, "hata|uyari|bilgi")
 	}
 	return nil
 }

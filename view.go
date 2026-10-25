@@ -7,6 +7,8 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/x/ansi"
+
+	"github.com/lucian95511/and/dil"
 )
 
 // ─── Tema sistemi ───────────────────────────────────────────────────────────
@@ -342,7 +344,7 @@ func (m model) cerceveUst(kenar lipgloss.Style) string {
 		tema = "Klasik"
 	}
 	sol := kenar.Render("╭─") + " " + stPill.Render("AND") + " "
-	sag := " " + stMuted.Render(tema+" teması") + stSubtle.Render(" · ") + stMuted.Render(Version) + " " + kenar.Render("─╮")
+	sag := " " + stMuted.Render(dil.F("%s teması", dil.T(tema))) + stSubtle.Render(" · ") + stMuted.Render(Version) + " " + kenar.Render("─╮")
 	dolgu := m.w - lipgloss.Width(sol) - lipgloss.Width(sag)
 	if dolgu < 1 {
 		sag = kenar.Render("╮")
@@ -457,13 +459,13 @@ func (m model) View() string {
 // ki alttaki ayırıcı çizgi ve diğer paneller ile HİZALI kalsın.
 func (m model) ustBar(alt string) string {
 	// "AND" zaten çerçevenin üst kenarındaki rozette yazar (bkz. cerceveUst).
-	sol := stTitle.Render("Arama Motoru")
+	sol := stTitle.Render(dil.T("Arama Motoru"))
 	if alt != "" {
 		sol += stSubtle.Render(" › ") + stBold.Render(alt)
 	}
 	sag := baglantiNoktasi(m.peerSayisi) + " " +
-		fmt.Sprintf("%d eş", m.peerSayisi) + stSubtle.Render("  ·  ") +
-		fmt.Sprintf("%d kayıt", m.indeksSayisi)
+		dil.F("%d eş", m.peerSayisi) + stSubtle.Render("  ·  ") +
+		dil.F("%d kayıt", m.indeksSayisi)
 
 	genislik := m.icerikGenisligi()
 	bosluk := max0(genislik - lipgloss.Width(sol) - lipgloss.Width(sag))
@@ -547,14 +549,20 @@ func (m model) viewAnaMenu() string {
 	var sb strings.Builder
 	// Sürüm ve etkin tema çerçevenin üst kenarında yazar (bkz. cerceveUst).
 	sb.WriteString(logoCiz() + "\n\n")
-	sb.WriteString(stBold.Render("Arama Motoru") + "\n")
-	sb.WriteString(stMuted.Render("AND ağındaki konu, yanıt, sohbet ve kişisel sayfalarda ara") + "\n\n")
+	sb.WriteString(stBold.Render(dil.T("Arama Motoru")) + "\n")
+	// Açıklama bazı dillerde (fr, ru) 80 sütunluk içerikten uzundur: sarılmazsa
+	// ortalanan bloğun her satırı çerçevede kırpılırdı.
+	aciklama := dil.T("AND ağındaki konu, yanıt, sohbet ve kişisel sayfalarda ara")
+	if g := m.icerikGenisligi(); g > 0 && lipgloss.Width(aciklama) > g {
+		aciklama = lipgloss.NewStyle().Width(g).Align(lipgloss.Center).Render(aciklama)
+	}
+	sb.WriteString(stMuted.Render(aciklama) + "\n\n")
 
 	sb.WriteString(baglantiNoktasi(m.peerSayisi) + " " +
-		fmt.Sprintf("%d bağlı eş", m.peerSayisi) + stDim.Render("  ·  ") +
-		fmt.Sprintf("%d kayıt indekste", m.indeksSayisi) + "\n")
+		dil.F("%d bağlı eş", m.peerSayisi) + stDim.Render("  ·  ") +
+		dil.F("%d kayıt indekste", m.indeksSayisi) + "\n")
 	if m.yeniKimlik {
-		sb.WriteString(stMuted.Render("Yeni bir ağ kimliği oluşturuldu (~/.and-arama-motoru/kimlik.json).") + "\n")
+		sb.WriteString(stMuted.Render(dil.T("Yeni bir ağ kimliği oluşturuldu (~/.and-arama-motoru/kimlik.json).")) + "\n")
 	}
 	sb.WriteString("\n")
 
@@ -563,9 +571,9 @@ func (m model) viewAnaMenu() string {
 		// sayısını bir rozet olarak ekle (bkz. index.go'nun
 		// TakipToplamYeni'si) — gerçek arama motorlarının/e-posta
 		// istemcilerinin "N yeni" rozetiyle AYNI fikir.
-		parcalar := []parca{{metin: opt}}
+		parcalar := []parca{{metin: dil.T(opt)}}
 		if opt == "Takip Edilenler" && m.takipYeniSayisi > 0 {
-			parcalar = append(parcalar, parca{metin: fmt.Sprintf("  %d yeni", m.takipYeniSayisi), renk: colWarn, kalin: true})
+			parcalar = append(parcalar, parca{metin: dil.F("  %d yeni", m.takipYeniSayisi), renk: colWarn, kalin: true})
 		}
 		// Her seçenek sabit genişlikli (menuButonGenisligi) bir satırdır —
 		// seçili olanın TAMAMI seçim zemininde, solunda vurgu çubuğuyla
@@ -578,7 +586,7 @@ func (m model) viewAnaMenu() string {
 	}
 
 	icerik := lipgloss.NewStyle().Align(lipgloss.Center).Render(strings.TrimRight(sb.String(), "\n"))
-	alt := m.altBilgi(m.icerikGenisligi(), "↑/↓ gezin   enter seç   f1 yardım   q çıkış")
+	alt := m.altBilgi(m.icerikGenisligi(), dil.T("↑/↓ gezin   enter seç   f1 yardım   q çıkış"))
 	if m.w > 0 && m.h > 0 {
 		// Açılış bloğu, tam ekran çerçevede alt bilgiden geriye kalan alanın
 		// tam ortasına yerleşir.
@@ -615,13 +623,13 @@ func sonucRozetMetni(s AramaSonucu) (string, lipgloss.Color) {
 	var etiket string
 	switch s.Tip {
 	case TipKonu:
-		etiket = "KONU"
+		etiket = dil.T("KONU")
 	case TipYanit:
-		etiket = "YANIT"
+		etiket = dil.T("YANIT")
 	case TipSohbet:
-		etiket = "SOHBET"
+		etiket = dil.T("SOHBET")
 	case TipSite:
-		etiket = "SİTE"
+		etiket = dil.T("SİTE")
 	default:
 		return "", ""
 	}
@@ -634,6 +642,23 @@ func kirp(s string, n int) string {
 		return s
 	}
 	return string(r[:n]) + "…"
+}
+
+// kartEtiketleri, detay ve durum kartlarının etiket sütunundaki metinlerdir.
+var kartEtiketleri = []string{
+	dil.K("Başlık"), dil.K("Kategori"), dil.K("Yazar"), dil.K("Zaman"), dil.K("Kaynak"),
+	dil.K("Kod"), dil.K("Link"), dil.K("Peer ID"), dil.K("Ağ"), dil.K("İndeks"),
+}
+
+// etiket, kart satırının etiket sütunudur. Sütun en az 9 karakter, etkin
+// dildeki en uzun etiketten bir fazla genişliktedir (ör. Rusça "Категория"):
+// sabit genişlikte uzun bir etiket değere yapışırdı.
+func etiket(s string) string {
+	w := 9
+	for _, e := range kartEtiketleri {
+		w = max(w, lipgloss.Width(dil.T(e))+1)
+	}
+	return stEtiket.Width(w).Render(s)
 }
 
 func kisaPeer(id string) string {
@@ -658,15 +683,15 @@ func duzMetin(s string) string {
 func filtreEtiketi(t SonucTip) string {
 	switch t {
 	case TipKonu:
-		return "Konu"
+		return dil.T("Konu")
 	case TipYanit:
-		return "Yanıt"
+		return dil.T("Yanıt")
 	case TipSohbet:
-		return "Sohbet"
+		return dil.T("Sohbet")
 	case TipSite:
-		return "Site"
+		return dil.T("Site")
 	default:
-		return "Tümü"
+		return dil.T("Tümü")
 	}
 }
 
@@ -693,7 +718,7 @@ func (m model) viewFiltreSekmeleri() string {
 
 func (m model) viewArama() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Ara"))
+	sb.WriteString(m.ustBar(dil.T("Ara")))
 
 	genislik := m.icerikGenisligi()
 	girisStili := stBorder
@@ -707,7 +732,7 @@ func (m model) viewArama() string {
 		if ad == "" {
 			ad = kisaPeer(m.yazarFiltre)
 		}
-		sb.WriteString(stDim.Render("   Yazar: ") + stBold.Render(ad) + stDim.Render("  (ctrl+y temizle)"))
+		sb.WriteString(stDim.Render(dil.T("   Yazar: ")) + stBold.Render(ad) + stDim.Render(dil.T("  (ctrl+y temizle)")))
 	}
 	sb.WriteString("\n\n")
 
@@ -715,17 +740,17 @@ func (m model) viewArama() string {
 	if len(liste) == 0 {
 		switch {
 		case strings.TrimSpace(m.aramaIn.Value()) == "" && m.yazarFiltre != "":
-			sb.WriteString(stMuted.Render("Bu yazardan henüz indekslenmiş içerik yok.") + "\n")
+			sb.WriteString(stMuted.Render(dil.T("Bu yazardan henüz indekslenmiş içerik yok.")) + "\n")
 		case strings.TrimSpace(m.aramaIn.Value()) == "":
-			sb.WriteString(stMuted.Render("Aramak için yazmaya başla…") + "\n")
+			sb.WriteString(stMuted.Render(dil.T("Aramak için yazmaya başla…")) + "\n")
 		default:
-			sb.WriteString(stMuted.Render("Sonuç yok.") + "\n")
+			sb.WriteString(stMuted.Render(dil.T("Sonuç yok.")) + "\n")
 			if m.yazimOnerisi != "" {
-				sb.WriteString(stDim.Render("Şunu mu demek istediniz: ") + stBold.Render(m.yazimOnerisi) + stDim.Render("  (ctrl+d ile uygula)") + "\n")
+				sb.WriteString(stDim.Render(dil.T("Şunu mu demek istediniz: ")) + stBold.Render(m.yazimOnerisi) + stDim.Render(dil.T("  (ctrl+d ile uygula)")) + "\n")
 			}
 		}
 	} else {
-		sb.WriteString(stMuted.Render(fmt.Sprintf("%d sonuç · sayfa %d · %s", len(liste), m.sayfaNo+1, siralamaEtiketi(m.siralama))) + "\n\n")
+		sb.WriteString(stMuted.Render(dil.F("%d sonuç · sayfa %d · %s", len(liste), m.sayfaNo+1, siralamaEtiketi(m.siralama))) + "\n\n")
 		for i, s := range liste {
 			baslikMetni := s.Baslik
 			ayrikBaslik := baslikMetni != "" // sohbet mesajlarında başlık yok — snippet zaten başlık yerine geçer
@@ -742,7 +767,7 @@ func (m model) viewArama() string {
 				parcalar = append(parcalar, parca{metin: "  " + s.YazarAd, renk: colMuted, soluk: true})
 			}
 			if s.KaynakPeer != "" {
-				parcalar = append(parcalar, parca{metin: "  ağ: " + kisaPeer(s.KaynakPeer), renk: colWarn, soluk: true})
+				parcalar = append(parcalar, parca{metin: dil.T("  ağ: ") + kisaPeer(s.KaynakPeer), renk: colWarn, soluk: true})
 			}
 			sb.WriteString(satirCiz(genislik, i == m.sonucIdx, parcalar...) + "\n")
 			if ayrikBaslik && s.Snippet != "" {
@@ -755,13 +780,13 @@ func (m model) viewArama() string {
 
 	arama := ""
 	if m.agAraniyor {
-		arama = stDim.Render(m.spinner.View() + " ağda aranıyor…")
+		arama = stDim.Render(m.spinner.View() + dil.T(" ağda aranıyor…"))
 	}
-	altBilgi := "↑/↓ seç   enter detay   tab filtre   ctrl+n ağda ara   ctrl+r sırala   ctrl+t takip et"
+	altBilgi := dil.T("↑/↓ seç   enter detay   tab filtre   ctrl+n ağda ara   ctrl+r sırala   ctrl+t takip et")
 	if m.sayfaNo > 0 || m.sonrakiVarMi {
-		altBilgi += "   pgup/pgdown sayfa"
+		altBilgi += dil.T("   pgup/pgdown sayfa")
 	}
-	altBilgi += "   f1 yardım   esc geri"
+	altBilgi += dil.T("   f1 yardım   esc geri")
 	return m.sayfa(sb.String(), m.altBilgi(genislik, altBilgi, arama))
 }
 
@@ -770,9 +795,9 @@ func (m model) viewArama() string {
 func siralamaEtiketi(s SiralamaModu) string {
 	switch s {
 	case SiralamaYeni:
-		return "Yeni"
+		return dil.T("Yeni")
 	default:
-		return "Alaka"
+		return dil.T("Alaka")
 	}
 }
 
@@ -784,7 +809,7 @@ func siralamaEtiketi(s SiralamaModu) string {
 // hata bildirimi gösterilir (bkz. model.go'nun keyKodlaGit'i).
 func (m model) viewKodlaGit() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Kodla Git"))
+	sb.WriteString(m.ustBar(dil.T("Kodla Git")))
 
 	genislik := m.icerikGenisligi()
 	girisStili := stBorder
@@ -793,14 +818,14 @@ func (m model) viewKodlaGit() string {
 	}
 	okuma := m.okumaGenisligi()
 	sb.WriteString(girisStili.Width(okuma-2).Render(m.kodIn.View()) + "\n\n")
-	sb.WriteString(stMuted.Render(sarG("Birinden aldığın bir site paylaşım kodunu (yazarAnahtarı/slug) yapıştırıp enter'a bas.", okuma)) + "\n")
-	sb.WriteString(stMuted.Render(sarG("Yalnızca yazarAnahtarı (kod değil) girersen, o yazarın TÜM site sayfaları (site haritası) listelenir.", okuma)) + "\n\n")
+	sb.WriteString(stMuted.Render(sarG(dil.T("Birinden aldığın bir site paylaşım kodunu (yazarAnahtarı/slug) yapıştırıp enter'a bas."), okuma)) + "\n")
+	sb.WriteString(stMuted.Render(sarG(dil.T("Yalnızca yazarAnahtarı (kod değil) girersen, o yazarın TÜM site sayfaları (site haritası) listelenir."), okuma)) + "\n\n")
 
 	arama := ""
 	if m.kodAraniyor {
-		arama = stDim.Render(m.spinner.View() + " ağda aranıyor…")
+		arama = stDim.Render(m.spinner.View() + dil.T(" ağda aranıyor…"))
 	}
-	return m.sayfa(sb.String(), m.altBilgi(genislik, "enter git   f1 yardım   esc geri", arama))
+	return m.sayfa(sb.String(), m.altBilgi(genislik, dil.T("enter git   f1 yardım   esc geri"), arama))
 }
 
 // yardimSatiri, tek bir "tuş  açıklama" satırını hizalı render eder —
@@ -815,85 +840,86 @@ func yardimSatiri(tus, aciklama string) string {
 // handleKey'in doc yorumu), esc ile girildiği ekrana geri döner.
 func (m model) viewYardim() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Yardım"))
+	sb.WriteString(m.ustBar(dil.T("Yardım")))
 	genislik := m.icerikGenisligi()
 
 	var panel strings.Builder
-	panel.WriteString(stBold.Render("Genel") + "\n")
-	panel.WriteString(yardimSatiri("↑/↓  j/k", "listede/menüde gezin"))
-	panel.WriteString(yardimSatiri("enter", "seç / detaya gir"))
-	panel.WriteString(yardimSatiri("esc  q", "geri / bir önceki ekran"))
-	panel.WriteString(yardimSatiri("f1", "bu yardım ekranı (her yerden)"))
-	panel.WriteString(yardimSatiri("ctrl+c", "çık"))
+	panel.WriteString(stBold.Render(dil.T("Genel")) + "\n")
+	panel.WriteString(yardimSatiri("↑/↓  j/k", dil.T("listede/menüde gezin")))
+	panel.WriteString(yardimSatiri("enter", dil.T("seç / detaya gir")))
+	panel.WriteString(yardimSatiri("esc  q", dil.T("geri / bir önceki ekran")))
+	panel.WriteString(yardimSatiri("f1", dil.T("bu yardım ekranı (her yerden)")))
+	panel.WriteString(yardimSatiri("ctrl+c", dil.T("çık")))
 	panel.WriteString("\n")
 
-	panel.WriteString(stBold.Render("Ara") + "\n")
-	panel.WriteString(yardimSatiri("tab", "içerik türü filtresi: Tümü/Konu/Yanıt/Sohbet/Site"))
-	panel.WriteString(yardimSatiri("ctrl+n", "aynı sorguyu ağda (çok atlamalı) sor"))
-	panel.WriteString(yardimSatiri("ctrl+r", "sıralamayı değiştir: Alaka ⇄ Yeni"))
-	panel.WriteString(yardimSatiri("ctrl+t", "geçerli aramayı takibe al"))
-	panel.WriteString(yardimSatiri("ctrl+y", "aktif yazar filtresini temizle"))
-	panel.WriteString(yardimSatiri("pgup/pgdown", "sonuç sayfaları arasında gez"))
-	panel.WriteString(yardimSatiri("ctrl+d", "\"şunu mu demek istediniz?\" önerisini uygula"))
+	panel.WriteString(stBold.Render(dil.T("Ara")) + "\n")
+	panel.WriteString(yardimSatiri("tab", dil.T("içerik türü filtresi: Tümü/Konu/Yanıt/Sohbet/Site")))
+	panel.WriteString(yardimSatiri("ctrl+n", dil.T("aynı sorguyu ağda (çok atlamalı) sor")))
+	panel.WriteString(yardimSatiri("ctrl+r", dil.T("sıralamayı değiştir: Alaka ⇄ Yeni")))
+	panel.WriteString(yardimSatiri("ctrl+t", dil.T("geçerli aramayı takibe al")))
+	panel.WriteString(yardimSatiri("ctrl+y", dil.T("aktif yazar filtresini temizle")))
+	panel.WriteString(yardimSatiri("pgup/pgdown", dil.T("sonuç sayfaları arasında gez")))
+	panel.WriteString(yardimSatiri("ctrl+d", dil.T("\"şunu mu demek istediniz?\" önerisini uygula")))
 	panel.WriteString("\n")
 
-	panel.WriteString(stBold.Render("Sonuç Detayı") + "\n")
-	panel.WriteString(yardimSatiri("a", "bu yazarın diğer içerikleri (yazar sayfası)"))
-	panel.WriteString(yardimSatiri("t", "bu ağ sonucunun eşini doğrudan hedefle"))
-	panel.WriteString(yardimSatiri("o  1-9", "gövdedeki bağlantıyı tarayıcıda aç"))
-	panel.WriteString(yardimSatiri("g", "sayfa içindeki ilk iç bağlantıya git"))
-	panel.WriteString(yardimSatiri("c", "site sayfasının paylaşım kodunu panoya kopyala"))
-	panel.WriteString(yardimSatiri("k", "site paylaşım kodunun QR kodunu göster/gizle"))
+	panel.WriteString(stBold.Render(dil.T("Sonuç Detayı")) + "\n")
+	panel.WriteString(yardimSatiri("a", dil.T("bu yazarın diğer içerikleri (yazar sayfası)")))
+	panel.WriteString(yardimSatiri("t", dil.T("bu ağ sonucunun eşini doğrudan hedefle")))
+	panel.WriteString(yardimSatiri("o  1-9", dil.T("gövdedeki bağlantıyı tarayıcıda aç")))
+	panel.WriteString(yardimSatiri("g", dil.T("sayfa içindeki ilk iç bağlantıya git")))
+	panel.WriteString(yardimSatiri("c", dil.T("site sayfasının paylaşım kodunu panoya kopyala")))
+	panel.WriteString(yardimSatiri("k", dil.T("site paylaşım kodunun QR kodunu göster/gizle")))
 	panel.WriteString("\n")
 
-	panel.WriteString(stBold.Render("Takip Edilenler") + "\n")
-	panel.WriteString(yardimSatiri("enter", "kayıtlı aramayı yükle (Ara ekranına geç)"))
-	panel.WriteString(yardimSatiri("d", "kayıtlı aramayı sil"))
+	panel.WriteString(stBold.Render(dil.T("Takip Edilenler")) + "\n")
+	panel.WriteString(yardimSatiri("enter", dil.T("kayıtlı aramayı yükle (Ara ekranına geç)")))
+	panel.WriteString(yardimSatiri("d", dil.T("kayıtlı aramayı sil")))
 	panel.WriteString("\n")
 
-	panel.WriteString(stBold.Render("Gelişmiş sorgu sözdizimi") + "\n")
-	panel.WriteString(yardimSatiri(`"tam ifade"`, "bitişik eşleşme (prefix değil)"))
-	panel.WriteString(yardimSatiri("-hariç", "sonuçlardan dışla"))
-	panel.WriteString(yardimSatiri("a OR b", "ikisinden biri (BÜYÜK harf OR)"))
+	panel.WriteString(stBold.Render(dil.T("Gelişmiş sorgu sözdizimi")) + "\n")
+	panel.WriteString(yardimSatiri(dil.T(`"tam ifade"`), dil.T("bitişik eşleşme (prefix değil)")))
+	panel.WriteString(yardimSatiri(dil.T("-hariç"), dil.T("sonuçlardan dışla")))
+	panel.WriteString(yardimSatiri("a OR b", dil.T("ikisinden biri (BÜYÜK harf OR)")))
 	okuma := m.okumaGenisligi()
 	sb.WriteString(stBorder.Width(okuma-2).Render(strings.TrimRight(panel.String(), "\n")) + "\n\n")
 
-	sb.WriteString(stMuted.Render(sarG("Kodla Git ekranı, birinden aldığın bir site paylaşım kodunu (Sonuç Detayı'ndaki \"Kod\" satırı) yapıştırıp doğrudan o sayfaya gitmeni sağlar.", okuma)) + "\n\n")
+	sb.WriteString(stMuted.Render(sarG(dil.T("Kodla Git ekranı, birinden aldığın bir site paylaşım kodunu (Sonuç Detayı'ndaki \"Kod\" satırı) yapıştırıp doğrudan o sayfaya gitmeni sağlar."), okuma)) + "\n\n")
 
-	return m.sayfa(sb.String(), m.altBilgi(genislik, "esc  geri"))
+	return m.sayfa(sb.String(), m.altBilgi(genislik, dil.T("esc  geri")))
 }
 
 func (m model) viewDetay() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Sonuç Detayı"))
+	sb.WriteString(m.ustBar(dil.T("Sonuç Detayı")))
 	genislik := m.icerikGenisligi()
 	// Kart, kod/bağlantı satırları ve gövde okuma genişliğinde kalır.
 	okuma := m.okumaGenisligi()
 
 	s := m.seciliSonuc
 	if s == nil {
-		sb.WriteString(stMuted.Render("(seçili sonuç yok)") + "\n")
-		return m.sayfa(sb.String(), m.altBilgi(genislik, "f1 yardım   esc  geri"))
+		sb.WriteString(stMuted.Render(dil.T("(seçili sonuç yok)")) + "\n")
+		return m.sayfa(sb.String(), m.altBilgi(genislik, dil.T("f1 yardım   esc  geri")))
 	}
 
 	var meta strings.Builder
 	meta.WriteString(sonucRozeti(*s) + "\n")
 	if s.Baslik != "" {
-		meta.WriteString(stEtiket.Render("Başlık") + s.Baslik + "\n")
+		meta.WriteString(etiket(dil.T("Başlık")) + s.Baslik + "\n")
 	}
 	if s.Kategori != "" {
-		meta.WriteString(stEtiket.Render("Kategori") + s.Kategori + "\n")
+		// Kategori ağda Türkçe gelir; AND'ın kataloğu her dildeki adını bilir.
+		meta.WriteString(etiket(dil.T("Kategori")) + dil.T(s.Kategori) + "\n")
 	}
 	if s.YazarAd != "" {
-		meta.WriteString(stEtiket.Render("Yazar") + s.YazarAd + "\n")
+		meta.WriteString(etiket(dil.T("Yazar")) + s.YazarAd + "\n")
 	}
 	if !s.OlusturmaTS.IsZero() {
-		meta.WriteString(stEtiket.Render("Zaman") + s.OlusturmaTS.Local().Format("2006-01-02 15:04") + "\n")
+		meta.WriteString(etiket(dil.T("Zaman")) + s.OlusturmaTS.Local().Format("2006-01-02 15:04") + "\n")
 	}
 	if s.KaynakPeer != "" {
-		meta.WriteString(stEtiket.Render("Kaynak") + stBadge.Render("ağ — "+kisaPeer(s.KaynakPeer)))
+		meta.WriteString(etiket(dil.T("Kaynak")) + stBadge.Render(dil.T("ağ — ")+kisaPeer(s.KaynakPeer)))
 	} else {
-		meta.WriteString(stEtiket.Render("Kaynak") + "yerel indeks")
+		meta.WriteString(etiket(dil.T("Kaynak")) + dil.T("yerel indeks"))
 	}
 	if s.Tip == TipSite {
 		// KaynakID, site.go'nun siteKaynakID'sinin ürettiği
@@ -905,15 +931,15 @@ func (m model) viewDetay() string {
 		// Kod ve bağlantı, etiket sütununa hizalı olarak sarılır: 64
 		// karakterlik yazar anahtarı kartın genişliğini aştığında eskiden
 		// "and-" / "site://…" gibi ortasından bölünüyordu.
-		degerW := okuma - 4 - lipgloss.Width(stEtiket.Render(""))
-		girinti := strings.Repeat(" ", lipgloss.Width(stEtiket.Render("")))
+		degerW := okuma - 4 - lipgloss.Width(etiket(""))
+		girinti := strings.Repeat(" ", lipgloss.Width(etiket("")))
 		// Sözcük sarma (sarG) tireyi her zaman kırılma noktası sayar ve
 		// "and-site://"yi "and-" ile "site://" arasından bölerdi — kod ve
 		// bağlantı bu yüzden tam sütun sınırında kırılır.
 		hizali := func(s string) string {
 			return strings.ReplaceAll(ansi.Hardwrap(s, degerW, true), "\n", "\n"+girinti)
 		}
-		meta.WriteString("\n" + stEtiket.Render("Kod") + stBold.Render(hizali(s.KaynakID)))
+		meta.WriteString("\n" + etiket(dil.T("Kod")) + stBold.Render(hizali(s.KaynakID)))
 		// and-site:// bağlantısı ayrıca OSC 8 ile tıklanabilir kılınır (bkz.
 		// tiklanabilirBaglanti'nin doc yorumu) — protokolKaydet ile
 		// kaydedilmiş bir sistemde bu satıra TIKLAMAK, kodu elle kopyala-
@@ -927,7 +953,7 @@ func (m model) viewDetay() string {
 		if yazar, slug, ok := siteKaynakIDCoz(s.KaynakID); ok && lipgloss.Width(gorunen) > degerW && len(yazar) > 20 {
 			gorunen = siteURI(yazar[:10] + "…" + yazar[len(yazar)-6:] + "/" + slug)
 		}
-		meta.WriteString("\n" + stEtiket.Render("Link") + stMuted.Render(tiklanabilirBaglanti(siteURI(s.KaynakID), hizali(gorunen))))
+		meta.WriteString("\n" + etiket(dil.T("Link")) + stMuted.Render(tiklanabilirBaglanti(siteURI(s.KaynakID), hizali(gorunen))))
 	}
 
 	// Kenarlık rengi, seçili sonucun türüne göre değişir (bkz. tipRengi) —
@@ -956,28 +982,28 @@ func (m model) viewDetay() string {
 	// eskiden uzun satırlar ekranın sağından taşıyordu.
 	sb.WriteString(sarG(govde, okuma) + "\n\n")
 
-	altBilgi := "f1 yardım   esc  geri"
+	altBilgi := dil.T("f1 yardım   esc  geri")
 	if s.YazarKey != "" {
-		altBilgi = "a  yazarın diğer içerikleri   " + altBilgi
+		altBilgi = dil.T("a  yazarın diğer içerikleri   ") + altBilgi
 	}
 	if s.Tip == TipSite {
-		altBilgi = "c  kodu kopyala   k  QR kodu   " + altBilgi
+		altBilgi = dil.T("c  kodu kopyala   k  QR kodu   ") + altBilgi
 	}
 	if s.KaynakPeer != "" {
 		// Bu bir AĞ sonucudur — kaynağını (bkz. agdaTekEsHedefleCmd) doğrudan
 		// hedefleme imkânı yalnızca bu durumda anlamlıdır.
-		altBilgi = "t  bu eşi hedefle   " + altBilgi
+		altBilgi = dil.T("t  bu eşi hedefle   ") + altBilgi
 	}
 	if len(m.baglantilar) > 0 {
-		sb.WriteString(stBold.Render("Bağlantılar:") + "\n")
+		sb.WriteString(stBold.Render(dil.T("Bağlantılar:")) + "\n")
 		for i, u := range m.baglantilar {
 			sb.WriteString(stDim.Render(fmt.Sprintf("  %d  ", i+1)) + tiklanabilirBaglanti(u, stLink.Render(kirp(u, genislik-7))) + "\n")
 		}
 		sb.WriteString("\n")
 		if len(m.baglantilar) == 1 {
-			altBilgi = "o  bağlantıyı aç   " + altBilgi
+			altBilgi = dil.T("o  bağlantıyı aç   ") + altBilgi
 		} else {
-			altBilgi = "o/1-9  bağlantı aç   " + altBilgi
+			altBilgi = dil.T("o/1-9  bağlantı aç   ") + altBilgi
 		}
 	}
 	if len(m.siteBaglantilari) > 0 {
@@ -985,17 +1011,17 @@ func (m model) viewDetay() string {
 		// — protokolKaydet ile kaydedilmiş bir sistemde OSC 8 ile doğrudan
 		// tıklanabilir; "g" tuşu ise KAYIT GEREKMEDEN uygulama İÇİNDEN
 		// (yerelde yoksa ağda) ilkine gider.
-		sb.WriteString(stBold.Render("Sayfa içi bağlantılar:") + "\n")
+		sb.WriteString(stBold.Render(dil.T("Sayfa içi bağlantılar:")) + "\n")
 		for _, kod := range m.siteBaglantilari {
 			uri := siteURI(kod)
 			sb.WriteString(stDim.Render("  · ") + tiklanabilirBaglanti(uri, stLink.Render(kirp(kod, 50))) + "\n")
 		}
 		sb.WriteString("\n")
-		altBilgi = "g  ilk iç bağlantıya git   " + altBilgi
+		altBilgi = dil.T("g  ilk iç bağlantıya git   ") + altBilgi
 	}
 	arama := ""
 	if m.kodAraniyor {
-		arama = stDim.Render(m.spinner.View() + " bağlantılı sayfa ağda aranıyor…")
+		arama = stDim.Render(m.spinner.View() + dil.T(" bağlantılı sayfa ağda aranıyor…"))
 	}
 	return m.sayfa(sb.String(), m.altBilgi(genislik, altBilgi, arama))
 }
@@ -1027,13 +1053,13 @@ func cubuk(n, maks, genislik int, renk lipgloss.Color) string {
 
 func (m model) viewDurum() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Durum"))
+	sb.WriteString(m.ustBar(dil.T("Durum")))
 
 	var panel strings.Builder
-	panel.WriteString(stEtiket.Render("Peer ID") + "\n")
+	panel.WriteString(etiket(dil.T("Peer ID")) + "\n")
 	panel.WriteString("  " + stDim.Render(m.host.ID().String()) + "\n\n")
-	panel.WriteString(stEtiket.Render("Bağlantı") + baglantiNoktasi(m.peerSayisi) + fmt.Sprintf(" %d eş", m.peerSayisi) + "\n")
-	panel.WriteString(stEtiket.Render("İndeks") + fmt.Sprintf("%d kayıt", m.indeksSayisi))
+	panel.WriteString(etiket(dil.T("Ağ")) + baglantiNoktasi(m.peerSayisi) + dil.F(" %d eş", m.peerSayisi) + "\n")
+	panel.WriteString(etiket(dil.T("İndeks")) + dil.F("%d kayıt", m.indeksSayisi))
 
 	genislik := m.icerikGenisligi()
 	// Geniş terminalde kartlar iki sütuna dizilir; dar olanda alt alta,
@@ -1050,8 +1076,8 @@ func (m model) viewDurum() string {
 		sb.WriteString(strings.Join(kartlar, "\n\n") + "\n\n")
 	}
 
-	sb.WriteString(stMuted.Render(sarG("İçerik, AND ağına gerçek bir eş olarak katılıp GossipSub üzerinden canlı, yeni bağlanan eşlerle de senkronizasyon protokolüyle geçmişe dönük toplanır.", m.okumaGenisligi())) + "\n\n")
-	return m.sayfa(sb.String(), m.altBilgi(genislik, "f1 yardım   esc  geri"))
+	sb.WriteString(stMuted.Render(sarG(dil.T("İçerik, AND ağına gerçek bir eş olarak katılıp GossipSub üzerinden canlı, yeni bağlanan eşlerle de senkronizasyon protokolüyle geçmişe dönük toplanır."), m.okumaGenisligi())) + "\n\n")
+	return m.sayfa(sb.String(), m.altBilgi(genislik, dil.T("f1 yardım   esc  geri")))
 }
 
 // ikiSutunaDiz, kartları sırayla o an daha kısa olan sütuna ekleyerek iki
@@ -1097,7 +1123,7 @@ func (m model) aramaKonsoluKartlari(genislik int) []string {
 
 	if m.tipDagilimi != nil {
 		var panel strings.Builder
-		panel.WriteString(stBold.Render("İçerik türü dağılımı") + "\n")
+		panel.WriteString(stBold.Render(dil.T("İçerik türü dağılımı")) + "\n")
 		maks := 1
 		for _, n := range m.tipDagilimi {
 			if n > maks {
@@ -1113,20 +1139,20 @@ func (m model) aramaKonsoluKartlari(genislik int) []string {
 
 	if len(m.enAktifYazarlar) > 0 {
 		var panel strings.Builder
-		panel.WriteString(stBold.Render("En aktif yazarlar") + "\n")
+		panel.WriteString(stBold.Render(dil.T("En aktif yazarlar")) + "\n")
 		for _, y := range m.enAktifYazarlar {
 			ad := y.YazarAd
 			if ad == "" {
 				ad = kisaPeer(y.YazarKey)
 			}
-			panel.WriteString(fmt.Sprintf("  %-20s %d içerik\n", kirp(ad, 20), y.IcerikSayisi))
+			panel.WriteString(dil.F("  %-20s %d içerik\n", kirp(ad, 20), y.IcerikSayisi))
 		}
 		kart(panel.String())
 	}
 
 	if len(m.gunlukTrend) > 0 {
 		var panel strings.Builder
-		panel.WriteString(stBold.Render("Günlük içerik trendi (son 14 gün)") + "\n")
+		panel.WriteString(stBold.Render(dil.T("Günlük içerik trendi (son 14 gün)")) + "\n")
 		maks := 1
 		for _, g := range m.gunlukTrend {
 			if g.Sayi > maks {
@@ -1141,8 +1167,8 @@ func (m model) aramaKonsoluKartlari(genislik int) []string {
 
 	if len(m.esGuven) > 0 {
 		var panel strings.Builder
-		panel.WriteString(stBold.Render("Eş güven göstergesi") + "\n")
-		panel.WriteString(stMuted.Render("(bu oturumda doğrudan sorgulanan eşlerin geçerli/geçersiz imzalı sonuç oranı)") + "\n")
+		panel.WriteString(stBold.Render(dil.T("Eş güven göstergesi")) + "\n")
+		panel.WriteString(stMuted.Render(dil.T("(bu oturumda doğrudan sorgulanan eşlerin geçerli/geçersiz imzalı sonuç oranı)")) + "\n")
 		for _, e := range m.esGuven {
 			satir := fmt.Sprintf("  %-14s ", kisaPeer(e.Peer.String()))
 			satir += stOk.Render(fmt.Sprintf("✓%d", e.Gecerli))
@@ -1169,10 +1195,10 @@ func takipSatiriOzeti(k KayitliArama) string {
 		parca = append(parca, filtreEtiketi(k.Tip))
 	}
 	if k.YazarKey != "" {
-		parca = append(parca, "yazar:"+kisaPeer(k.YazarKey))
+		parca = append(parca, dil.F("yazar:%s", kisaPeer(k.YazarKey)))
 	}
 	if len(parca) == 0 {
-		return "(boş)"
+		return dil.T("(boş)")
 	}
 	return strings.Join(parca, "  ·  ")
 }
@@ -1181,23 +1207,23 @@ func takipSatiriOzeti(k KayitliArama) string {
 // bkz. model.go'nun ekTakip'i, keyTakip'i.
 func (m model) viewTakip() string {
 	var sb strings.Builder
-	sb.WriteString(m.ustBar("Takip Edilenler"))
+	sb.WriteString(m.ustBar(dil.T("Takip Edilenler")))
 	genislik := m.icerikGenisligi()
 
 	if len(m.takipListesi) == 0 {
-		sb.WriteString(stMuted.Render("Henüz takip edilen bir arama yok — Ara ekranında ctrl+t ile geçerli aramayı takibe alabilirsin.") + "\n\n")
+		sb.WriteString(stMuted.Render(dil.T("Henüz takip edilen bir arama yok — Ara ekranında ctrl+t ile geçerli aramayı takibe alabilirsin.")) + "\n\n")
 	} else {
 		for i, k := range m.takipListesi {
 			parcalar := []parca{{metin: takipSatiriOzeti(k)}}
 			if k.YeniEslesme > 0 {
-				parcalar = append(parcalar, parca{metin: fmt.Sprintf("  ● %d yeni", k.YeniEslesme), renk: colWarn, kalin: true})
+				parcalar = append(parcalar, parca{metin: dil.F("  ● %d yeni", k.YeniEslesme), renk: colWarn, kalin: true})
 			}
 			sb.WriteString(satirCiz(genislik, i == m.takipIdx, parcalar...) + "\n")
 		}
 		sb.WriteString("\n")
 	}
 
-	return m.sayfa(sb.String(), m.altBilgi(genislik, "↑/↓ seç   enter git   d sil   f1 yardım   esc geri"))
+	return m.sayfa(sb.String(), m.altBilgi(genislik, dil.T("↑/↓ seç   enter git   d sil   f1 yardım   esc geri")))
 }
 
 // yazBildirim, m.notice'ı AND'ın kendi bildirim biçimiyle (ui.Notice —

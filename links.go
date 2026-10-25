@@ -14,11 +14,13 @@ package main
 // bastığında açılır — hiçbir zaman otomatik/sessiz değildir.
 
 import (
-	"fmt"
+	"errors"
 	"os/exec"
 	"regexp"
 	"runtime"
 	"strings"
+
+	"github.com/lucian95511/and/dil"
 )
 
 var reURL = regexp.MustCompile(`https?://[^\s<>"'` + "`" + `]+`)
@@ -115,7 +117,7 @@ func tiklanabilirBaglanti(url, gorunenMetin string) string {
 // işlev görür.
 func baglantiAc(url string) error {
 	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
-		return fmt.Errorf("yalnızca http(s) bağlantıları açılabilir")
+		return errors.New(dil.T("yalnızca http(s) bağlantıları açılabilir"))
 	}
 	switch runtime.GOOS {
 	case "windows":

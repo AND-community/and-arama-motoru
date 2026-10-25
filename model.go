@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"strings"
 	"sync"
 	"time"
@@ -13,6 +13,8 @@ import (
 
 	libp2phost "github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/peer"
+
+	"github.com/lucian95511/and/dil"
 )
 
 type ekran int
@@ -215,7 +217,7 @@ type model struct {
 
 func yeniModel(ctx context.Context, h libp2phost.Host, depo *Depo, kimlik *Kimlik) model {
 	ti := textinput.New()
-	ti.Placeholder = "Arama sorgusu…"
+	ti.Placeholder = dil.T("Arama sorgusu…")
 	ti.CharLimit = 200
 	// Varsayılan "> " istemi yerine uygulamanın kendi arama simgesi — bkz.
 	// view.go'nun ustBar/durum çubuğu gibi diğer "chrome" öğeleriyle aynı
@@ -223,7 +225,7 @@ func yeniModel(ctx context.Context, h libp2phost.Host, depo *Depo, kimlik *Kimli
 	ti.Prompt = "› "
 
 	ki := textinput.New()
-	ki.Placeholder = "yazarAnahtarı/slug"
+	ki.Placeholder = dil.T("yazarAnahtarı/slug")
 	ki.CharLimit = 200
 	ki.Prompt = "› "
 
@@ -314,7 +316,7 @@ func agdaAraCmd(ctx context.Context, h libp2phost.Host, sorgu string, tip SonucT
 	return func() tea.Msg {
 		peers := aramaEsleri(h, "", true)
 		if len(peers) == 0 {
-			return agAramaSonucuMsg{err: fmt.Errorf("Arama Motoru çalıştıran bağlı eş yok")}
+			return agAramaSonucuMsg{err: errors.New(dil.T("Arama Motoru çalıştıran bağlı eş yok"))}
 		}
 		istek := yeniAramaIstegi(sorgu, tip, yazarKey)
 		var mu sync.Mutex
@@ -391,11 +393,11 @@ func agdaSiteAraCmd(ctx context.Context, h libp2phost.Host, depo *Depo, kod stri
 	return func() tea.Msg {
 		yazarKey, _, ok := siteKaynakIDCoz(kod)
 		if !ok {
-			return agSiteBulunduMsg{kod: kod, err: fmt.Errorf("geçersiz kod biçimi")}
+			return agSiteBulunduMsg{kod: kod, err: errors.New(dil.T("geçersiz kod biçimi"))}
 		}
 		peers := aramaEsleri(h, "", true)
 		if len(peers) == 0 {
-			return agSiteBulunduMsg{kod: kod, err: fmt.Errorf("Arama Motoru çalıştıran bağlı eş yok")}
+			return agSiteBulunduMsg{kod: kod, err: errors.New(dil.T("Arama Motoru çalıştıran bağlı eş yok"))}
 		}
 		istek := yeniAramaIstegi("", TipSite, yazarKey)
 		var mu sync.Mutex
@@ -530,7 +532,7 @@ func (m model) updateInner(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		if msg.err != nil {
-			m.notice, m.isErr = "Arama hatası: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("Arama hatası: ")+msg.err.Error(), true
 			return m, nil
 		}
 		m.yerelSonuclar = ekranIcinListe(msg.sayfa.Sonuclar) // ağdan gelmiş içerik — bkz. guvenlik.go
@@ -543,7 +545,7 @@ func (m model) updateInner(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case durumIstatistikMsg:
 		if msg.err != nil {
-			m.notice, m.isErr = "İstatistikler alınamadı: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("İstatistikler alınamadı: ")+msg.err.Error(), true
 			return m, nil
 		}
 		m.tipDagilimi = msg.tipDagilimi
@@ -558,30 +560,30 @@ func (m model) updateInner(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case agAramaSonucuMsg:
 		m.agAraniyor = false
 		if msg.err != nil {
-			m.notice, m.isErr = "Ağda arama başarısız: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("Ağda arama başarısız: ")+msg.err.Error(), true
 			return m, nil
 		}
 		m.agSonuclari = ekranIcinListe(msg.sonuclar)
 		switch {
 		case len(m.agSonuclari) == 0 && msg.hedefli:
-			m.notice, m.isErr = "Hedeflenen eşten ek sonuç gelmedi.", false
+			m.notice, m.isErr = dil.T("Hedeflenen eşten ek sonuç gelmedi."), false
 		case len(m.agSonuclari) == 0:
-			m.notice, m.isErr = "Ağdan ek sonuç gelmedi.", false
+			m.notice, m.isErr = dil.T("Ağdan ek sonuç gelmedi."), false
 		case msg.hedefli:
-			m.notice, m.isErr = fmt.Sprintf("Hedeflenen eşten %d sonuç geldi.", len(m.agSonuclari)), false
+			m.notice, m.isErr = dil.F("Hedeflenen eşten %d sonuç geldi.", len(m.agSonuclari)), false
 		default:
-			m.notice, m.isErr = fmt.Sprintf("Ağdan %d ek sonuç geldi.", len(m.agSonuclari)), false
+			m.notice, m.isErr = dil.F("Ağdan %d ek sonuç geldi.", len(m.agSonuclari)), false
 		}
 		return m, nil
 
 	case agSiteBulunduMsg:
 		m.kodAraniyor = false
 		if msg.err != nil {
-			m.notice, m.isErr = "Ağda arama başarısız: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("Ağda arama başarısız: ")+msg.err.Error(), true
 			return m, nil
 		}
 		if !msg.bulunduMu {
-			m.notice, m.isErr = "Bu kod ağda da bulunamadı.", true
+			m.notice, m.isErr = dil.T("Bu kod ağda da bulunamadı."), true
 			return m, nil
 		}
 		s := msg.s.ekranIcin()
@@ -596,7 +598,7 @@ func (m model) updateInner(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case takipListesiMsg:
 		if msg.err != nil {
-			m.notice, m.isErr = "Kayıtlı aramalar alınamadı: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("Kayıtlı aramalar alınamadı: ")+msg.err.Error(), true
 			return m, nil
 		}
 		m.takipListesi = msg.liste
@@ -607,9 +609,9 @@ func (m model) updateInner(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case baglantiAcildiMsg:
 		if msg.err != nil {
-			m.notice, m.isErr = "Bağlantı açılamadı: "+msg.err.Error(), true
+			m.notice, m.isErr = dil.T("Bağlantı açılamadı: ")+msg.err.Error(), true
 		} else {
-			m.notice, m.isErr = "Tarayıcıda açıldı: "+kirp(msg.url, 60), false
+			m.notice, m.isErr = dil.T("Tarayıcıda açıldı: ")+kirp(msg.url, 60), false
 		}
 		return m, nil
 
@@ -676,7 +678,8 @@ func (m model) keyYardim(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) menuSecenekleri() []string {
-	return []string{"Ara", "Kodla Git", "Takip Edilenler", "Durum", "Çıkış"}
+	// Kimliklerdir (keyAnaMenu bunları karşılaştırır); ekranda dil.T ile çevrilir.
+	return []string{dil.K("Ara"), dil.K("Kodla Git"), dil.K("Takip Edilenler"), dil.K("Durum"), dil.K("Çıkış")}
 }
 
 func (m model) keyAnaMenu(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
@@ -771,16 +774,16 @@ func (m model) keyKodlaGit(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		s, bulunduMu, err := m.depo.SiteSayfasiBul(kod)
 		if err != nil {
-			m.notice, m.isErr = "Arama hatası: "+err.Error(), true
+			m.notice, m.isErr = dil.T("Arama hatası: ")+err.Error(), true
 			return m, nil
 		}
 		if !bulunduMu {
 			if len(m.host.Network().Peers()) == 0 {
-				m.notice, m.isErr = "Bu kod yerel indekste bulunamadı — sayfa henüz senkronize olmamış olabilir.", true
+				m.notice, m.isErr = dil.T("Bu kod yerel indekste bulunamadı — sayfa henüz senkronize olmamış olabilir."), true
 				return m, nil
 			}
 			m.kodAraniyor = true
-			m.notice, m.isErr = "Yerelde yok, ağda aranıyor…", false
+			m.notice, m.isErr = dil.T("Yerelde yok, ağda aranıyor…"), false
 			return m, pendingCmd(m, agdaSiteAraCmd(m.ctx, m.host, m.depo, kod))
 		}
 		m.seciliSonuc = &s
@@ -854,9 +857,9 @@ func (m model) keyArama(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		// ("tüm ağı takip et") TakipEkle tarafından reddedilir.
 		sorgu := strings.TrimSpace(m.aramaIn.Value())
 		if err := m.depo.TakipEkle(sorgu, m.filtre, m.yazarFiltre); err != nil {
-			m.notice, m.isErr = "Takibe alınamadı: "+err.Error(), true
+			m.notice, m.isErr = dil.T("Takibe alınamadı: ")+err.Error(), true
 		} else {
-			m.notice, m.isErr = "Bu arama takibe alındı — Ana Menü'deki \"Takip Edilenler\"den izleyebilirsin.", false
+			m.notice, m.isErr = dil.T("Bu arama takibe alındı — Ana Menü'deki \"Takip Edilenler\"den izleyebilirsin."), false
 		}
 		return m, nil
 	case "pgdown":
@@ -910,7 +913,7 @@ func (m model) keyArama(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		m.agAraniyor = true
 		m.agSonuclari = nil
-		m.notice, m.isErr = "Ağda aranıyor…", false
+		m.notice, m.isErr = dil.T("Ağda aranıyor…"), false
 		return m, pendingCmd(m, agdaAraCmd(m.ctx, m.host, sorgu, m.filtre, m.yazarFiltre))
 	}
 
@@ -967,7 +970,7 @@ func (m model) keyDetay(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		m.ekran = ekArama
 		m.agAraniyor = true
 		m.agSonuclari = nil
-		m.notice, m.isErr = "Eş hedefleniyor: "+kisaPeer(hedef)+"…", false
+		m.notice, m.isErr = dil.T("Eş hedefleniyor: ")+kisaPeer(hedef)+"…", false
 		return m, pendingCmd(m, agdaTekEsHedefleCmd(m.ctx, m.host, hedef, sorgu, m.filtre, m.yazarFiltre))
 	case "g":
 		// Sayfa içindeki İLK and-site:// iç bağlantısına git (bkz.
@@ -987,11 +990,11 @@ func (m model) keyDetay(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		if len(m.host.Network().Peers()) == 0 {
-			m.notice, m.isErr = "Bağlantılı sayfa yerelde yok; ağda aramak için bağlı eş gerekiyor.", true
+			m.notice, m.isErr = dil.T("Bağlantılı sayfa yerelde yok; ağda aramak için bağlı eş gerekiyor."), true
 			return m, nil
 		}
 		m.kodAraniyor = true
-		m.notice, m.isErr = "Bağlantılı sayfa ağda aranıyor…", false
+		m.notice, m.isErr = dil.T("Bağlantılı sayfa ağda aranıyor…"), false
 		return m, pendingCmd(m, agdaSiteAraCmd(m.ctx, m.host, m.depo, kod))
 	case "k":
 		// Site paylaşım kodunun QR kodunu göster/gizle (bkz. qr.go).
@@ -1008,7 +1011,7 @@ func (m model) keyDetay(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		m.panoKopyalaDizisi = panoyaKopyalaDizisi(m.seciliSonuc.KaynakID)
-		m.notice, m.isErr = "Paylaşım kodu panoya kopyalandı.", false
+		m.notice, m.isErr = dil.T("Paylaşım kodu panoya kopyalandı."), false
 		return m, panoTemizleCmd()
 	}
 	// Tek haneli bir rakam (1-9): o sıradaki bağlantıyı aç — bkz.
@@ -1058,14 +1061,14 @@ func (m model) keyTakip(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		secili := m.takipListesi[m.takipIdx]
 		if err := m.depo.TakipSil(secili.ID); err != nil {
-			m.notice, m.isErr = "Silinemedi: "+err.Error(), true
+			m.notice, m.isErr = dil.T("Silinemedi: ")+err.Error(), true
 			return m, nil
 		}
 		m.takipListesi = append(append([]KayitliArama{}, m.takipListesi[:m.takipIdx]...), m.takipListesi[m.takipIdx+1:]...)
 		if m.takipIdx >= len(m.takipListesi) && m.takipIdx > 0 {
 			m.takipIdx--
 		}
-		m.notice, m.isErr = "Kayıtlı arama silindi.", false
+		m.notice, m.isErr = dil.T("Kayıtlı arama silindi."), false
 		return m, nil
 	case "enter":
 		if m.takipIdx >= len(m.takipListesi) {

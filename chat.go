@@ -17,6 +17,7 @@ import (
 	libp2phost "github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/peer"
 
+	"github.com/lucian95511/and/dil"
 	"github.com/lucian95511/and/protokol"
 )
 
@@ -102,7 +103,7 @@ func chatIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID,
 
 	st, err := h.NewStream(ctx, peerID, chatSyncProtokolu)
 	if err != nil {
-		return fmt.Errorf("chat sync: stream açılamadı: %w", err)
+		return fmt.Errorf(dil.T("chat sync: stream açılamadı: %w"), err)
 	}
 	defer st.Close()
 	st.SetDeadline(time.Now().Add(chatSyncZamanAsimi)) //nolint:errcheck
@@ -113,13 +114,13 @@ func chatIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID,
 	}
 
 	if err := json.NewEncoder(st).Encode(chatSyncIstek{MessageIDs: bilinenIDler}); err != nil {
-		return fmt.Errorf("chat sync: istek gönderilemedi: %w", err)
+		return fmt.Errorf(dil.T("chat sync: istek gönderilemedi: %w"), err)
 	}
 	st.CloseWrite() //nolint:errcheck
 
 	var resp chatSyncYanit
 	if err := json.NewDecoder(io.LimitReader(st, maxChatSyncYanitBayt)).Decode(&resp); err != nil {
-		return fmt.Errorf("chat sync: yanıt okunamadı: %w", err)
+		return fmt.Errorf(dil.T("chat sync: yanıt okunamadı: %w"), err)
 	}
 
 	for _, m := range resp.Messages {

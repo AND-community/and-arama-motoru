@@ -16,6 +16,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/lucian95511/and/dil"
 )
 
 // tipDenetle, -tip bayrağının değerini doğrular ("" = tümü).
@@ -24,7 +26,7 @@ func tipDenetle(s string) (SonucTip, error) {
 	case "", TipKonu, TipYanit, TipSohbet, TipSite:
 		return SonucTip(s), nil
 	default:
-		return "", fmt.Errorf("geçersiz -tip değeri %q (konu|yanit|sohbet|site olmalı)", s)
+		return "", fmt.Errorf(dil.T("geçersiz -tip değeri %q (%s olmalı)"), s, "konu|yanit|sohbet|site")
 	}
 }
 
@@ -82,7 +84,7 @@ func aramaCLICalistir(depo *Depo, sorgu string, tip SonucTip, yazarKey string, l
 	offset := (sayfa - 1) * limit
 	aramaSayfasi, err := depo.AraGelismis(sorgu, tip, yazarKey, limit, offset)
 	if err != nil {
-		return fmt.Errorf("arama başarısız: %w", err)
+		return fmt.Errorf(dil.T("arama başarısız: %w"), err)
 	}
 	sonuclar := aramaSayfasi.Sonuclar
 
@@ -98,17 +100,17 @@ func aramaCLICalistir(depo *Depo, sorgu string, tip SonucTip, yazarKey string, l
 		}
 		if len(sonuclar) == 0 && strings.TrimSpace(sorgu) != "" {
 			if oneri, bulunduMu := depo.YazimOnerisiUret(sorgu); bulunduMu {
-				fmt.Fprintf(os.Stderr, "Şunu mu demek istediniz: %s\n", oneri)
+				fmt.Fprintf(os.Stderr, dil.T("Şunu mu demek istediniz: %s\n"), oneri)
 			}
 		}
 		return nil
 	}
 
 	if len(sonuclar) == 0 {
-		fmt.Println("Sonuç yok.")
+		fmt.Println(dil.T("Sonuç yok."))
 		if strings.TrimSpace(sorgu) != "" {
 			if oneri, bulunduMu := depo.YazimOnerisiUret(sorgu); bulunduMu {
-				fmt.Fprintf(os.Stderr, "Şunu mu demek istediniz: %s\n", oneri)
+				fmt.Fprintf(os.Stderr, dil.T("Şunu mu demek istediniz: %s\n"), oneri)
 			}
 		}
 		return nil
@@ -122,9 +124,9 @@ func aramaCLICalistir(depo *Depo, sorgu string, tip SonucTip, yazarKey string, l
 		fmt.Printf("  %s\n", kirp(c.Govde, 200))
 		fmt.Printf("  id: %s\n\n", c.ID)
 	}
-	fmt.Printf("%d sonuç (sayfa %d)", len(sonuclar), sayfa)
+	fmt.Print(dil.F("%d sonuç (sayfa %d)", len(sonuclar), sayfa))
 	if aramaSayfasi.SonrakiVarMi {
-		fmt.Printf(" — daha fazlası için -sayfa %d\n", sayfa+1)
+		fmt.Printf(dil.T(" — daha fazlası için -sayfa %d\n"), sayfa+1)
 	} else {
 		fmt.Println(".")
 	}
@@ -146,7 +148,7 @@ func siteCLICalistir(depo *Depo, kod string, jsonCikti bool) error {
 			fmt.Println("null")
 			return nil
 		}
-		fmt.Println("Bu kod yerel indekste bulunamadı.")
+		fmt.Println(dil.T("Bu kod yerel indekste bulunamadı."))
 		return nil
 	}
 	c := cliSonucaCevir(s)
@@ -155,11 +157,11 @@ func siteCLICalistir(depo *Depo, kod string, jsonCikti bool) error {
 		enc.SetIndent("", "  ")
 		return enc.Encode(c)
 	}
-	fmt.Printf("[SİTE] %s\n", c.oncelikliBaslik())
+	fmt.Printf(dil.T("[SİTE] %s\n"), c.oncelikliBaslik())
 	if c.Yazar != "" || c.Zaman != "" {
 		fmt.Printf("  %s  %s\n", c.Yazar, c.Zaman)
 	}
 	fmt.Printf("\n%s\n\n", c.Govde)
-	fmt.Printf("kod: %s\n", c.ID)
+	fmt.Printf(dil.T("kod: %s\n"), c.ID)
 	return nil
 }

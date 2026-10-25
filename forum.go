@@ -25,6 +25,7 @@ import (
 	libp2phost "github.com/libp2p/go-libp2p/core/host"
 	"github.com/libp2p/go-libp2p/core/peer"
 
+	"github.com/lucian95511/and/dil"
 	"github.com/lucian95511/and/protokol"
 )
 
@@ -175,7 +176,7 @@ func forumIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID
 
 	st, err := h.NewStream(ctx, peerID, forumSyncProtokolu)
 	if err != nil {
-		return fmt.Errorf("forum sync: stream açılamadı: %w", err)
+		return fmt.Errorf(dil.T("forum sync: stream açılamadı: %w"), err)
 	}
 	defer st.Close()
 	st.SetDeadline(time.Now().Add(forumSyncZamanAsimi)) //nolint:errcheck
@@ -186,13 +187,13 @@ func forumIleSenkronizeOl(ctx context.Context, h libp2phost.Host, peerID peer.ID
 	}
 
 	if err := json.NewEncoder(st).Encode(forumSyncIstek{PostIDs: bilinenIDler}); err != nil {
-		return fmt.Errorf("forum sync: istek gönderilemedi: %w", err)
+		return fmt.Errorf(dil.T("forum sync: istek gönderilemedi: %w"), err)
 	}
 	st.CloseWrite() //nolint:errcheck
 
 	var resp forumSyncYanit
 	if err := json.NewDecoder(io.LimitReader(st, maxForumSyncYanitBayt)).Decode(&resp); err != nil {
-		return fmt.Errorf("forum sync: yanıt okunamadı: %w", err)
+		return fmt.Errorf(dil.T("forum sync: yanıt okunamadı: %w"), err)
 	}
 
 	for _, p := range resp.Posts {

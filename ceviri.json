@@ -1,0 +1,1026 @@
+{
+  "   Yazar: ": {"en": "   Author: ", "de": "   Autor: ", "es": "   Autor: ", "fr": "   Auteur : ", "ru": "   Автор: "},
+  "   f1 yardım   esc geri": {"en": "   f1 help   esc back", "de": "   f1 Hilfe   esc zurück", "es": "   f1 ayuda   esc atrás", "fr": "   f1 aide   esc retour", "ru": "   f1 справка   esc назад"},
+  "   pgup/pgdown sayfa": {"en": "   pgup/pgdown page", "de": "   pgup/pgdown Seite", "es": "   pgup/pgdown página", "fr": "   pgup/pgdown page", "ru": "   pgup/pgdown страница"},
+  "  %-20s %d içerik\n": {
+    "en": "  %-20s %d item\n|  %-20s %d items\n",
+    "de": "  %-20s %d Inhalt\n|  %-20s %d Inhalte\n",
+    "es": "  %-20s %d contenido\n|  %-20s %d contenidos\n",
+    "fr": "  %-20s %d contenu\n|  %-20s %d contenus\n",
+    "ru": "  %-20s %d запись\n|  %-20s %d записи\n|  %-20s %d записей\n"
+  },
+  "  %d yeni": {"en": "  %d new", "de": "  %d neu", "es": "  %d nuevo|  %d nuevos", "fr": "  %d nouveau|  %d nouveaux", "ru": "  %d новый|  %d новых|  %d новых"},
+  "  (ctrl+d ile uygula)": {"en": "  (ctrl+d to apply)", "de": "  (ctrl+d zum Übernehmen)", "es": "  (ctrl+d para aplicar)", "fr": "  (ctrl+d pour appliquer)", "ru": "  (ctrl+d — применить)"},
+  "  (ctrl+y temizle)": {"en": "  (ctrl+y clear)", "de": "  (ctrl+y löschen)", "es": "  (ctrl+y borrar)", "fr": "  (ctrl+y effacer)", "ru": "  (ctrl+y — сбросить)"},
+  "  ağ: ": {"en": "  network: ", "de": "  Netzwerk: ", "es": "  red: ", "fr": "  réseau : ", "ru": "  сеть: "},
+  "  derleme:": {"en": "  build:", "de": "  Build:", "es": "  compilación:", "fr": "  compilation :", "ru": "  сборка:"},
+  "  ● %d yeni": {"en": "  ● %d new", "de": "  ● %d neu", "es": "  ● %d nuevo|  ● %d nuevos", "fr": "  ● %d nouveau|  ● %d nouveaux", "ru": "  ● %d новый|  ● %d новых|  ● %d новых"},
+  " %d eş": {"en": " %d peer| %d peers", "de": " %d Peer| %d Peers", "es": " %d par| %d pares", "fr": " %d pair| %d pairs", "ru": " %d узел| %d узла| %d узлов"},
+  " (varsayılan: %s)": {"en": " (default: %s)", "de": " (Standard: %s)", "es": " (predeterminado: %s)", "fr": " (par défaut : %s)", "ru": " (по умолчанию: %s)"},
+  " ağda aranıyor…": {"en": " searching the network…", "de": " wird im Netzwerk gesucht…", "es": " buscando en la red…", "fr": " recherche sur le réseau…", "ru": " поиск в сети…"},
+  " bağlantılı sayfa ağda aranıyor…": {
+    "en": " looking for the linked page on the network…",
+    "de": " verlinkte Seite wird im Netzwerk gesucht…",
+    "es": " buscando la página enlazada en la red…",
+    "fr": " recherche de la page liée sur le réseau…",
+    "ru": " поиск связанной страницы в сети…"
+  },
+  " — daha fazlası için -sayfa %d\n": {
+    "en": " — for more, use -sayfa %d\n",
+    "de": " — für mehr: -sayfa %d\n",
+    "es": " — para ver más, usa -sayfa %d\n",
+    "fr": " — pour la suite : -sayfa %d\n",
+    "ru": " — чтобы увидеть больше: -sayfa %d\n"
+  },
+  "\"tam ifade\"": {"en": "\"exact phrase\"", "de": "\"genauer Ausdruck\"", "es": "\"frase exacta\"", "fr": "\"expression exacte\"", "ru": "\"точная фраза\""},
+  "\"şunu mu demek istediniz?\" önerisini uygula": {
+    "en": "apply the \"did you mean?\" suggestion",
+    "de": "Vorschlag „Meintest du?“ übernehmen",
+    "es": "aplicar la sugerencia \"¿quisiste decir?\"",
+    "fr": "appliquer la suggestion « vouliez-vous dire ? »",
+    "ru": "применить подсказку «возможно, вы имели в виду?»"
+  },
+  "%d bağlı eş": {
+    "en": "%d connected peer|%d connected peers",
+    "de": "%d verbundener Peer|%d verbundene Peers",
+    "es": "%d par conectado|%d pares conectados",
+    "fr": "%d pair connecté|%d pairs connectés",
+    "ru": "%d подключённый узел|%d подключённых узла|%d подключённых узлов"
+  },
+  "%d eş": {"en": "%d peer|%d peers", "de": "%d Peer|%d Peers", "es": "%d par|%d pares", "fr": "%d pair|%d pairs", "ru": "%d узел|%d узла|%d узлов"},
+  "%d kayıt indekste": {
+    "en": "%d entry in the index|%d entries in the index",
+    "de": "%d Eintrag im Index|%d Einträge im Index",
+    "es": "%d registro en el índice|%d registros en el índice",
+    "fr": "%d entrée dans l'index|%d entrées dans l'index",
+    "ru": "%d запись в индексе|%d записи в индексе|%d записей в индексе"
+  },
+  "%d sonuç (sayfa %d)": {
+    "en": "%d result (page %d)|%d results (page %d)",
+    "de": "%d Ergebnis (Seite %d)|%d Ergebnisse (Seite %d)",
+    "es": "%d resultado (página %d)|%d resultados (página %d)",
+    "fr": "%d résultat (page %d)|%d résultats (page %d)",
+    "ru": "%d результат (страница %d)|%d результата (страница %d)|%d результатов (страница %d)"
+  },
+  "%d sonuç · sayfa %d · %s": {
+    "en": "%d result · page %d · %s|%d results · page %d · %s",
+    "de": "%d Ergebnis · Seite %d · %s|%d Ergebnisse · Seite %d · %s",
+    "es": "%d resultado · página %d · %s|%d resultados · página %d · %s",
+    "fr": "%d résultat · page %d · %s|%d résultats · page %d · %s",
+    "ru": "%d результат · стр. %d · %s|%d результата · стр. %d · %s|%d результатов · стр. %d · %s"
+  },
+  "(boş)": {"en": "(empty)", "de": "(leer)", "es": "(vacío)", "fr": "(vide)", "ru": "(пусто)"},
+  "(bu oturumda doğrudan sorgulanan eşlerin geçerli/geçersiz imzalı sonuç oranı)": {
+    "en": "(ratio of validly/invalidly signed results from peers queried directly in this session)",
+    "de": "(Anteil gültig/ungültig signierter Ergebnisse der in dieser Sitzung direkt abgefragten Peers)",
+    "es": "(proporción de resultados con firma válida/no válida de los pares consultados directamente en esta sesión)",
+    "fr": "(proportion de résultats à signature valide/invalide des pairs interrogés directement pendant cette session)",
+    "ru": "(доля результатов с верной/неверной подписью от узлов, опрошенных напрямую в этом сеансе)"
+  },
+  "(seçili sonuç yok)": {"en": "(no result selected)", "de": "(kein Ergebnis ausgewählt)", "es": "(ningún resultado seleccionado)", "fr": "(aucun résultat sélectionné)", "ru": "(результат не выбран)"},
+  "-hariç": {"en": "-exclude", "de": "-ohne", "es": "-excluir", "fr": "-exclure", "ru": "-исключить"},
+  "-search ile birlikte: en fazla kaç sonuç": {
+    "en": "with -search: maximum number of results",
+    "de": "mit -search: höchstens so viele Ergebnisse",
+    "es": "con -search: número máximo de resultados",
+    "fr": "avec -search : nombre maximal de résultats",
+    "ru": "вместе с -search: наибольшее число результатов"
+  },
+  "-search ile birlikte: sayfa numarası (1'den başlar)": {
+    "en": "with -search: page number (starts at 1)",
+    "de": "mit -search: Seitennummer (beginnt bei 1)",
+    "es": "con -search: número de página (empieza en 1)",
+    "fr": "avec -search : numéro de page (commence à 1)",
+    "ru": "вместе с -search: номер страницы (с 1)"
+  },
+  "-search ile birlikte: sonuçları türe göre sınırla (%s)": {
+    "en": "with -search: limit results to a type (%s)",
+    "de": "mit -search: Ergebnisse auf einen Typ beschränken (%s)",
+    "es": "con -search: limitar los resultados a un tipo (%s)",
+    "fr": "avec -search : limiter les résultats à un type (%s)",
+    "ru": "вместе с -search: ограничить результаты типом (%s)"
+  },
+  "-search/-site ile birlikte: sonucu JSON olarak yazdır": {
+    "en": "with -search/-site: print the result as JSON",
+    "de": "mit -search/-site: Ergebnis als JSON ausgeben",
+    "es": "con -search/-site: imprimir el resultado como JSON",
+    "fr": "avec -search/-site : afficher le résultat en JSON",
+    "ru": "вместе с -search/-site: вывести результат в JSON"
+  },
+  "-ttl %d..%d arasında olmalı": {
+    "en": "-ttl must be between %d and %d",
+    "de": "-ttl muss zwischen %d und %d liegen",
+    "es": "-ttl debe estar entre %d y %d",
+    "fr": "-ttl doit être compris entre %d et %d",
+    "ru": "-ttl должен быть от %d до %d"
+  },
+  ".desktop dosyası silinemedi: %w": {
+    "en": "could not delete the .desktop file: %w",
+    "de": ".desktop-Datei konnte nicht gelöscht werden: %w",
+    "es": "no se pudo borrar el archivo .desktop: %w",
+    "fr": "impossible de supprimer le fichier .desktop : %w",
+    "ru": "не удалось удалить файл .desktop: %w"
+  },
+  ".desktop dosyası yazılamadı: %w": {
+    "en": "could not write the .desktop file: %w",
+    "de": ".desktop-Datei konnte nicht geschrieben werden: %w",
+    "es": "no se pudo escribir el archivo .desktop: %w",
+    "fr": "impossible d'écrire le fichier .desktop : %w",
+    "ru": "не удалось записать файл .desktop: %w"
+  },
+  "AND Arama Motoru": {"en": "AND Search Engine", "de": "AND-Suchmaschine", "es": "Buscador AND", "fr": "Moteur de recherche AND", "ru": "Поисковик AND"},
+  "AND Arama Motoru %s — AND ekosistemini (forum + sohbet + kişisel site) yerelde ve ağda arayan bağımsız bir P2P eşi.\n\n": {
+    "en": "AND Search Engine %s — a standalone P2P peer that searches the AND ecosystem (forum + chat + personal sites) locally and on the network.\n\n",
+    "de": "AND-Suchmaschine %s — ein eigenständiger P2P-Peer, der das AND-Ökosystem (Forum + Chat + persönliche Websites) lokal und im Netzwerk durchsucht.\n\n",
+    "es": "Buscador AND %s — un par P2P independiente que busca en el ecosistema AND (foro + chat + sitios personales) en local y en la red.\n\n",
+    "fr": "Moteur de recherche AND %s — un pair P2P autonome qui cherche dans l'écosystème AND (forum + chat + sites personnels) en local et sur le réseau.\n\n",
+    "ru": "Поисковик AND %s — самостоятельный P2P-узел, который ищет по экосистеме AND (форум + чат + личные сайты) локально и в сети.\n\n"
+  },
+  "AND Arama Motoru:": {"en": "AND Search Engine:", "de": "AND-Suchmaschine:", "es": "Buscador AND:", "fr": "Moteur de recherche AND :", "ru": "Поисковик AND:"},
+  "AND ağındaki konu, yanıt, sohbet ve kişisel sayfalarda ara": {
+    "en": "Search topics, replies, chat and personal pages on the AND network",
+    "de": "Themen, Antworten, Chat und persönliche Seiten im AND-Netzwerk durchsuchen",
+    "es": "Busca temas, respuestas, chat y páginas personales en la red AND",
+    "fr": "Cherchez dans les sujets, réponses, chats et pages personnelles du réseau AND",
+    "ru": "Поиск по темам, ответам, чату и личным страницам в сети AND"
+  },
+  "Alaka": {"en": "Relevance", "de": "Relevanz", "es": "Relevancia", "fr": "Pertinence", "ru": "Релевантность"},
+  "Ara": {"en": "Search", "de": "Suchen", "es": "Buscar", "fr": "Rechercher", "ru": "Поиск"},
+  "Arama (-search ile, TUI/ağ AÇILMAZ):": {
+    "en": "Search (with -search; the TUI/network is NOT opened):",
+    "de": "Suche (mit -search; TUI/Netzwerk werden NICHT geöffnet):",
+    "es": "Búsqueda (con -search; la TUI y la red NO se abren):",
+    "fr": "Recherche (avec -search ; la TUI et le réseau ne sont PAS ouverts) :",
+    "ru": "Поиск (с -search; TUI и сеть НЕ открываются):"
+  },
+  "Arama Motoru": {"en": "Search Engine", "de": "Suchmaschine", "es": "Buscador", "fr": "Moteur de recherche", "ru": "Поисковик"},
+  "Arama Motoru çalıştıran bağlı eş yok": {
+    "en": "no connected peer is running the Search Engine",
+    "de": "kein verbundener Peer betreibt die Suchmaschine",
+    "es": "ningún par conectado ejecuta el Buscador",
+    "fr": "aucun pair connecté n'exécute le moteur de recherche",
+    "ru": "ни один подключённый узел не запускает поисковик"
+  },
+  "Arama hatası: ": {"en": "Search error: ", "de": "Suchfehler: ", "es": "Error de búsqueda: ", "fr": "Erreur de recherche : ", "ru": "Ошибка поиска: "},
+  "Arama sorgusu…": {"en": "Search query…", "de": "Suchanfrage…", "es": "Consulta de búsqueda…", "fr": "Requête de recherche…", "ru": "Поисковый запрос…"},
+  "Aramak için yazmaya başla…": {
+    "en": "Start typing to search…",
+    "de": "Tippe, um zu suchen…",
+    "es": "Empieza a escribir para buscar…",
+    "fr": "Commencez à taper pour chercher…",
+    "ru": "Начните вводить запрос…"
+  },
+  "Ağ:": {"en": "Network:", "de": "Netzwerk:", "es": "Red:", "fr": "Réseau :", "ru": "Сеть:"},
+  "Ağda arama başarısız: ": {
+    "en": "Network search failed: ",
+    "de": "Netzwerksuche fehlgeschlagen: ",
+    "es": "La búsqueda en la red falló: ",
+    "fr": "Échec de la recherche sur le réseau : ",
+    "ru": "Поиск в сети не удался: "
+  },
+  "Ağda aranıyor…": {"en": "Searching the network…", "de": "Netzwerk wird durchsucht…", "es": "Buscando en la red…", "fr": "Recherche sur le réseau…", "ru": "Поиск в сети…"},
+  "Ağdan %d ek sonuç geldi.": {
+    "en": "%d more result arrived from the network.|%d more results arrived from the network.",
+    "de": "%d weiteres Ergebnis aus dem Netzwerk.|%d weitere Ergebnisse aus dem Netzwerk.",
+    "es": "Llegó %d resultado más de la red.|Llegaron %d resultados más de la red.",
+    "fr": "%d résultat supplémentaire reçu du réseau.|%d résultats supplémentaires reçus du réseau.",
+    "ru": "Из сети пришёл ещё %d результат.|Из сети пришло ещё %d результата.|Из сети пришло ещё %d результатов."
+  },
+  "Ağdan ek sonuç gelmedi.": {
+    "en": "No more results came from the network.",
+    "de": "Aus dem Netzwerk kamen keine weiteren Ergebnisse.",
+    "es": "No llegaron más resultados de la red.",
+    "fr": "Aucun résultat supplémentaire du réseau.",
+    "ru": "Из сети больше результатов не пришло."
+  },
+  "Bağlantı açılamadı: ": {
+    "en": "Could not open the link: ",
+    "de": "Link konnte nicht geöffnet werden: ",
+    "es": "No se pudo abrir el enlace: ",
+    "fr": "Impossible d'ouvrir le lien : ",
+    "ru": "Не удалось открыть ссылку: "
+  },
+  "Bağlantılar:": {"en": "Links:", "de": "Links:", "es": "Enlaces:", "fr": "Liens :", "ru": "Ссылки:"},
+  "Bağlantılı sayfa ağda aranıyor…": {
+    "en": "Looking for the linked page on the network…",
+    "de": "Verlinkte Seite wird im Netzwerk gesucht…",
+    "es": "Buscando la página enlazada en la red…",
+    "fr": "Recherche de la page liée sur le réseau…",
+    "ru": "Поиск связанной страницы в сети…"
+  },
+  "Bağlantılı sayfa yerelde yok; ağda aramak için bağlı eş gerekiyor.": {
+    "en": "The linked page is not available locally; searching the network needs a connected peer.",
+    "de": "Die verlinkte Seite ist lokal nicht vorhanden; für die Netzwerksuche wird ein verbundener Peer benötigt.",
+    "es": "La página enlazada no está en local; para buscar en la red hace falta un par conectado.",
+    "fr": "La page liée n'est pas disponible en local ; la recherche sur le réseau nécessite un pair connecté.",
+    "ru": "Связанной страницы нет локально; для поиска в сети нужен подключённый узел."
+  },
+  "Başlık": {"en": "Title", "de": "Titel", "es": "Título", "fr": "Titre", "ru": "Заголовок"},
+  "Birinden aldığın bir site paylaşım kodunu (yazarAnahtarı/slug) yapıştırıp enter'a bas.": {
+    "en": "Paste a site share code (authorKey/slug) you got from someone and press enter.",
+    "de": "Füge einen Teilungscode einer Website (autorSchlüssel/slug) ein, den du von jemandem bekommen hast, und drücke Enter.",
+    "es": "Pega un código para compartir de un sitio (claveAutor/slug) que te hayan pasado y pulsa enter.",
+    "fr": "Collez un code de partage de site (cléAuteur/slug) reçu de quelqu'un et appuyez sur entrée.",
+    "ru": "Вставьте полученный код общего доступа к сайту (ключАвтора/slug) и нажмите enter."
+  },
+  "Bu arama takibe alındı — Ana Menü'deki \"Takip Edilenler\"den izleyebilirsin.": {
+    "en": "This search is now followed — you can track it under \"Followed\" in the main menu.",
+    "de": "Diese Suche wird jetzt verfolgt — du findest sie im Hauptmenü unter „Verfolgt“.",
+    "es": "Ahora sigues esta búsqueda: puedes verla en \"Seguidas\" del menú principal.",
+    "fr": "Cette recherche est maintenant suivie — retrouvez-la dans « Suivies » du menu principal.",
+    "ru": "Поиск добавлен в отслеживаемые — смотрите его в разделе «Отслеживаемые» главного меню."
+  },
+  "Bu kod ağda da bulunamadı.": {
+    "en": "This code was not found on the network either.",
+    "de": "Dieser Code wurde auch im Netzwerk nicht gefunden.",
+    "es": "Este código tampoco se encontró en la red.",
+    "fr": "Ce code est introuvable sur le réseau aussi.",
+    "ru": "Этот код не найден и в сети."
+  },
+  "Bu kod yerel indekste bulunamadı — sayfa henüz senkronize olmamış olabilir.": {
+    "en": "This code was not found in the local index — the page may not have synced yet.",
+    "de": "Dieser Code ist nicht im lokalen Index — die Seite wurde vielleicht noch nicht synchronisiert.",
+    "es": "Este código no está en el índice local: puede que la página aún no se haya sincronizado.",
+    "fr": "Ce code est introuvable dans l'index local — la page n'est peut-être pas encore synchronisée.",
+    "ru": "Этого кода нет в локальном индексе — возможно, страница ещё не синхронизирована."
+  },
+  "Bu kod yerel indekste bulunamadı.": {
+    "en": "This code was not found in the local index.",
+    "de": "Dieser Code ist nicht im lokalen Index.",
+    "es": "Este código no está en el índice local.",
+    "fr": "Ce code est introuvable dans l'index local.",
+    "ru": "Этого кода нет в локальном индексе."
+  },
+  "Bu yazardan henüz indekslenmiş içerik yok.": {
+    "en": "No indexed content from this author yet.",
+    "de": "Von diesem Autor gibt es noch keine indexierten Inhalte.",
+    "es": "Aún no hay contenido indexado de este autor.",
+    "fr": "Aucun contenu indexé de cet auteur pour l'instant.",
+    "ru": "От этого автора пока нет проиндексированного содержимого."
+  },
+  "En aktif yazarlar": {"en": "Most active authors", "de": "Aktivste Autoren", "es": "Autores más activos", "fr": "Auteurs les plus actifs", "ru": "Самые активные авторы"},
+  "Eş güven göstergesi": {
+    "en": "Peer trust indicator",
+    "de": "Peer-Vertrauensanzeige",
+    "es": "Indicador de confianza de pares",
+    "fr": "Indicateur de confiance des pairs",
+    "ru": "Показатель доверия узлам"
+  },
+  "Eş hedefleniyor: ": {"en": "Targeting peer: ", "de": "Ziel-Peer: ", "es": "Apuntando al par: ", "fr": "Pair ciblé : ", "ru": "Целевой узел: "},
+  "Gelişmiş sorgu sözdizimi": {
+    "en": "Advanced query syntax",
+    "de": "Erweiterte Suchsyntax",
+    "es": "Sintaxis avanzada de consultas",
+    "fr": "Syntaxe de requête avancée",
+    "ru": "Расширенный синтаксис запросов"
+  },
+  "Günlük içerik trendi (son 14 gün)": {
+    "en": "Daily content trend (last 14 days)",
+    "de": "Tägliche Inhaltsentwicklung (letzte 14 Tage)",
+    "es": "Tendencia diaria de contenido (últimos 14 días)",
+    "fr": "Tendance quotidienne du contenu (14 derniers jours)",
+    "ru": "Динамика содержимого по дням (последние 14 дней)"
+  },
+  "Hedeflenen eşten %d sonuç geldi.": {
+    "en": "%d result arrived from the targeted peer.|%d results arrived from the targeted peer.",
+    "de": "%d Ergebnis vom Ziel-Peer erhalten.|%d Ergebnisse vom Ziel-Peer erhalten.",
+    "es": "Llegó %d resultado del par elegido.|Llegaron %d resultados del par elegido.",
+    "fr": "%d résultat reçu du pair ciblé.|%d résultats reçus du pair ciblé.",
+    "ru": "От целевого узла пришёл %d результат.|От целевого узла пришло %d результата.|От целевого узла пришло %d результатов."
+  },
+  "Hedeflenen eşten ek sonuç gelmedi.": {
+    "en": "No more results came from the targeted peer.",
+    "de": "Vom Ziel-Peer kamen keine weiteren Ergebnisse.",
+    "es": "No llegaron más resultados del par elegido.",
+    "fr": "Aucun résultat supplémentaire du pair ciblé.",
+    "ru": "От целевого узла больше результатов не пришло."
+  },
+  "Henüz takip edilen bir arama yok — Ara ekranında ctrl+t ile geçerli aramayı takibe alabilirsin.": {
+    "en": "No followed searches yet — press ctrl+t on the Search screen to follow the current search.",
+    "de": "Noch keine verfolgten Suchen — mit ctrl+t im Suchbildschirm verfolgst du die aktuelle Suche.",
+    "es": "Aún no sigues ninguna búsqueda: en la pantalla Buscar pulsa ctrl+t para seguir la actual.",
+    "fr": "Aucune recherche suivie pour l'instant — appuyez sur ctrl+t dans l'écran Rechercher pour suivre la recherche en cours.",
+    "ru": "Отслеживаемых поисков пока нет — на экране «Поиск» нажмите ctrl+t, чтобы отслеживать текущий поиск."
+  },
+  "KONU": {"en": "TOPIC", "de": "THEMA", "es": "TEMA", "fr": "SUJET", "ru": "ТЕМА"},
+  "Kategori": {"en": "Category", "de": "Kategorie", "es": "Categoría", "fr": "Catégorie", "ru": "Категория"},
+  "Kaynak": {"en": "Source", "de": "Quelle", "es": "Origen", "fr": "Source", "ru": "Источник"},
+  "Kayıtlı arama silindi.": {
+    "en": "Saved search deleted.",
+    "de": "Gespeicherte Suche gelöscht.",
+    "es": "Búsqueda guardada borrada.",
+    "fr": "Recherche enregistrée supprimée.",
+    "ru": "Сохранённый поиск удалён."
+  },
+  "Kayıtlı aramalar alınamadı: ": {
+    "en": "Could not load saved searches: ",
+    "de": "Gespeicherte Suchen konnten nicht geladen werden: ",
+    "es": "No se pudieron cargar las búsquedas guardadas: ",
+    "fr": "Impossible de charger les recherches enregistrées : ",
+    "ru": "Не удалось загрузить сохранённые поиски: "
+  },
+  "Kod": {"en": "Code", "de": "Code", "es": "Código", "fr": "Code", "ru": "Код"},
+  "Kodla Git": {"en": "Open by Code", "de": "Per Code öffnen", "es": "Abrir por código", "fr": "Ouvrir par code", "ru": "Открыть по коду"},
+  "Kodla Git ekranı, birinden aldığın bir site paylaşım kodunu (Sonuç Detayı'ndaki \"Kod\" satırı) yapıştırıp doğrudan o sayfaya gitmeni sağlar.": {
+    "en": "The Open by Code screen takes you straight to a page when you paste a site share code you got from someone (the \"Code\" line in Result Details).",
+    "de": "Im Bildschirm „Per Code öffnen“ gelangst du direkt zu einer Seite, wenn du einen erhaltenen Teilungscode einfügst (die Zeile „Code“ in den Ergebnisdetails).",
+    "es": "La pantalla Abrir por código te lleva directamente a una página al pegar un código para compartir que te hayan pasado (la línea \"Código\" de Detalles del resultado).",
+    "fr": "L'écran Ouvrir par code vous emmène directement à une page quand vous collez un code de partage reçu (la ligne « Code » des Détails du résultat).",
+    "ru": "Экран «Открыть по коду» сразу открывает страницу по полученному коду общего доступа (строка «Код» в «Подробностях результата»)."
+  },
+  "Kullanım:\n  %s [seçenekler]\n\n": {
+    "en": "Usage:\n  %s [options]\n\n",
+    "de": "Verwendung:\n  %s [Optionen]\n\n",
+    "es": "Uso:\n  %s [opciones]\n\n",
+    "fr": "Utilisation :\n  %s [options]\n\n",
+    "ru": "Использование:\n  %s [параметры]\n\n"
+  },
+  "Link": {"en": "Link", "de": "Link", "es": "Enlace", "fr": "Lien", "ru": "Ссылка"},
+  "Paylaşım kodu panoya kopyalandı.": {
+    "en": "Share code copied to the clipboard.",
+    "de": "Teilungscode in die Zwischenablage kopiert.",
+    "es": "Código para compartir copiado al portapapeles.",
+    "fr": "Code de partage copié dans le presse-papiers.",
+    "ru": "Код общего доступа скопирован в буфер обмена."
+  },
+  "SOHBET": {"en": "CHAT", "de": "CHAT", "es": "CHAT", "fr": "CHAT", "ru": "ЧАТ"},
+  "Sayfa içi bağlantılar:": {"en": "In-page links:", "de": "Links auf der Seite:", "es": "Enlaces de la página:", "fr": "Liens internes :", "ru": "Ссылки на странице:"},
+  "Silinemedi: ": {"en": "Could not delete: ", "de": "Löschen fehlgeschlagen: ", "es": "No se pudo eliminar: ", "fr": "Suppression impossible : ", "ru": "Не удалось удалить: "},
+  "Site paylaşımı (-site ile, TUI/ağ AÇILMAZ):": {
+    "en": "Site sharing (with -site; the TUI/network is NOT opened):",
+    "de": "Website teilen (mit -site; TUI/Netzwerk werden NICHT geöffnet):",
+    "es": "Compartir sitios (con -site; la TUI y la red NO se abren):",
+    "fr": "Partage de site (avec -site ; la TUI et le réseau ne sont PAS ouverts) :",
+    "ru": "Общий доступ к сайтам (с -site; TUI и сеть НЕ открываются):"
+  },
+  "Sonuç Detayı": {"en": "Result Details", "de": "Ergebnisdetails", "es": "Detalles del resultado", "fr": "Détails du résultat", "ru": "Подробности результата"},
+  "Sonuç yok.": {"en": "No results.", "de": "Keine Ergebnisse.", "es": "Sin resultados.", "fr": "Aucun résultat.", "ru": "Нет результатов."},
+  "SİTE": {"en": "SITE", "de": "SEITE", "es": "SITIO", "fr": "SITE", "ru": "САЙТ"},
+  "Takibe alınamadı: ": {"en": "Could not follow: ", "de": "Verfolgen fehlgeschlagen: ", "es": "No se pudo seguir: ", "fr": "Impossible de suivre : ", "ru": "Не удалось отслеживать: "},
+  "Takip Edilenler": {"en": "Followed", "de": "Verfolgt", "es": "Seguidas", "fr": "Suivies", "ru": "Отслеживаемые"},
+  "Tarayıcıda açıldı: ": {"en": "Opened in the browser: ", "de": "Im Browser geöffnet: ", "es": "Abierto en el navegador: ", "fr": "Ouvert dans le navigateur : ", "ru": "Открыто в браузере: "},
+  "Tümü": {"en": "All", "de": "Alle", "es": "Todo", "fr": "Tout", "ru": "Все"},
+  "YANIT": {"en": "REPLY", "de": "ANTW.", "es": "RESP.", "fr": "RÉP.", "ru": "ОТВЕТ"},
+  "Yalnızca yazarAnahtarı (kod değil) girersen, o yazarın TÜM site sayfaları (site haritası) listelenir.": {
+    "en": "If you enter only the authorKey (not a code), ALL of that author's site pages (the site map) are listed.",
+    "de": "Gibst du nur den autorSchlüssel (keinen Code) ein, werden ALLE Website-Seiten dieses Autors (Sitemap) aufgelistet.",
+    "es": "Si escribes solo la claveAutor (no un código), se listan TODAS las páginas del sitio de ese autor (mapa del sitio).",
+    "fr": "Si vous saisissez seulement la cléAuteur (pas un code), TOUTES les pages de site de cet auteur (plan du site) sont listées.",
+    "ru": "Если ввести только ключАвтора (не код), будут показаны ВСЕ страницы сайта этого автора (карта сайта)."
+  },
+  "Yanıt": {"en": "Reply", "de": "Antwort", "es": "Respuesta", "fr": "Réponse", "ru": "Ответ"},
+  "Yardım": {"en": "Help", "de": "Hilfe", "es": "Ayuda", "fr": "Aide", "ru": "Справка"},
+  "Yeni": {"en": "Newest", "de": "Neueste", "es": "Recientes", "fr": "Récents", "ru": "Новые"},
+  "Yeni bir ağ kimliği oluşturuldu (~/.and-arama-motoru/kimlik.json).": {
+    "en": "A new network identity was created (~/.and-arama-motoru/kimlik.json).",
+    "de": "Eine neue Netzwerkidentität wurde erstellt (~/.and-arama-motoru/kimlik.json).",
+    "es": "Se creó una nueva identidad de red (~/.and-arama-motoru/kimlik.json).",
+    "fr": "Une nouvelle identité réseau a été créée (~/.and-arama-motoru/kimlik.json).",
+    "ru": "Создана новая сетевая личность (~/.and-arama-motoru/kimlik.json)."
+  },
+  "Yerelde yok, ağda aranıyor…": {
+    "en": "Not available locally, searching the network…",
+    "de": "Lokal nicht vorhanden, Netzwerk wird durchsucht…",
+    "es": "No está en local; buscando en la red…",
+    "fr": "Absent en local, recherche sur le réseau…",
+    "ru": "Локально нет, поиск в сети…"
+  },
+  "Zaman": {"en": "Time", "de": "Zeit", "es": "Fecha", "fr": "Date", "ru": "Время"},
+  "[SİTE] %s\n": {"en": "[SITE] %s\n", "de": "[SEITE] %s\n", "es": "[SITIO] %s\n", "fr": "[SITE] %s\n", "ru": "[САЙТ] %s\n"},
+  "a  yazarın diğer içerikleri   ": {
+    "en": "a  more from this author   ",
+    "de": "a  weitere Inhalte des Autors   ",
+    "es": "a  más de este autor   ",
+    "fr": "a  autres contenus de l'auteur   ",
+    "ru": "a  другие записи автора   "
+  },
+  "aktif yazar filtresini temizle": {
+    "en": "clear the active author filter",
+    "de": "aktiven Autorfilter entfernen",
+    "es": "quitar el filtro de autor activo",
+    "fr": "effacer le filtre d'auteur actif",
+    "ru": "сбросить фильтр по автору"
+  },
+  "and-site:// bağlantı kaydı kaldırıldı.": {
+    "en": "The and-site:// link registration was removed.",
+    "de": "Die Registrierung für and-site://-Links wurde entfernt.",
+    "es": "Se quitó el registro de los enlaces and-site://.",
+    "fr": "L'enregistrement des liens and-site:// a été supprimé.",
+    "ru": "Регистрация ссылок and-site:// удалена."
+  },
+  "and-site:// bağlantı kaydını kaldır (yalnızca Windows) ve çık": {
+    "en": "remove the and-site:// link registration (Windows only) and exit",
+    "de": "Registrierung für and-site://-Links entfernen (nur Windows) und beenden",
+    "es": "quitar el registro de los enlaces and-site:// (solo Windows) y salir",
+    "fr": "supprimer l'enregistrement des liens and-site:// (Windows uniquement) et quitter",
+    "ru": "удалить регистрацию ссылок and-site:// (только Windows) и выйти"
+  },
+  "and-site:// bağlantıları artık şu programla açılacak: %s\n": {
+    "en": "and-site:// links will now open with this program: %s\n",
+    "de": "and-site://-Links werden jetzt mit diesem Programm geöffnet: %s\n",
+    "es": "Los enlaces and-site:// se abrirán ahora con este programa: %s\n",
+    "fr": "Les liens and-site:// s'ouvriront désormais avec ce programme : %s\n",
+    "ru": "Ссылки and-site:// теперь будут открываться этой программой: %s\n"
+  },
+  "and-site:// bağlantılarını bu programla açacak şekilde işletim sistemine kaydet (yalnızca Windows) ve çık": {
+    "en": "register this program with the operating system to open and-site:// links (Windows only) and exit",
+    "de": "dieses Programm im Betriebssystem für and-site://-Links registrieren (nur Windows) und beenden",
+    "es": "registrar este programa en el sistema operativo para abrir los enlaces and-site:// (solo Windows) y salir",
+    "fr": "enregistrer ce programme auprès du système pour ouvrir les liens and-site:// (Windows uniquement) et quitter",
+    "ru": "зарегистрировать эту программу в системе для открытия ссылок and-site:// (только Windows) и выйти"
+  },
+  "and-site:// protokol kaydı şu an yalnızca Windows'ta destekleniyor": {
+    "en": "and-site:// protocol registration is currently supported only on Windows",
+    "de": "Die Registrierung des and-site://-Protokolls wird derzeit nur unter Windows unterstützt",
+    "es": "por ahora el registro del protocolo and-site:// solo se admite en Windows",
+    "fr": "l'enregistrement du protocole and-site:// n'est pris en charge que sous Windows pour l'instant",
+    "ru": "регистрация протокола and-site:// пока поддерживается только в Windows"
+  },
+  "arama başarısız: %w": {"en": "search failed: %w", "de": "Suche fehlgeschlagen: %w", "es": "la búsqueda falló: %w", "fr": "échec de la recherche : %w", "ru": "поиск не удался: %w"},
+  "arama isteği gönderilemedi: %w": {
+    "en": "could not send the search request: %w",
+    "de": "Suchanfrage konnte nicht gesendet werden: %w",
+    "es": "no se pudo enviar la solicitud de búsqueda: %w",
+    "fr": "impossible d'envoyer la requête de recherche : %w",
+    "ru": "не удалось отправить поисковый запрос: %w"
+  },
+  "arama isteği: stream açılamadı: %w": {
+    "en": "search request: could not open stream: %w",
+    "de": "Suchanfrage: Stream konnte nicht geöffnet werden: %w",
+    "es": "solicitud de búsqueda: no se pudo abrir el stream: %w",
+    "fr": "requête de recherche : impossible d'ouvrir le flux : %w",
+    "ru": "поисковый запрос: не удалось открыть поток: %w"
+  },
+  "arama yanıtı okunamadı: %w": {
+    "en": "could not read the search response: %w",
+    "de": "Suchantwort konnte nicht gelesen werden: %w",
+    "es": "no se pudo leer la respuesta de búsqueda: %w",
+    "fr": "impossible de lire la réponse de recherche : %w",
+    "ru": "не удалось прочитать ответ на поиск: %w"
+  },
+  "aynı sorguyu ağda (çok atlamalı) sor": {
+    "en": "ask the network the same query (multi-hop)",
+    "de": "dieselbe Anfrage im Netzwerk stellen (mehrere Sprünge)",
+    "es": "hacer la misma consulta a la red (varios saltos)",
+    "fr": "poser la même requête au réseau (multi-saut)",
+    "ru": "задать тот же запрос сети (через несколько узлов)"
+  },
+  "ağ — ": {"en": "network — ", "de": "Netzwerk — ", "es": "red — ", "fr": "réseau — ", "ru": "сеть — "},
+  "ağ: DHT başlatılamadı: %w": {
+    "en": "network: could not start the DHT: %w",
+    "de": "Netzwerk: DHT konnte nicht gestartet werden: %w",
+    "es": "red: no se pudo iniciar la DHT: %w",
+    "fr": "réseau : impossible de démarrer la DHT : %w",
+    "ru": "сеть: не удалось запустить DHT: %w"
+  },
+  "ağ: DHT önyüklenemedi: %w": {
+    "en": "network: could not bootstrap the DHT: %w",
+    "de": "Netzwerk: DHT-Bootstrap fehlgeschlagen: %w",
+    "es": "red: no se pudo arrancar la DHT: %w",
+    "fr": "réseau : échec de l'amorçage de la DHT : %w",
+    "ru": "сеть: не удалось выполнить начальную загрузку DHT: %w"
+  },
+  "ağ: bağlantı yöneticisi oluşturulamadı: %w": {
+    "en": "network: could not create the connection manager: %w",
+    "de": "Netzwerk: Verbindungsmanager konnte nicht erstellt werden: %w",
+    "es": "red: no se pudo crear el gestor de conexiones: %w",
+    "fr": "réseau : impossible de créer le gestionnaire de connexions : %w",
+    "ru": "сеть: не удалось создать менеджер подключений: %w"
+  },
+  "ağ: kimlik anahtarı dönüştürülemedi: %w": {
+    "en": "network: could not convert the identity key: %w",
+    "de": "Netzwerk: Identitätsschlüssel konnte nicht umgewandelt werden: %w",
+    "es": "red: no se pudo convertir la clave de identidad: %w",
+    "fr": "réseau : impossible de convertir la clé d'identité : %w",
+    "ru": "сеть: не удалось преобразовать ключ личности: %w"
+  },
+  "ağ: konuya abone olunamadı %q: %w": {
+    "en": "network: could not subscribe to topic %q: %w",
+    "de": "Netzwerk: Thema %q konnte nicht abonniert werden: %w",
+    "es": "red: no se pudo suscribir al tema %q: %w",
+    "fr": "réseau : impossible de s'abonner au sujet %q : %w",
+    "ru": "сеть: не удалось подписаться на тему %q: %w"
+  },
+  "ağ: konuya katılınamadı %q: %w": {
+    "en": "network: could not join topic %q: %w",
+    "de": "Netzwerk: Thema %q konnte nicht beigetreten werden: %w",
+    "es": "red: no se pudo unir al tema %q: %w",
+    "fr": "réseau : impossible de rejoindre le sujet %q : %w",
+    "ru": "сеть: не удалось присоединиться к теме %q: %w"
+  },
+  "ağ: libp2p host oluşturulamadı: %w": {
+    "en": "network: could not create the libp2p host: %w",
+    "de": "Netzwerk: libp2p-Host konnte nicht erstellt werden: %w",
+    "es": "red: no se pudo crear el host libp2p: %w",
+    "fr": "réseau : impossible de créer l'hôte libp2p : %w",
+    "ru": "сеть: не удалось создать узел libp2p: %w"
+  },
+  "ağ: mDNS başlatılamadı: %w": {
+    "en": "network: could not start mDNS: %w",
+    "de": "Netzwerk: mDNS konnte nicht gestartet werden: %w",
+    "es": "red: no se pudo iniciar mDNS: %w",
+    "fr": "réseau : impossible de démarrer mDNS : %w",
+    "ru": "сеть: не удалось запустить mDNS: %w"
+  },
+  "ağ: pubsub başlatılamadı: %w": {
+    "en": "network: could not start pubsub: %w",
+    "de": "Netzwerk: Pubsub konnte nicht gestartet werden: %w",
+    "es": "red: no se pudo iniciar pubsub: %w",
+    "fr": "réseau : impossible de démarrer pubsub : %w",
+    "ru": "сеть: не удалось запустить pubsub: %w"
+  },
+  "ağda arama için varsayılan atlama (TTL) sayısı (%d-%d)": {
+    "en": "default hop count (TTL) for network searches (%d-%d)",
+    "de": "Standardanzahl der Sprünge (TTL) bei Netzwerksuchen (%d-%d)",
+    "es": "número predeterminado de saltos (TTL) en búsquedas en la red (%d-%d)",
+    "fr": "nombre de sauts (TTL) par défaut pour les recherches sur le réseau (%d-%d)",
+    "ru": "число переходов (TTL) по умолчанию для поиска в сети (%d-%d)"
+  },
+  "bir site paylaşım kodunu (yazarAnahtarı/slug) yerel indekste ara, sayfayı yazdır ve çık (TUI/ağ AÇILMAZ)": {
+    "en": "look up a site share code (authorKey/slug) in the local index, print the page and exit (the TUI/network is NOT opened)",
+    "de": "einen Teilungscode (autorSchlüssel/slug) im lokalen Index suchen, die Seite ausgeben und beenden (TUI/Netzwerk werden NICHT geöffnet)",
+    "es": "buscar un código para compartir (claveAutor/slug) en el índice local, imprimir la página y salir (la TUI y la red NO se abren)",
+    "fr": "chercher un code de partage (cléAuteur/slug) dans l'index local, afficher la page et quitter (la TUI et le réseau ne sont PAS ouverts)",
+    "ru": "найти код общего доступа (ключАвтора/slug) в локальном индексе, вывести страницу и выйти (TUI и сеть НЕ открываются)"
+  },
+  "bitişik eşleşme (prefix değil)": {
+    "en": "adjacent match (not a prefix)",
+    "de": "zusammenhängender Treffer (kein Präfix)",
+    "es": "coincidencia contigua (no un prefijo)",
+    "fr": "correspondance contiguë (pas un préfixe)",
+    "ru": "точное совпадение подряд (не префикс)"
+  },
+  "bu ağ sonucunun eşini doğrudan hedefle": {
+    "en": "target this network result's peer directly",
+    "de": "den Peer dieses Netzwerkergebnisses direkt ansteuern",
+    "es": "apuntar directamente al par de este resultado de red",
+    "fr": "cibler directement le pair de ce résultat réseau",
+    "ru": "обращаться напрямую к узлу этого результата"
+  },
+  "bu yardım ekranı (her yerden)": {
+    "en": "this help screen (from anywhere)",
+    "de": "dieser Hilfebildschirm (von überall)",
+    "es": "esta pantalla de ayuda (desde cualquier sitio)",
+    "fr": "cet écran d'aide (depuis partout)",
+    "ru": "этот экран справки (откуда угодно)"
+  },
+  "bu yazarın diğer içerikleri (yazar sayfası)": {
+    "en": "this author's other content (author page)",
+    "de": "weitere Inhalte dieses Autors (Autorenseite)",
+    "es": "otros contenidos de este autor (página del autor)",
+    "fr": "autres contenus de cet auteur (page auteur)",
+    "ru": "другие записи этого автора (страница автора)"
+  },
+  "c  kodu kopyala   k  QR kodu   ": {
+    "en": "c  copy code   k  QR code   ",
+    "de": "c  Code kopieren   k  QR-Code   ",
+    "es": "c  copiar código   k  código QR   ",
+    "fr": "c  copier le code   k  code QR   ",
+    "ru": "c  копировать код   k  QR-код   "
+  },
+  "chat sync: istek gönderilemedi: %w": {
+    "en": "chat sync: could not send request: %w",
+    "de": "Chat-Sync: Anfrage konnte nicht gesendet werden: %w",
+    "es": "sincronización del chat: no se pudo enviar la solicitud: %w",
+    "fr": "synchro du chat : impossible d'envoyer la requête : %w",
+    "ru": "синхронизация чата: не удалось отправить запрос: %w"
+  },
+  "chat sync: stream açılamadı: %w": {
+    "en": "chat sync: could not open stream: %w",
+    "de": "Chat-Sync: Stream konnte nicht geöffnet werden: %w",
+    "es": "sincronización del chat: no se pudo abrir el stream: %w",
+    "fr": "synchro du chat : impossible d'ouvrir le flux : %w",
+    "ru": "синхронизация чата: не удалось открыть поток: %w"
+  },
+  "chat sync: yanıt okunamadı: %w": {
+    "en": "chat sync: could not read response: %w",
+    "de": "Chat-Sync: Antwort konnte nicht gelesen werden: %w",
+    "es": "sincronización del chat: no se pudo leer la respuesta: %w",
+    "fr": "synchro du chat : impossible de lire la réponse : %w",
+    "ru": "синхронизация чата: не удалось прочитать ответ: %w"
+  },
+  "en aktif yazarlar alınamadı: %w": {
+    "en": "could not get the most active authors: %w",
+    "de": "aktivste Autoren konnten nicht ermittelt werden: %w",
+    "es": "no se pudieron obtener los autores más activos: %w",
+    "fr": "impossible d'obtenir les auteurs les plus actifs : %w",
+    "ru": "не удалось получить самых активных авторов: %w"
+  },
+  "enter git   f1 yardım   esc geri": {
+    "en": "enter go   f1 help   esc back",
+    "de": "enter öffnen   f1 Hilfe   esc zurück",
+    "es": "enter ir   f1 ayuda   esc atrás",
+    "fr": "enter aller   f1 aide   esc retour",
+    "ru": "enter перейти   f1 справка   esc назад"
+  },
+  "esc  geri": {"en": "esc  back", "de": "esc  zurück", "es": "esc  atrás", "fr": "esc  retour", "ru": "esc  назад"},
+  "f1 yardım   esc  geri": {"en": "f1 help   esc  back", "de": "f1 Hilfe   esc  zurück", "es": "f1 ayuda   esc  atrás", "fr": "f1 aide   esc  retour", "ru": "f1 справка   esc  назад"},
+  "forum sync: istek gönderilemedi: %w": {
+    "en": "forum sync: could not send request: %w",
+    "de": "Forum-Sync: Anfrage konnte nicht gesendet werden: %w",
+    "es": "sincronización del foro: no se pudo enviar la solicitud: %w",
+    "fr": "synchro du forum : impossible d'envoyer la requête : %w",
+    "ru": "синхронизация форума: не удалось отправить запрос: %w"
+  },
+  "forum sync: stream açılamadı: %w": {
+    "en": "forum sync: could not open stream: %w",
+    "de": "Forum-Sync: Stream konnte nicht geöffnet werden: %w",
+    "es": "sincronización del foro: no se pudo abrir el stream: %w",
+    "fr": "synchro du forum : impossible d'ouvrir le flux : %w",
+    "ru": "синхронизация форума: не удалось открыть поток: %w"
+  },
+  "forum sync: yanıt okunamadı: %w": {
+    "en": "forum sync: could not read response: %w",
+    "de": "Forum-Sync: Antwort konnte nicht gelesen werden: %w",
+    "es": "sincronización del foro: no se pudo leer la respuesta: %w",
+    "fr": "synchro du forum : impossible de lire la réponse : %w",
+    "ru": "синхронизация форума: не удалось прочитать ответ: %w"
+  },
+  "g  ilk iç bağlantıya git   ": {
+    "en": "g  go to first in-page link   ",
+    "de": "g  zum ersten internen Link   ",
+    "es": "g  ir al primer enlace interno   ",
+    "fr": "g  aller au premier lien interne   ",
+    "ru": "g  к первой внутренней ссылке   "
+  },
+  "geri / bir önceki ekran": {
+    "en": "back / previous screen",
+    "de": "zurück / vorheriger Bildschirm",
+    "es": "atrás / pantalla anterior",
+    "fr": "retour / écran précédent",
+    "ru": "назад / предыдущий экран"
+  },
+  "geçerli aramayı takibe al": {
+    "en": "follow the current search",
+    "de": "aktuelle Suche verfolgen",
+    "es": "seguir la búsqueda actual",
+    "fr": "suivre la recherche en cours",
+    "ru": "отслеживать текущий поиск"
+  },
+  "geçersiz -log-level değeri %q (%s olmalı)": {
+    "en": "invalid -log-level value %q (must be %s)",
+    "de": "ungültiger -log-level-Wert %q (erlaubt: %s)",
+    "es": "valor de -log-level no válido %q (debe ser %s)",
+    "fr": "valeur -log-level invalide %q (doit être %s)",
+    "ru": "недопустимое значение -log-level %q (допустимо: %s)"
+  },
+  "geçersiz -tip değeri %q (%s olmalı)": {
+    "en": "invalid -tip value %q (must be %s)",
+    "de": "ungültiger -tip-Wert %q (erlaubt: %s)",
+    "es": "valor de -tip no válido %q (debe ser %s)",
+    "fr": "valeur -tip invalide %q (doit être %s)",
+    "ru": "недопустимое значение -tip %q (допустимо: %s)"
+  },
+  "geçersiz eş kimliği: %w": {"en": "invalid peer ID: %w", "de": "ungültige Peer-ID: %w", "es": "ID de par no válido: %w", "fr": "ID de pair invalide : %w", "ru": "недопустимый ID узла: %w"},
+  "geçersiz kod biçimi": {"en": "invalid code format", "de": "ungültiges Codeformat", "es": "formato de código no válido", "fr": "format de code invalide", "ru": "недопустимый формат кода"},
+  "gövdedeki bağlantıyı tarayıcıda aç": {
+    "en": "open a link from the body in the browser",
+    "de": "Link aus dem Text im Browser öffnen",
+    "es": "abrir en el navegador un enlace del cuerpo",
+    "fr": "ouvrir un lien du corps dans le navigateur",
+    "ru": "открыть ссылку из текста в браузере"
+  },
+  "günlük ayrıntı düzeyi: %s": {"en": "log level: %s", "de": "Protokollstufe: %s", "es": "nivel de registro: %s", "fr": "niveau de journalisation : %s", "ru": "уровень журнала: %s"},
+  "günlük içerik trendi alınamadı: %w": {
+    "en": "could not get the daily content trend: %w",
+    "de": "tägliche Inhaltsentwicklung konnte nicht ermittelt werden: %w",
+    "es": "no se pudo obtener la tendencia diaria de contenido: %w",
+    "fr": "impossible d'obtenir la tendance quotidienne du contenu : %w",
+    "ru": "не удалось получить динамику содержимого по дням: %w"
+  },
+  "ikisinden biri (BÜYÜK harf OR)": {
+    "en": "either one (UPPERCASE OR)",
+    "de": "eins von beiden (OR in GROSSBUCHSTABEN)",
+    "es": "uno de los dos (OR en MAYÚSCULAS)",
+    "fr": "l'un ou l'autre (OR en MAJUSCULES)",
+    "ru": "любой из двух (OR ЗАГЛАВНЫМИ)"
+  },
+  "içerik türü filtresi: Tümü/Konu/Yanıt/Sohbet/Site": {
+    "en": "content type filter: All/Topic/Reply/Chat/Site",
+    "de": "Inhaltstyp-Filter: Alle/Thema/Antwort/Chat/Website",
+    "es": "filtro de tipo: Todo/Tema/Respuesta/Chat/Sitio",
+    "fr": "filtre de type : Tout/Sujet/Réponse/Chat/Site",
+    "ru": "фильтр типа: Все/Тема/Ответ/Чат/Сайт"
+  },
+  "kayıtlı aramalar alınamadı: %w": {
+    "en": "could not get saved searches: %w",
+    "de": "gespeicherte Suchen konnten nicht geladen werden: %w",
+    "es": "no se pudieron obtener las búsquedas guardadas: %w",
+    "fr": "impossible d'obtenir les recherches enregistrées : %w",
+    "ru": "не удалось получить сохранённые поиски: %w"
+  },
+  "kayıtlı aramayı sil": {
+    "en": "delete the saved search",
+    "de": "gespeicherte Suche löschen",
+    "es": "borrar la búsqueda guardada",
+    "fr": "supprimer la recherche enregistrée",
+    "ru": "удалить сохранённый поиск"
+  },
+  "kayıtlı aramayı yükle (Ara ekranına geç)": {
+    "en": "load the saved search (go to the Search screen)",
+    "de": "gespeicherte Suche laden (zum Suchbildschirm)",
+    "es": "cargar la búsqueda guardada (ir a Buscar)",
+    "fr": "charger la recherche enregistrée (aller à Rechercher)",
+    "ru": "загрузить сохранённый поиск (перейти к «Поиску»)"
+  },
+  "kimlik dosyası okunamadı: %w": {
+    "en": "could not read the identity file: %w",
+    "de": "Identitätsdatei konnte nicht gelesen werden: %w",
+    "es": "no se pudo leer el archivo de identidad: %w",
+    "fr": "impossible de lire le fichier d'identité : %w",
+    "ru": "не удалось прочитать файл личности: %w"
+  },
+  "kimlik: %s bozuk, elle silip yeniden başlatman gerekebilir": {
+    "en": "identity: %s is corrupt; you may need to delete it by hand and restart",
+    "de": "Identität: %s ist beschädigt; eventuell musst du die Datei von Hand löschen und neu starten",
+    "es": "identidad: %s está dañado; quizá tengas que borrarlo a mano y reiniciar",
+    "fr": "identité : %s est corrompu ; vous devrez peut-être le supprimer à la main et redémarrer",
+    "ru": "личность: файл %s повреждён; возможно, его нужно удалить вручную и перезапустить программу"
+  },
+  "kimlik: geçersiz mnemonic": {
+    "en": "identity: invalid mnemonic",
+    "de": "Identität: ungültige Mnemonic",
+    "es": "identidad: mnemónico no válido",
+    "fr": "identité : phrase mnémonique invalide",
+    "ru": "личность: недопустимая мнемоническая фраза"
+  },
+  "kod: %s\n": {"en": "code: %s\n", "de": "Code: %s\n", "es": "código: %s\n", "fr": "code : %s\n", "ru": "код: %s\n"},
+  "kullanıcı ev dizini bulunamadı: %w": {
+    "en": "could not find the user's home directory: %w",
+    "de": "Benutzerverzeichnis nicht gefunden: %w",
+    "es": "no se encontró el directorio personal del usuario: %w",
+    "fr": "dossier personnel de l'utilisateur introuvable : %w",
+    "ru": "не найден домашний каталог пользователя: %w"
+  },
+  "listede/menüde gezin": {
+    "en": "move through the list/menu",
+    "de": "in Liste/Menü bewegen",
+    "es": "moverse por la lista o el menú",
+    "fr": "se déplacer dans la liste/le menu",
+    "ru": "перемещение по списку/меню"
+  },
+  "mevcut kayıt sayısı okunamadı: %w": {
+    "en": "could not read the current entry count: %w",
+    "de": "aktuelle Anzahl der Einträge konnte nicht gelesen werden: %w",
+    "es": "no se pudo leer el número actual de registros: %w",
+    "fr": "impossible de lire le nombre actuel d'entrées : %w",
+    "ru": "не удалось прочитать текущее число записей: %w"
+  },
+  "o  bağlantıyı aç   ": {"en": "o  open link   ", "de": "o  Link öffnen   ", "es": "o  abrir enlace   ", "fr": "o  ouvrir le lien   ", "ru": "o  открыть ссылку   "},
+  "o/1-9  bağlantı aç   ": {"en": "o/1-9  open link   ", "de": "o/1-9  Link öffnen   ", "es": "o/1-9  abrir enlace   ", "fr": "o/1-9  ouvrir un lien   ", "ru": "o/1-9  открыть ссылку   "},
+  "registry anahtarı oluşturulamadı: %w": {
+    "en": "could not create the registry key: %w",
+    "de": "Registrierungsschlüssel konnte nicht erstellt werden: %w",
+    "es": "no se pudo crear la clave del registro: %w",
+    "fr": "impossible de créer la clé de registre : %w",
+    "ru": "не удалось создать раздел реестра: %w"
+  },
+  "registry anahtarı silinemedi: %w": {
+    "en": "could not delete the registry key: %w",
+    "de": "Registrierungsschlüssel konnte nicht gelöscht werden: %w",
+    "es": "no se pudo borrar la clave del registro: %w",
+    "fr": "impossible de supprimer la clé de registre : %w",
+    "ru": "не удалось удалить раздел реестра: %w"
+  },
+  "registry değeri yazılamadı: %w": {
+    "en": "could not write the registry value: %w",
+    "de": "Registrierungswert konnte nicht geschrieben werden: %w",
+    "es": "no se pudo escribir el valor del registro: %w",
+    "fr": "impossible d'écrire la valeur de registre : %w",
+    "ru": "не удалось записать значение реестра: %w"
+  },
+  "sayfa içindeki ilk iç bağlantıya git": {
+    "en": "go to the first in-page link",
+    "de": "zum ersten internen Link der Seite",
+    "es": "ir al primer enlace interno de la página",
+    "fr": "aller au premier lien interne de la page",
+    "ru": "перейти к первой внутренней ссылке страницы"
+  },
+  "seç / detaya gir": {"en": "select / open details", "de": "auswählen / Details öffnen", "es": "elegir / ver detalles", "fr": "sélectionner / voir le détail", "ru": "выбрать / подробнее"},
+  "site paylaşım kodunun QR kodunu göster/gizle": {
+    "en": "show/hide the QR code of the site share code",
+    "de": "QR-Code des Teilungscodes ein-/ausblenden",
+    "es": "mostrar u ocultar el código QR del código para compartir",
+    "fr": "afficher/masquer le code QR du code de partage",
+    "ru": "показать/скрыть QR-код кода общего доступа"
+  },
+  "site sayfası aranamadı: %w": {
+    "en": "could not look up the site page: %w",
+    "de": "Website-Seite konnte nicht gesucht werden: %w",
+    "es": "no se pudo buscar la página del sitio: %w",
+    "fr": "impossible de chercher la page du site : %w",
+    "ru": "не удалось найти страницу сайта: %w"
+  },
+  "site sayfasının paylaşım kodunu panoya kopyala": {
+    "en": "copy the site page's share code to the clipboard",
+    "de": "Teilungscode der Website-Seite in die Zwischenablage kopieren",
+    "es": "copiar al portapapeles el código para compartir de la página",
+    "fr": "copier le code de partage de la page dans le presse-papiers",
+    "ru": "скопировать код общего доступа страницы в буфер обмена"
+  },
+  "site sync: istek gönderilemedi: %w": {
+    "en": "site sync: could not send request: %w",
+    "de": "Website-Sync: Anfrage konnte nicht gesendet werden: %w",
+    "es": "sincronización de sitios: no se pudo enviar la solicitud: %w",
+    "fr": "synchro des sites : impossible d'envoyer la requête : %w",
+    "ru": "синхронизация сайтов: не удалось отправить запрос: %w"
+  },
+  "site sync: istek hazırlanamadı: %w": {
+    "en": "site sync: could not prepare request: %w",
+    "de": "Website-Sync: Anfrage konnte nicht vorbereitet werden: %w",
+    "es": "sincronización de sitios: no se pudo preparar la solicitud: %w",
+    "fr": "synchro des sites : impossible de préparer la requête : %w",
+    "ru": "синхронизация сайтов: не удалось подготовить запрос: %w"
+  },
+  "site sync: stream açılamadı: %w": {
+    "en": "site sync: could not open stream: %w",
+    "de": "Website-Sync: Stream konnte nicht geöffnet werden: %w",
+    "es": "sincronización de sitios: no se pudo abrir el stream: %w",
+    "fr": "synchro des sites : impossible d'ouvrir le flux : %w",
+    "ru": "синхронизация сайтов: не удалось открыть поток: %w"
+  },
+  "site sync: yanıt okunamadı: %w": {
+    "en": "site sync: could not read response: %w",
+    "de": "Website-Sync: Antwort konnte nicht gelesen werden: %w",
+    "es": "sincronización de sitios: no se pudo leer la respuesta: %w",
+    "fr": "synchro des sites : impossible de lire la réponse : %w",
+    "ru": "синхронизация сайтов: не удалось прочитать ответ: %w"
+  },
+  "sonuç sayfaları arasında gez": {
+    "en": "move between result pages",
+    "de": "zwischen Ergebnisseiten blättern",
+    "es": "moverse entre páginas de resultados",
+    "fr": "naviguer entre les pages de résultats",
+    "ru": "листать страницы результатов"
+  },
+  "sonuçlardan dışla": {"en": "exclude from results", "de": "aus den Ergebnissen ausschließen", "es": "excluir de los resultados", "fr": "exclure des résultats", "ru": "исключить из результатов"},
+  "sürüm bilgisini yazdır ve çık": {
+    "en": "print version information and exit",
+    "de": "Versionsinformationen ausgeben und beenden",
+    "es": "imprimir la información de versión y salir",
+    "fr": "afficher les informations de version et quitter",
+    "ru": "вывести сведения о версии и выйти"
+  },
+  "sıralamayı değiştir: Alaka ⇄ Yeni": {
+    "en": "change sorting: Relevance ⇄ Newest",
+    "de": "Sortierung ändern: Relevanz ⇄ Neueste",
+    "es": "cambiar el orden: Relevancia ⇄ Recientes",
+    "fr": "changer le tri : Pertinence ⇄ Récents",
+    "ru": "сменить сортировку: Релевантность ⇄ Новые"
+  },
+  "t  bu eşi hedefle   ": {"en": "t  target this peer   ", "de": "t  diesen Peer ansteuern   ", "es": "t  apuntar a este par   ", "fr": "t  cibler ce pair   ", "ru": "t  обращаться к этому узлу   "},
+  "takip edilecek bir sorgu ya da yazar filtresi gerekli": {
+    "en": "a query or an author filter is needed to follow",
+    "de": "zum Verfolgen ist eine Anfrage oder ein Autorfilter nötig",
+    "es": "para seguir hace falta una consulta o un filtro de autor",
+    "fr": "une requête ou un filtre d'auteur est nécessaire pour suivre",
+    "ru": "для отслеживания нужен запрос или фильтр по автору"
+  },
+  "tip dağılımı alınamadı: %w": {
+    "en": "could not get the type distribution: %w",
+    "de": "Typverteilung konnte nicht ermittelt werden: %w",
+    "es": "no se pudo obtener la distribución por tipo: %w",
+    "fr": "impossible d'obtenir la répartition par type : %w",
+    "ru": "не удалось получить распределение по типам: %w"
+  },
+  "uygulama dizini oluşturulamadı: %w": {
+    "en": "could not create the applications directory: %w",
+    "de": "Anwendungsverzeichnis konnte nicht erstellt werden: %w",
+    "es": "no se pudo crear el directorio de aplicaciones: %w",
+    "fr": "impossible de créer le dossier des applications : %w",
+    "ru": "не удалось создать каталог приложений: %w"
+  },
+  "veri dizini (varsayılan: $ARAMA_MOTORU_VERI_DIR ya da ~/.and-arama-motoru)": {
+    "en": "data directory (default: $ARAMA_MOTORU_VERI_DIR or ~/.and-arama-motoru)",
+    "de": "Datenverzeichnis (Standard: $ARAMA_MOTORU_VERI_DIR oder ~/.and-arama-motoru)",
+    "es": "directorio de datos (predeterminado: $ARAMA_MOTORU_VERI_DIR o ~/.and-arama-motoru)",
+    "fr": "dossier de données (par défaut : $ARAMA_MOTORU_VERI_DIR ou ~/.and-arama-motoru)",
+    "ru": "каталог данных (по умолчанию: $ARAMA_MOTORU_VERI_DIR или ~/.and-arama-motoru)"
+  },
+  "veri dizini boş olamaz": {
+    "en": "the data directory cannot be empty",
+    "de": "das Datenverzeichnis darf nicht leer sein",
+    "es": "el directorio de datos no puede estar vacío",
+    "fr": "le dossier de données ne peut pas être vide",
+    "ru": "каталог данных не может быть пустым"
+  },
+  "veri dizini oluşturulamadı: %w": {
+    "en": "could not create the data directory: %w",
+    "de": "Datenverzeichnis konnte nicht erstellt werden: %w",
+    "es": "no se pudo crear el directorio de datos: %w",
+    "fr": "impossible de créer le dossier de données : %w",
+    "ru": "не удалось создать каталог данных: %w"
+  },
+  "veritabanı ayarları uygulanamadı: %w": {
+    "en": "could not apply the database settings: %w",
+    "de": "Datenbankeinstellungen konnten nicht angewendet werden: %w",
+    "es": "no se pudieron aplicar los ajustes de la base de datos: %w",
+    "fr": "impossible d'appliquer les réglages de la base de données : %w",
+    "ru": "не удалось применить настройки базы данных: %w"
+  },
+  "veritabanı açılamadı: %w": {
+    "en": "could not open the database: %w",
+    "de": "Datenbank konnte nicht geöffnet werden: %w",
+    "es": "no se pudo abrir la base de datos: %w",
+    "fr": "impossible d'ouvrir la base de données : %w",
+    "ru": "не удалось открыть базу данных: %w"
+  },
+  "yalnızca bu yazar anahtarına (hex) ait sonuçlar; -search boşsa bile tek başına o yazarın tüm içeriğini listeler": {
+    "en": "only results from this author key (hex); on its own, even with an empty -search, lists all of that author's content",
+    "de": "nur Ergebnisse dieses Autorschlüssels (hex); allein, auch mit leerem -search, listet es alle Inhalte des Autors",
+    "es": "solo resultados de esta clave de autor (hex); por sí sola, aunque -search esté vacío, lista todo el contenido de ese autor",
+    "fr": "uniquement les résultats de cette clé d'auteur (hex) ; seule, même avec -search vide, liste tout le contenu de cet auteur",
+    "ru": "только результаты этого ключа автора (hex); сама по себе, даже при пустом -search, выводит всё содержимое автора"
+  },
+  "yalnızca http(s) bağlantıları açılabilir": {
+    "en": "only http(s) links can be opened",
+    "de": "nur http(s)-Links können geöffnet werden",
+    "es": "solo se pueden abrir enlaces http(s)",
+    "fr": "seuls les liens http(s) peuvent être ouverts",
+    "ru": "открывать можно только ссылки http(s)"
+  },
+  "yazar:%s": {"en": "author:%s", "de": "Autor:%s", "es": "autor:%s", "fr": "auteur:%s", "ru": "автор:%s"},
+  "yazarAnahtarı/slug": {"en": "authorKey/slug", "de": "autorSchlüssel/slug", "es": "claveAutor/slug", "fr": "cléAuteur/slug", "ru": "ключАвтора/slug"},
+  "yerel indeks": {"en": "local index", "de": "lokaler Index", "es": "índice local", "fr": "index local", "ru": "локальный индекс"},
+  "yerel indekste ara, sonuçları yazdır ve çık (TUI/ağ AÇILMAZ — betiklenebilir hızlı arama)": {
+    "en": "search the local index, print the results and exit (the TUI/network is NOT opened — scriptable quick search)",
+    "de": "im lokalen Index suchen, Ergebnisse ausgeben und beenden (TUI/Netzwerk werden NICHT geöffnet — skriptfähige Schnellsuche)",
+    "es": "buscar en el índice local, imprimir los resultados y salir (la TUI y la red NO se abren; búsqueda rápida para scripts)",
+    "fr": "chercher dans l'index local, afficher les résultats et quitter (la TUI et le réseau ne sont PAS ouverts — recherche rapide scriptable)",
+    "ru": "искать в локальном индексе, вывести результаты и выйти (TUI и сеть НЕ открываются — быстрый поиск для скриптов)"
+  },
+  "çalıştırılabilir dosyanın yolu bulunamadı: %w": {
+    "en": "could not find the executable's path: %w",
+    "de": "Pfad der ausführbaren Datei nicht gefunden: %w",
+    "es": "no se encontró la ruta del ejecutable: %w",
+    "fr": "chemin de l'exécutable introuvable : %w",
+    "ru": "не найден путь к исполняемому файлу: %w"
+  },
+  "çık": {"en": "quit", "de": "beenden", "es": "salir", "fr": "quitter", "ru": "выйти"},
+  "İndeks": {"en": "Index", "de": "Index", "es": "Índice", "fr": "Index", "ru": "Индекс"},
+  "İstatistikler alınamadı: ": {
+    "en": "Could not load statistics: ",
+    "de": "Statistiken konnten nicht geladen werden: ",
+    "es": "No se pudieron cargar las estadísticas: ",
+    "fr": "Impossible de charger les statistiques : ",
+    "ru": "Не удалось загрузить статистику: "
+  },
+  "İçerik türü dağılımı": {
+    "en": "Content type distribution",
+    "de": "Verteilung nach Inhaltstyp",
+    "es": "Distribución por tipo de contenido",
+    "fr": "Répartition par type de contenu",
+    "ru": "Распределение по типам содержимого"
+  },
+  "İçerik, AND ağına gerçek bir eş olarak katılıp GossipSub üzerinden canlı, yeni bağlanan eşlerle de senkronizasyon protokolüyle geçmişe dönük toplanır.": {
+    "en": "Content is collected by joining the AND network as a real peer: live via GossipSub, and retroactively from newly connected peers through the sync protocol.",
+    "de": "Inhalte werden gesammelt, indem das Programm dem AND-Netzwerk als echter Peer beitritt: live über GossipSub und rückwirkend per Synchronisationsprotokoll von neu verbundenen Peers.",
+    "es": "El contenido se recoge uniéndose a la red AND como un par real: en vivo por GossipSub y, de forma retroactiva, con el protocolo de sincronización de los pares que se conectan.",
+    "fr": "Le contenu est collecté en rejoignant le réseau AND comme un vrai pair : en direct via GossipSub, et rétroactivement auprès des pairs nouvellement connectés grâce au protocole de synchronisation.",
+    "ru": "Содержимое собирается так: программа подключается к сети AND как настоящий узел и получает новое через GossipSub в реальном времени, а прошлое — по протоколу синхронизации от вновь подключившихся узлов."
+  },
+  "Şunu mu demek istediniz: ": {"en": "Did you mean: ", "de": "Meintest du: ", "es": "Quizás quisiste decir: ", "fr": "Vouliez-vous dire : ", "ru": "Возможно, вы имели в виду: "},
+  "Şunu mu demek istediniz: %s\n": {
+    "en": "Did you mean: %s\n",
+    "de": "Meintest du: %s\n",
+    "es": "Quizás quisiste decir: %s\n",
+    "fr": "Vouliez-vous dire : %s\n",
+    "ru": "Возможно, вы имели в виду: %s\n"
+  },
+  "şema göçü başarısız: %w": {
+    "en": "schema migration failed: %w",
+    "de": "Schemamigration fehlgeschlagen: %w",
+    "es": "la migración del esquema falló: %w",
+    "fr": "échec de la migration du schéma : %w",
+    "ru": "миграция схемы не удалась: %w"
+  },
+  "şema oluşturulamadı: %w": {
+    "en": "could not create the schema: %w",
+    "de": "Schema konnte nicht erstellt werden: %w",
+    "es": "no se pudo crear el esquema: %w",
+    "fr": "impossible de créer le schéma : %w",
+    "ru": "не удалось создать схему: %w"
+  },
+  "↑/↓ gezin   enter seç   f1 yardım   q çıkış": {
+    "en": "↑/↓ move   enter select   f1 help   q quit",
+    "de": "↑/↓ bewegen   enter auswählen   f1 Hilfe   q beenden",
+    "es": "↑/↓ mover   enter elegir   f1 ayuda   q salir",
+    "fr": "↑/↓ naviguer   enter choisir   f1 aide   q quitter",
+    "ru": "↑/↓ выбор   enter открыть   f1 справка   q выход"
+  },
+  "↑/↓ seç   enter detay   tab filtre   ctrl+n ağda ara   ctrl+r sırala   ctrl+t takip et": {
+    "en": "↑/↓ select   enter details   tab filter   ctrl+n search network   ctrl+r sort   ctrl+t follow",
+    "de": "↑/↓ auswählen   enter Details   tab Filter   ctrl+n im Netzwerk suchen   ctrl+r sortieren   ctrl+t verfolgen",
+    "es": "↑/↓ elegir   enter detalles   tab filtro   ctrl+n buscar en la red   ctrl+r ordenar   ctrl+t seguir",
+    "fr": "↑/↓ choisir   enter détail   tab filtre   ctrl+n chercher sur le réseau   ctrl+r trier   ctrl+t suivre",
+    "ru": "↑/↓ выбор   enter подробнее   tab фильтр   ctrl+n искать в сети   ctrl+r сортировка   ctrl+t отслеживать"
+  },
+  "↑/↓ seç   enter git   d sil   f1 yardım   esc geri": {
+    "en": "↑/↓ select   enter go   d delete   f1 help   esc back",
+    "de": "↑/↓ auswählen   enter öffnen   d löschen   f1 Hilfe   esc zurück",
+    "es": "↑/↓ elegir   enter ir   d borrar   f1 ayuda   esc atrás",
+    "fr": "↑/↓ choisir   enter aller   d supprimer   f1 aide   esc retour",
+    "ru": "↑/↓ выбор   enter перейти   d удалить   f1 справка   esc назад"
+  },
+  "Genel:": {"en": "General:", "de": "Allgemein:", "es": "General:", "fr": "Général :", "ru": "Общие:"}
+}

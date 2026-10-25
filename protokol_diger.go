@@ -2,6 +2,8 @@
 
 package main
 
+import "github.com/lucian95511/and/dil"
+
 // protokol_diger.go — and-site:// protokol kaydı Windows'ta
 // (protokol_windows.go) ve Linux'ta (protokol_linux.go, xdg-mime) uygulandı.
 // macOS için ayrı bir mekanizma gerekir: Launch Services (lsregister),
@@ -13,14 +15,14 @@ package main
 // TUI'deki "Kodla Git" ekranı bu platformda da tamamen çalışır durumdadır;
 // eksik olan yalnızca "linke tıklayınca otomatik açılma" kolaylığıdır.
 
-import "fmt"
+import "errors"
 
 func protokolKaydet() (exeYolu string, err error) {
-	return "", fmt.Errorf("and-site:// protokol kaydı şu an yalnızca Windows'ta destekleniyor")
+	return "", errors.New(dil.T("and-site:// protokol kaydı şu an yalnızca Windows'ta destekleniyor"))
 }
 
 func protokolKaldir() error {
-	return fmt.Errorf("and-site:// protokol kaydı şu an yalnızca Windows'ta destekleniyor")
+	return errors.New(dil.T("and-site:// protokol kaydı şu an yalnızca Windows'ta destekleniyor"))
 }
 
 const protokolDestekleniyorMu = false

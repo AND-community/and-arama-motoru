@@ -30,6 +30,7 @@ import (
 	drouting "github.com/libp2p/go-libp2p/p2p/discovery/routing"
 	"github.com/libp2p/go-libp2p/p2p/net/connmgr"
 
+	"github.com/lucian95511/and/dil"
 	"github.com/lucian95511/and/protokol"
 )
 
@@ -59,7 +60,7 @@ const (
 func libp2pOzelAnahtar(k *Kimlik) (lp2pcrypto.PrivKey, error) {
 	priv, err := lp2pcrypto.UnmarshalEd25519PrivateKey(k.PrivateKey())
 	if err != nil {
-		return nil, fmt.Errorf("ağ: kimlik anahtarı dönüştürülemedi: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: kimlik anahtarı dönüştürülemedi: %w"), err)
 	}
 	return priv, nil
 }
@@ -72,7 +73,7 @@ func dugumOlustur(k *Kimlik) (host.Host, error) {
 	}
 	cm, err := connmgr.NewConnManager(baglantiAlt, baglantiUst, connmgr.WithGracePeriod(baglantiSuresi))
 	if err != nil {
-		return nil, fmt.Errorf("ağ: bağlantı yöneticisi oluşturulamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: bağlantı yöneticisi oluşturulamadı: %w"), err)
 	}
 	h, err := libp2p.New(
 		libp2p.Identity(priv),
@@ -81,7 +82,7 @@ func dugumOlustur(k *Kimlik) (host.Host, error) {
 		libp2p.NATPortMap(),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("ağ: libp2p host oluşturulamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: libp2p host oluşturulamadı: %w"), err)
 	}
 	return h, nil
 }
@@ -103,7 +104,7 @@ func (d *Kesif) PeerBaglandiCh() <-chan peer.ID { return d.peerBaglandi }
 func kesifBaslat(ctx context.Context, h host.Host) (*Kesif, error) {
 	kdht, err := dual.New(ctx, h)
 	if err != nil {
-		return nil, fmt.Errorf("ağ: DHT başlatılamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: DHT başlatılamadı: %w"), err)
 	}
 
 	for _, pi := range dht.GetDefaultBootstrapPeerAddrInfos() {
@@ -117,7 +118,7 @@ func kesifBaslat(ctx context.Context, h host.Host) (*Kesif, error) {
 
 	if err := kdht.Bootstrap(ctx); err != nil {
 		kdht.Close()
-		return nil, fmt.Errorf("ağ: DHT önyüklenemedi: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: DHT önyüklenemedi: %w"), err)
 	}
 
 	routing := drouting.NewRoutingDiscovery(kdht)
@@ -131,7 +132,7 @@ func kesifBaslat(ctx context.Context, h host.Host) (*Kesif, error) {
 	mdnsSvc := mdns.NewMdnsService(h, mdnsServisEtik, peerBulunduBildirimi{ctx: ctx, host: h})
 	if err := mdnsSvc.Start(); err != nil {
 		kdht.Close()
-		return nil, fmt.Errorf("ağ: mDNS başlatılamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: mDNS başlatılamadı: %w"), err)
 	}
 	d.mdns = mdnsSvc
 
@@ -232,7 +233,7 @@ func pubsubBaslat(ctx context.Context, h host.Host) (*pubsub.PubSub, error) {
 		pubsub.WithStrictSignatureVerification(true),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("ağ: pubsub başlatılamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("ağ: pubsub başlatılamadı: %w"), err)
 	}
 	return ps, nil
 }
@@ -246,11 +247,11 @@ type Konu struct {
 func konuyaKatil(ps *pubsub.PubSub, self host.Host, ad string) (*Konu, error) {
 	t, err := ps.Join(ad)
 	if err != nil {
-		return nil, fmt.Errorf("ağ: konuya katılınamadı %q: %w", ad, err)
+		return nil, fmt.Errorf(dil.T("ağ: konuya katılınamadı %q: %w"), ad, err)
 	}
 	sub, err := t.Subscribe()
 	if err != nil {
-		return nil, fmt.Errorf("ağ: konuya abone olunamadı %q: %w", ad, err)
+		return nil, fmt.Errorf(dil.T("ağ: konuya abone olunamadı %q: %w"), ad, err)
 	}
 	return &Konu{topic: t, sub: sub, self: self}, nil
 }

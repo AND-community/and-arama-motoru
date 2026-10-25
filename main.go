@@ -21,6 +21,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 
 	"github.com/libp2p/go-libp2p/core/peer"
+
+	"github.com/lucian95511/and/dil"
 )
 
 // Version, -ldflags "-X main.Version=..." ile derleme zamanında
@@ -48,13 +50,13 @@ func varsayilanVeriDizini(bayrakDegeri string) (string, error) {
 	}
 	ev, err := os.UserHomeDir()
 	if err != nil {
-		return "", fmt.Errorf("kullanıcı ev dizini bulunamadı: %w", err)
+		return "", fmt.Errorf(dil.T("kullanıcı ev dizini bulunamadı: %w"), err)
 	}
 	return filepath.Join(ev, ".and-arama-motoru"), nil
 }
 
 func olumculCik(gunlukMesaji string, err error) {
-	fmt.Fprintln(os.Stderr, "AND Arama Motoru:", err)
+	fmt.Fprintln(os.Stderr, dil.T("AND Arama Motoru:"), err)
 	gunlukHata(gunlukMesaji+":", err)
 	os.Exit(1)
 }
@@ -68,7 +70,7 @@ func olumculCik(gunlukMesaji string, err error) {
 // bir mesaj biçimi garanti edilir hem de gelecekte biçim değişirse tek
 // yerden güncellenir.
 func hataVeCik(err error) {
-	fmt.Fprintln(os.Stderr, "AND Arama Motoru:", err)
+	fmt.Fprintln(os.Stderr, dil.T("AND Arama Motoru:"), err)
 	os.Exit(1)
 }
 
@@ -78,7 +80,7 @@ func hataVeCik(err error) {
 // zamanı hatası) kasıtlı olarak farklıdır — bir betik ikisini ayırt
 // edebilsin diye.
 func bayrakHatasiCik(err error) {
-	fmt.Fprintln(os.Stderr, "AND Arama Motoru:", err)
+	fmt.Fprintln(os.Stderr, dil.T("AND Arama Motoru:"), err)
 	os.Exit(2)
 }
 
@@ -96,19 +98,21 @@ func recoverGoroutine(isim string) {
 }
 
 func main() {
-	bayrakSurum := flag.Bool("version", false, "sürüm bilgisini yazdır ve çık")
-	bayrakVeriDir := flag.String("veri-dir", "", "veri dizini (varsayılan: $ARAMA_MOTORU_VERI_DIR ya da ~/.and-arama-motoru)")
-	bayrakLogSeviye := flag.String("log-level", "bilgi", "günlük ayrıntı düzeyi: hata|uyari|bilgi")
-	bayrakTTL := flag.Int("ttl", aramaVarsayilanTTL, fmt.Sprintf("ağda arama için varsayılan atlama (TTL) sayısı (%d-%d)", aramaTTLMin, aramaTTLMax))
-	bayrakArama := flag.String("search", "", "yerel indekste ara, sonuçları yazdır ve çık (TUI/ağ AÇILMAZ — betiklenebilir hızlı arama)")
-	bayrakTip := flag.String("tip", "", "-search ile birlikte: sonuçları türe göre sınırla (konu|yanit|sohbet|site)")
-	bayrakYazar := flag.String("yazar", "", "yalnızca bu yazar anahtarına (hex) ait sonuçlar; -search boşsa bile tek başına o yazarın tüm içeriğini listeler")
-	bayrakLimit := flag.Int("limit", 20, "-search ile birlikte: en fazla kaç sonuç")
-	bayrakSayfa := flag.Int("sayfa", 1, "-search ile birlikte: sayfa numarası (1'den başlar)")
-	bayrakSite := flag.String("site", "", "bir site paylaşım kodunu (yazarAnahtarı/slug) yerel indekste ara, sayfayı yazdır ve çık (TUI/ağ AÇILMAZ)")
-	bayrakJSON := flag.Bool("json", false, "-search/-site ile birlikte: sonucu JSON olarak yazdır")
-	bayrakProtokolKaydet := flag.Bool("protokol-kaydet", false, "and-site:// bağlantılarını bu programla açacak şekilde işletim sistemine kaydet (yalnızca Windows) ve çık")
-	bayrakProtokolKaldir := flag.Bool("protokol-kaldir", false, "and-site:// bağlantı kaydını kaldır (yalnızca Windows) ve çık")
+	// Bayrak açıklamaları tanımlanırken çevrildiği için dil bayraklardan ÖNCE seçilir.
+	diliSec()
+	bayrakSurum := flag.Bool("version", false, dil.T("sürüm bilgisini yazdır ve çık"))
+	bayrakVeriDir := flag.String("veri-dir", "", dil.T("veri dizini (varsayılan: $ARAMA_MOTORU_VERI_DIR ya da ~/.and-arama-motoru)"))
+	bayrakLogSeviye := flag.String("log-level", "bilgi", dil.F("günlük ayrıntı düzeyi: %s", "hata|uyari|bilgi"))
+	bayrakTTL := flag.Int("ttl", aramaVarsayilanTTL, dil.F("ağda arama için varsayılan atlama (TTL) sayısı (%d-%d)", aramaTTLMin, aramaTTLMax))
+	bayrakArama := flag.String("search", "", dil.T("yerel indekste ara, sonuçları yazdır ve çık (TUI/ağ AÇILMAZ — betiklenebilir hızlı arama)"))
+	bayrakTip := flag.String("tip", "", dil.F("-search ile birlikte: sonuçları türe göre sınırla (%s)", "konu|yanit|sohbet|site"))
+	bayrakYazar := flag.String("yazar", "", dil.T("yalnızca bu yazar anahtarına (hex) ait sonuçlar; -search boşsa bile tek başına o yazarın tüm içeriğini listeler"))
+	bayrakLimit := flag.Int("limit", 20, dil.T("-search ile birlikte: en fazla kaç sonuç"))
+	bayrakSayfa := flag.Int("sayfa", 1, dil.T("-search ile birlikte: sayfa numarası (1'den başlar)"))
+	bayrakSite := flag.String("site", "", dil.T("bir site paylaşım kodunu (yazarAnahtarı/slug) yerel indekste ara, sayfayı yazdır ve çık (TUI/ağ AÇILMAZ)"))
+	bayrakJSON := flag.Bool("json", false, dil.T("-search/-site ile birlikte: sonucu JSON olarak yazdır"))
+	bayrakProtokolKaydet := flag.Bool("protokol-kaydet", false, dil.T("and-site:// bağlantılarını bu programla açacak şekilde işletim sistemine kaydet (yalnızca Windows) ve çık"))
+	bayrakProtokolKaldir := flag.Bool("protokol-kaldir", false, dil.T("and-site:// bağlantı kaydını kaldır (yalnızca Windows) ve çık"))
 
 	// flag.Usage, PrintDefaults'un düz/alfabetik tek listesi yerine
 	// seçenekleri ANLAMLI kategorilere ayırır (Genel/Arama/Site paylaşımı/
@@ -118,8 +122,8 @@ func main() {
 	// tekrarlanıp birbirinden SAPMA riski taşımaz.
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
-		fmt.Fprintf(out, "AND Arama Motoru %s — AND ekosistemini (forum + sohbet + kişisel site) yerelde ve ağda arayan bağımsız bir P2P eşi.\n\n", Version)
-		fmt.Fprintf(out, "Kullanım:\n  %s [seçenekler]\n\n", os.Args[0])
+		fmt.Fprintf(out, dil.T("AND Arama Motoru %s — AND ekosistemini (forum + sohbet + kişisel site) yerelde ve ağda arayan bağımsız bir P2P eşi.\n\n"), Version)
+		fmt.Fprintf(out, dil.T("Kullanım:\n  %s [seçenekler]\n\n"), os.Args[0])
 
 		yazdirGrup := func(baslik string, isimler ...string) {
 			fmt.Fprintln(out, baslik)
@@ -130,26 +134,26 @@ func main() {
 				}
 				varsayilan := ""
 				if f.DefValue != "" && f.DefValue != "false" {
-					varsayilan = fmt.Sprintf(" (varsayılan: %s)", f.DefValue)
+					varsayilan = dil.F(" (varsayılan: %s)", f.DefValue)
 				}
 				fmt.Fprintf(out, "  -%-10s %s%s\n", f.Name, f.Usage, varsayilan)
 			}
 			fmt.Fprintln(out)
 		}
-		yazdirGrup("Genel:", "version", "veri-dir", "log-level")
-		yazdirGrup("Arama (-search ile, TUI/ağ AÇILMAZ):", "search", "tip", "yazar", "limit", "sayfa", "json")
-		yazdirGrup("Site paylaşımı (-site ile, TUI/ağ AÇILMAZ):", "site", "protokol-kaydet", "protokol-kaldir")
-		yazdirGrup("Ağ:", "ttl")
+		yazdirGrup(dil.T("Genel:"), "version", "veri-dir", "log-level")
+		yazdirGrup(dil.T("Arama (-search ile, TUI/ağ AÇILMAZ):"), "search", "tip", "yazar", "limit", "sayfa", "json")
+		yazdirGrup(dil.T("Site paylaşımı (-site ile, TUI/ağ AÇILMAZ):"), "site", "protokol-kaydet", "protokol-kaldir")
+		yazdirGrup(dil.T("Ağ:"), "ttl")
 	}
 	flag.Parse()
 
 	if *bayrakSurum {
-		fmt.Println("AND Arama Motoru", Version)
+		fmt.Println(dil.T("AND Arama Motoru"), Version)
 		if BuildCommit != "" {
 			fmt.Println("  commit: ", BuildCommit)
 		}
 		if BuildDate != "" {
-			fmt.Println("  derleme:", BuildDate)
+			fmt.Println(dil.T("  derleme:"), BuildDate)
 		}
 		fmt.Printf("  go:      %s (%s/%s)\n", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 		return
@@ -165,14 +169,14 @@ func main() {
 		if err != nil {
 			hataVeCik(err)
 		}
-		fmt.Printf("and-site:// bağlantıları artık şu programla açılacak: %s\n", exeYolu)
+		fmt.Printf(dil.T("and-site:// bağlantıları artık şu programla açılacak: %s\n"), exeYolu)
 		return
 	}
 	if *bayrakProtokolKaldir {
 		if err := protokolKaldir(); err != nil {
 			hataVeCik(err)
 		}
-		fmt.Println("and-site:// bağlantı kaydı kaldırıldı.")
+		fmt.Println(dil.T("and-site:// bağlantı kaydı kaldırıldı."))
 		return
 	}
 
@@ -199,7 +203,7 @@ func main() {
 		hataVeCik(err)
 	}
 	if err := os.MkdirAll(dataDir, 0o700); err != nil {
-		hataVeCik(fmt.Errorf("veri dizini oluşturulamadı: %w", err))
+		hataVeCik(fmt.Errorf(dil.T("veri dizini oluşturulamadı: %w"), err))
 	}
 
 	// -site: bir paylaşım koduyla (bkz. index.go'nun SiteSayfasiBul'u)

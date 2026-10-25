@@ -8,6 +8,7 @@ package main
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"path/filepath"
 	"strings"
@@ -16,6 +17,8 @@ import (
 	"unicode"
 
 	_ "modernc.org/sqlite"
+
+	"github.com/lucian95511/and/dil"
 )
 
 const veriDosyaAdi = "arama_motoru.db"
@@ -76,12 +79,12 @@ type Depo struct {
 
 func depoAc(dataDir string) (*Depo, error) {
 	if dataDir == "" {
-		return nil, fmt.Errorf("veri dizini boş olamaz")
+		return nil, errors.New(dil.T("veri dizini boş olamaz"))
 	}
 	yol := filepath.Join(dataDir, veriDosyaAdi)
 	db, err := sql.Open("sqlite", "file:"+yol+"?_pragma=busy_timeout(5000)")
 	if err != nil {
-		return nil, fmt.Errorf("veritabanı açılamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("veritabanı açılamadı: %w"), err)
 	}
 	// AND'ın kendi internal/storage.Open'ıyla AYNI iki ayar, aynı gerekçeyle:
 	// WAL modu, sürekli gelen gossip yazımlarıyla (forum/chat/site) eşzamanlı
@@ -93,13 +96,13 @@ func depoAc(dataDir string) (*Depo, error) {
 	// serileştirir) daha en baştan engeller.
 	if _, err := db.Exec("PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;"); err != nil {
 		db.Close()
-		return nil, fmt.Errorf("veritabanı ayarları uygulanamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("veritabanı ayarları uygulanamadı: %w"), err)
 	}
 	db.SetMaxOpenConns(1)
 
 	if err := migrateAddSigColumns(db); err != nil {
 		db.Close()
-		return nil, fmt.Errorf("şema göçü başarısız: %w", err)
+		return nil, fmt.Errorf(dil.T("şema göçü başarısız: %w"), err)
 	}
 
 	stmts := []string{
@@ -153,7 +156,7 @@ func depoAc(dataDir string) (*Depo, error) {
 	for _, s := range stmts {
 		if _, err := db.Exec(s); err != nil {
 			db.Close()
-			return nil, fmt.Errorf("şema oluşturulamadı: %w", err)
+			return nil, fmt.Errorf(dil.T("şema oluşturulamadı: %w"), err)
 		}
 	}
 
@@ -167,7 +170,7 @@ func depoAc(dataDir string) (*Depo, error) {
 	var mevcutSayi int64
 	if err := db.QueryRow(`SELECT count(*) FROM arama_fts`).Scan(&mevcutSayi); err != nil {
 		db.Close()
-		return nil, fmt.Errorf("mevcut kayıt sayısı okunamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("mevcut kayıt sayısı okunamadı: %w"), err)
 	}
 	d.sayac.Store(mevcutSayi)
 	return d, nil
@@ -798,7 +801,7 @@ func (d *Depo) AraGelismisSirali(sorgu string, tip SonucTip, yazarKey string, si
 
 	rows, err := d.db.Query(sorguSQL, args...)
 	if err != nil {
-		return AramaSayfasi{}, fmt.Errorf("arama başarısız: %w", err)
+		return AramaSayfasi{}, fmt.Errorf(dil.T("arama başarısız: %w"), err)
 	}
 
 	var sonuclar []AramaSonucu
@@ -875,7 +878,7 @@ func (d *Depo) yazarinTumIcerigi(tip SonucTip, yazarKey string, limit, offset in
 
 	rows, err := d.db.Query(sorguSQL, args...)
 	if err != nil {
-		return AramaSayfasi{}, fmt.Errorf("arama başarısız: %w", err)
+		return AramaSayfasi{}, fmt.Errorf(dil.T("arama başarısız: %w"), err)
 	}
 
 	var sonuclar []AramaSonucu
@@ -964,7 +967,7 @@ func (d *Depo) SiteSayfasiBul(kod string) (AramaSonucu, bool, error) {
 		return AramaSonucu{}, false, nil
 	}
 	if err != nil {
-		return AramaSonucu{}, false, fmt.Errorf("site sayfası aranamadı: %w", err)
+		return AramaSonucu{}, false, fmt.Errorf(dil.T("site sayfası aranamadı: %w"), err)
 	}
 	if ts, perr := time.Parse(time.RFC3339Nano, tsStr); perr == nil {
 		s.OlusturmaTS = ts
@@ -995,7 +998,7 @@ func (d *Depo) SayimAl() (int, error) {
 func (d *Depo) TipDagilimiAl() (map[SonucTip]int, error) {
 	rows, err := d.db.Query(`SELECT tip, count(*) FROM arama_fts GROUP BY tip`)
 	if err != nil {
-		return nil, fmt.Errorf("tip dağılımı alınamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("tip dağılımı alınamadı: %w"), err)
 	}
 	defer rows.Close() //nolint:errcheck
 
@@ -1031,7 +1034,7 @@ func (d *Depo) EnAktifYazarlarAl(limit int) ([]YazarIstatistigi, error) {
 		ORDER BY n DESC, yazar_key
 		LIMIT ?`, limit)
 	if err != nil {
-		return nil, fmt.Errorf("en aktif yazarlar alınamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("en aktif yazarlar alınamadı: %w"), err)
 	}
 	defer rows.Close() //nolint:errcheck
 
@@ -1067,7 +1070,7 @@ func (d *Depo) GunlukIcerikTrendiAl(gun int) ([]GunlukSayim, error) {
 		GROUP BY g
 		ORDER BY g`, fmt.Sprintf("-%d days", gun))
 	if err != nil {
-		return nil, fmt.Errorf("günlük içerik trendi alınamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("günlük içerik trendi alınamadı: %w"), err)
 	}
 	defer rows.Close() //nolint:errcheck
 
@@ -1115,7 +1118,7 @@ type KayitliArama struct {
 func (d *Depo) TakipEkle(sorgu string, tip SonucTip, yazarKey string) error {
 	sorgu = strings.TrimSpace(sorgu)
 	if sorgu == "" && yazarKey == "" {
-		return fmt.Errorf("takip edilecek bir sorgu ya da yazar filtresi gerekli")
+		return errors.New(dil.T("takip edilecek bir sorgu ya da yazar filtresi gerekli"))
 	}
 	_, err := d.db.Exec(`INSERT OR IGNORE INTO kayitli_arama (sorgu, tip, yazar_key, olusturma_ts)
 		VALUES (?, ?, ?, ?)`, sorgu, string(tip), yazarKey, time.Now().UTC().Format(time.RFC3339Nano))
@@ -1141,7 +1144,7 @@ func (d *Depo) TakipListele() ([]KayitliArama, error) {
 	rows, err := d.db.Query(`SELECT id, sorgu, tip, yazar_key, olusturma_ts, yeni_eslesme, son_eslesme_ts
 		FROM kayitli_arama ORDER BY id DESC`)
 	if err != nil {
-		return nil, fmt.Errorf("kayıtlı aramalar alınamadı: %w", err)
+		return nil, fmt.Errorf(dil.T("kayıtlı aramalar alınamadı: %w"), err)
 	}
 	defer rows.Close() //nolint:errcheck
 
