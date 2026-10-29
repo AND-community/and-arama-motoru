@@ -45,7 +45,7 @@ Kimlik bilgilerini (`kimlik.json`, 12 kelimelik anımsatıcı) **asla** paylaşm
 
 Yeni özellik önermeden önce:
 
-- Bu programın **yalnızca okuyucu bir eş** olma sınırıyla (bkz. README'deki [Kapsam ve sınırlar](README.md#kapsam-ve-sınırlar)) uyumlu mu değerlendir — içerik oluşturma/moderasyon bu projenin kapsamı dışındadır, bunlar için AND'ın kendisine katkıda bulun.
+- Bu programın **yalnızca okuyucu bir eş** olma sınırıyla (bkz. README'deki [Kapsam ve sınırlar](README.tr.md#kapsam-ve-sınırlar)) uyumlu mu değerlendir — içerik oluşturma/moderasyon bu projenin kapsamı dışındadır, bunlar için AND'ın kendisine katkıda bulun.
 - Önerinin AND ile protokol uyumluluğunu bozup bozmadığını düşün (imza payload biçimi, GossipSub konu adları, senkron protokolleri AND ile bire bir aynı kalmalı).
 - Bir issue aç; motivasyonu, önerilen arayüzü ve alternatifler varsa açıkla.
 
@@ -118,7 +118,7 @@ yazimonerisi.go   — Levenshtein tabanlı "şunu mu demek istediniz?"
 main.go           — bayrak ayrıştırma, yaşam döngüsü, sıralı kapanış
 ```
 
-Genel kural: bu proje AND'ın iç (`internal/`) paketlerini **kullanmaz** ve AND'ı alt-süreç olarak da **çalıştırmaz**. AND'la paylaşılan tek kod, standart kütüphane dışında bağımlılığı olmayan `protokol` paketidir (konu adları, protokol kimlikleri, kategoriler). Bu paket yan klasördeki AND'dan (`../AND`, `go.mod`'daki `replace`) gelir. İleti ve imza biçimlerinin uyumu AND'ın `protokol/testdata/` örnekleriyle test edilir: AND'ın ileti biçimini değiştiren biri örnekleri `AND_ALTIN_GUNCELLE=1` ile yeniden üretir ve bu projenin `protokol_altin_test.go` testleri yeni örnekleri doğrulayana kadar burayı da günceller.
+Genel kural: bu proje AND'ın iç (`internal/`) paketlerini **kullanmaz** ve AND'ı alt-süreç olarak da **çalıştırmaz**. AND'la paylaşılan kod, standart kütüphane dışında bağımlılığı olmayan iki pakettir: `protokol` (konu adları, protokol kimlikleri, kategoriler) ve `dil` (arayüz çevirileri). İkisi de yan klasördeki AND'dan (`../AND`, `go.mod`'daki `replace`) gelir. İleti ve imza biçimlerinin uyumu AND'ın `protokol/testdata/` örnekleriyle test edilir: AND'ın ileti biçimini değiştiren biri örnekleri `AND_ALTIN_GUNCELLE=1` ile yeniden üretir ve bu projenin `protokol_altin_test.go` testleri yeni örnekleri doğrulayana kadar burayı da günceller.
 
 ---
 

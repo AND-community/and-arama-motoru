@@ -52,7 +52,7 @@ Düzeltme yayınlandığında, izin verirsen katkıcılar listesinde adını bel
 Aşağıdaki durumlar bu politika kapsamında **değildir**:
 
 - Bu programa bağlı olmayan üçüncü taraf kütüphanelerdeki açıklar — ilgili projeye bildir (bkz. aşağıdaki "Bilinen sınırlamalar"daki DHT istisnası)
-- AND'ın kendi kaynak kodundaki açıklar — bunları [AND'ın SECURITY.md](../AND/SECURITY.md) dosyasına bildir
+- AND'ın kendi kaynak kodundaki açıklar — bunları [AND'ın SECURITY.md](https://github.com/AND-community/AND/blob/main/SECURITY.md) dosyasına bildir
 - Ağ altyapısı saldırıları (DoS, BGP manipülasyonu) — bu program sunucusuz bir P2P eştir
 - Kullanıcının kendi cihazında kendi `kimlik.json` dosyasına erişmesi
 - Sosyal mühendislik — kullanıcının kendi onayıyla paylaştığı 12 kelimelik anımsatıcı ya da site paylaşım kodu

@@ -1,122 +1,149 @@
-# AND Arama Motoru
+# AND Search Engine
+
+**English** · [Türkçe](README.tr.md)
 
 ![Go](https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoColor=white)
-![Lisans](https://img.shields.io/badge/lisans-AGPL--3.0-blue)
+![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey)
 
-**AND** ekosistemindeki (P2P forum + sohbet + kişisel site) içeriği arayan, **AND'dan tamamen bağımsız** çalışan bir program.
-AND'ın kendisi kapalı olsa bile, bu program kendi ağ kimliğiyle ve kendi libp2p bağlantısıyla AND'ın P2P ağına doğrudan bir eş (peer) olarak katılır, içeriği toplayıp yerel bir tam metin indekste arattırır — hem AND'ın kaynak kodunu import etmeden hem de AND'ı bir alt-süreç olarak çalıştırmadan.
+A program that searches the content of the **[AND](https://github.com/AND-community/AND)**
+ecosystem (P2P forum + chat + personal sites) and runs **completely independently of AND**. ("Arama
+motoru" is Turkish for "search engine".)
+Even while AND itself is closed, this program joins AND's P2P network directly as a peer with its
+own network identity and its own libp2p connection, collects the content and makes it searchable in a
+local full-text index — without importing AND's internal packages and without running AND as a
+subprocess.
 
 ---
 
-## İçindekiler
+## Contents
 
-- [Genel Bakış](#genel-bakış)
-- [Özellikler](#özellikler)
-- [Neden "eklenti" değil de bağımsız bir program?](#neden-eklenti-değil-de-bağımsız-bir-program)
-- [Mimari](#mimari)
-- [Gereksinimler](#gereksinimler)
-- [Kurulum ve çalıştırma](#kurulum-ve-çalıştırma)
-- [Kullanım](#kullanım)
-- [Komut satırı seçenekleri](#komut-satırı-seçenekleri)
-- [Site sayfası paylaşımı](#site-sayfası-paylaşımı)
-- [Gelişmiş sorgu sözdizimi](#gelişmiş-sorgu-sözdizimi)
-- [Tema](#tema)
-- [Diller](#diller)
-- [Veri dizini dosyaları](#veri-dizini-dosyaları)
-- [Kapsam ve sınırlar](#kapsam-ve-sınırlar)
-- [Ekosistem](#ekosistem)
-- [Katkı](#katkı)
-- [Güvenlik](#güvenlik)
-- [Lisans](#lisans)
-
----
-
-## Genel Bakış
-
-AND Arama Motoru, AND'ın P2P forum/sohbet/kişisel-site ağına kendi bağımsız kimliğiyle katılan, ağda dolaşan içeriği topluca indeksleyip Google/Yandex benzeri bir arama deneyimiyle (tam metin arama, alakalılık sıralaması, yazım önerisi, sayfalama) aratmanı sağlayan bir terminal uygulamasıdır (TUI) ve aynı zamanda betiklenebilir bir komut satırı aracıdır (CLI).
-
-AND'ın iç paketlerini kullanmaz, AND'ı bir alt-süreç olarak da çalıştırmaz — protokolleri (imza biçimi, senkronizasyon akışı) bağımsız olarak yeniden uygular; yalnızca konu adları ve protokol kimlikleri AND'la paylaşılan `protokol` paketinden gelir, imza biçimlerinin AND'ınkiyle aynı kaldığı da AND'ın ürettiği örnek iletilerle (`../AND/protokol/testdata/`, bkz. `protokol_altin_test.go`) test edilir ve ağa **gerçek, kendi başına bir eş** olarak katılır. Bu yüzden AND hiç çalışmıyor olsa bile ağdaki içeriği görebilir ve arattırabilirsin.
+- [Overview](#overview)
+- [Features](#features)
+- [Why a standalone program and not a "plugin"?](#why-a-standalone-program-and-not-a-plugin)
+- [Architecture](#architecture)
+- [Requirements](#requirements)
+- [Installation and running](#installation-and-running)
+- [Usage](#usage)
+- [Command-line options](#command-line-options)
+- [Sharing site pages](#sharing-site-pages)
+- [Advanced query syntax](#advanced-query-syntax)
+- [Theme](#theme)
+- [Languages](#languages)
+- [Data directory files](#data-directory-files)
+- [Scope and limits](#scope-and-limits)
+- [Ecosystem](#ecosystem)
+- [Contributing](#contributing)
+- [Security](#security)
+- [License](#license)
 
 ---
 
-## Özellikler
+## Overview
 
-| Özellik | Açıklama |
+The AND Search Engine is a terminal application (TUI) — and at the same time a scriptable
+command-line tool (CLI) — that joins AND's P2P forum/chat/personal-site network with its own
+independent identity, indexes the content travelling on the network and lets you search it with a
+Google/Yandex-like experience (full-text search, relevance ranking, spelling suggestions, paging).
+
+It doesn't use AND's internal packages and doesn't run AND as a subprocess — it re-implements the
+protocols (signature format, sync flow) independently; only the topic names and protocol IDs come
+from the `protokol` package shared with AND, and that the signature formats stay identical to AND's
+is tested with sample messages produced by AND (`../AND/protokol/testdata/`, see
+`protokol_altin_test.go`). It joins the network as a **real peer of its own**. That is why you can
+see and search the content on the network even when AND isn't running at all.
+
+---
+
+## Features
+
+| Feature | Description |
 |---------|----------|
-| Tam bağımsız çalışma | AND'a hiçbir bağlantı/ortam değişkeni gerekmez; kendi kimliği ve ağ bağlantısıyla çalışır |
-| Tam metin arama | SQLite FTS5 tabanlı, Türkçe aksan-duyarsız, `bm25()` + tazelik boostuyla sıralanan arama |
-| Çok atlamalı ağ araması | Kendi P2P protokolüyle (`/and-arama-motoru/1.0.0`) ağdaki diğer düğümlerin indekslerinde de arar |
-| Gelişmiş sorgu sözdizimi | `"tam ifade"`, `-hariç`, `terim1 OR terim2` desteklenir |
-| Yazım önerisi | Sıfır sonuçta "şunu mu demek istediniz?" önerisi (ekstra bağımlılık gerekmez) |
-| Yazara göre arama | Bir sonucun yazarının tüm içeriğini tek tuşla listele |
-| Betiklenebilir CLI | `-search`/`-site` ile TUI/ağ açmadan yerel indekste ara, `-json` ile makine-okur çıktı |
-| Kişisel site paylaşım kodu | Bir site sayfasını `yazarAnahtarı/slug` koduyla, ya da (Windows ve Linux'ta) tek tıkla açılan `and-site://` bağlantısıyla doğrudan paylaş |
-| Tıklanabilir bağlantılar | Sonuçlardaki `http(s)://` ve sayfa içi `and-site://` bağlantıları terminalde gerçekten tıklanabilir |
-| Görsel kimlik | AND ile aynı tasarım dili (palet, logo, liste satırları, kısayol satırı); özelleştirilebilir tema |
-| Panik kalkanı | Güvenilmeyen ağ içeriğindeki bir ayrıştırma hatası programı çökertmez |
-| Çökme-güvenli depolama | Kimlik/eş listesi dosyaları atomik yazımla korunur |
-| Sıralama modu | Sonuçları Alaka (bm25+tazelik) ya da yalnızca Tarih'e (Yeni) göre sırala (`ctrl+r`) |
-| Kayıtlı arama / "takip et" | Bir aramayı takibe al; ağdan yeni eşleşen içerik geldikçe bir "N yeni" rozetiyle bildirim al |
-| Hedefli P2P sorgu | Bir ağ sonucunun geldiği eşi doğrudan hedefleyip yalnızca onun güncel indeksini sorgula |
-| Eş güven göstergesi | Durum ekranında, doğrudan sorgulanan eşlerin geçerli/geçersiz imzalı sonuç oranını gör |
-| Site haritası ve "ağa düşen" kod arama | Yalnızca bir yazar anahtarıyla o yazarın TÜM site sayfalarını listele; yerelde olmayan bir kod otomatik olarak ağda da aranır |
-| Sayfa içi çapraz bağlantı ve QR kodu | Site sayfası gövdesindeki `and-site://` bağlantılarında gezin; paylaşım kodunu terminalde QR kod olarak göster |
-| Düzenleme senkronu | Bir site sayfasının DÜZENLENMİŞ hali de senkronizasyonla geriye dönük yakalanır — yalnızca hiç bilinmeyen sayfalar değil |
+| Fully standalone | Needs no connection to AND and no environment variables; runs with its own identity and network connection |
+| Full-text search | SQLite FTS5 based, accent-insensitive for Turkish, ranked by `bm25()` + a freshness boost |
+| Multi-hop network search | Also searches the indexes of other nodes on the network with its own P2P protocol (`/and-arama-motoru/1.0.0`) |
+| Advanced query syntax | `"exact phrase"`, `-exclude` and `term1 OR term2` are supported |
+| Spelling suggestions | A "did you mean?" suggestion when there are zero results (no extra dependency) |
+| Search by author | List all content by a result's author with one key |
+| Scriptable CLI | Search the local index with `-search`/`-site` without opening the TUI or the network; machine-readable output with `-json` |
+| Personal site share codes | Share a site page directly with an `authorKey/slug` code or (on Windows and Linux) with an `and-site://` link that opens with one click |
+| Clickable links | `http(s)://` links in results and `and-site://` links inside pages are really clickable in the terminal |
+| Visual identity | The same design language as AND (palette, logo, list rows, hint line); customisable theme |
+| Panic shield | A parsing error in untrusted network content doesn't crash the program |
+| Crash-safe storage | The identity/peer list files are protected with atomic writes |
+| Sort mode | Sort results by Relevance (bm25+freshness) or only by Date (Newest) (`ctrl+r`) |
+| Saved searches / "follow" | Follow a search; get notified with an "N new" badge as newly matching content arrives from the network |
+| Targeted P2P query | Query only the up-to-date index of the peer a network result came from |
+| Peer trust indicator | On the Status screen, see the ratio of validly/invalidly signed results of the peers queried directly |
+| Site map and code search that "falls back to the network" | List ALL site pages of an author with just their author key; a code that isn't available locally is searched on the network automatically |
+| In-page cross links and QR codes | Follow `and-site://` links in a site page's body; show a share code as a QR code in the terminal |
+| Edit sync | The EDITED version of a site page is also caught retroactively through sync — not only pages that were never seen before |
 
 ---
 
-## Neden "eklenti" değil de bağımsız bir program?
+## Why a standalone program and not a "plugin"?
 
-Bu klasör AND'ın Go modülünün **dışında**: `AND/internal/...` paketlerini (ağ, forum, kimlik doğrulama mantığı) Go'nun paket görünürlük kuralları gereği import edemez. Bu yüzden AND'ın protokollerini (aşağıda listelenen) **bağımsız olarak yeniden uyguladı** — aynı GossipSub konuları, aynı imza biçimi, aynı senkronizasyon protokolü, ama kendi kodu. Sonuç: AND çalışmasa bile, bu program ağa kendi başına bağlanıp aynı içeriği görebilen gerçek bir eş.
+This folder is **outside** AND's Go module: under Go's package visibility rules it can't import the
+`AND/internal/...` packages (network, forum, authentication logic). That is why it **re-implements
+AND's protocols independently** (listed below) — the same GossipSub topics, the same signature
+format, the same sync protocol, but its own code. The result: a real peer that can connect to the
+network on its own and see the same content, even when AND isn't running.
 
-## Mimari
+## Architecture
 
-1. **Kendi kimliği** (`identity.go`) — AND'ın kullandığı aynı türetme şemasıyla (BIP39 mnemonic → ed25519 anahtar) ama kullanıcının asıl AND kimliğinden tamamen bağımsız, ilk çalıştırmada üretilip `~/.and-arama-motoru/kimlik.json`'a kaydedilir.
-2. **Ağ katmanı** (`network.go`) — kendi libp2p host'u; AND ile aynı eş keşif mekanizması: genel IPFS önyükleme eşlerine dayanan bir DHT (rendezvous: `and-community/1.0.0`) + yerel ağda mDNS (`and-community-mdns`).
-3. **İçerik alımı** (`forum.go`, `chat.go`, `site.go`) — AND'ın forum (`github.com/lucian95511/and/forum` konusu), sohbet (`.../chat` konusu) ve kişisel site (`.../site/1.0.0` konusu) GossipSub yayınlarına abone olur; her post/yanıt/mesajın/sayfanın ed25519 imzasını AND'ın kendisiyle **bire bir aynı payload biçimiyle** doğrular — imzasız ya da kurcalanmış hiçbir şey indekslenmez. Yeni bağlanan her eşle AND'ın senkronizasyon protokollerini (`/and/sync/1.0.0`, `/and/chatsync/1.0.0`, `/and/sitesync/1.0.0`) konuşarak geçmişi de geriye dönük toplar. Site sayfaları forum post'larından/sohbet mesajlarından FARKLI olarak DEĞİŞEBİLİR (aynı yazar/slug yeniden yayınlanınca tamamen değişir) — bu yüzden yaz-bir-kez `Ekle` yerine "en yeni kazanır" upsert semantiğine sahip `Depo.EkleYaGuncelle` kullanılır.
-4. **Yerel indeks** (`index.go`) — SQLite FTS5, Türkçe aksan-duyarsız arama; kendi ayrı veritabanı dosyası (`~/.and-arama-motoru/arama_motoru.db`), AND'ın `forum.db`'sine hiç dokunmaz. Sıralama, sütun ağırlıklı `bm25()` (başlık eşleşmesi gövdeden çok daha değerlidir) ile bir tazelik boostunu birleştirir — eşit derecede alakalı sonuçlar arasında yeni içerik hafifçe öne çıkar. Sonuçlar eşleşen terimi vurgulayan bir alıntıyla (snippet) gelir; bir yanıt sonucu, ait olduğu konunun başlığını/kategorisini de (konu zaten senkronize olduysa) gösterir.
-5. **Kendi P2P arama protokolü — ÇOK ATLAMALI** (`search.go`) — bu programın AYRI bir libp2p protokolü (`/and-arama-motoru/1.0.0`): bu programın başka bir kopyasını çalıştıran eşlere doğrudan bir stream üzerinden sorgu gönderip onların kendi indekslerinden sonuç alabilirsin ("ağda ara", `ctrl+n`). AND'ın DM kanalının aksine boyut sınırı yok (tam gövde taşınır) ve gönderenin kimliği bağlantının kendisinden (sahtesi mümkün olmayan şekilde) bilinir. Sorgu yalnızca DOĞRUDAN bağlı eşlerle sınırlı değildir: her düğüm, kendi TTL'i (varsayılan 3 atlama) tükenmedikçe sorguyu kendi eşlerine de ileterek yanıtları toplar ve tek bir birleşik sonuçla geri döner (klasik "flood & aggregate" P2P arama deseni) — böylece ağın birkaç atlama ötesindeki bir düğümün indeksindeki içerik de bulunabilir. Aynı sorgunun ağda sonsuz dönmesi/gereksiz tekrarlanması, paylaşılan bir sorgu ID'sinin her düğümde yalnızca bir kez işlenmesiyle (bkz. `sorguOnbellek`) önlenir. Her sonuç, ONU GERÇEKTEN indeksleyen düğümün peer ID'siyle etiketlenir (ara düğümler tarafından değiştirilmeden taşınır) — kaç atlama öteden geldiğinden bağımsız olarak gerçek kaynağı bilirsin.
-6. **Bilinen eş listesi** (`peers.go`) — şu an bağlı olduğun eşlerin adresleri periyodik olarak `~/.and-arama-motoru/bilinen_peerler.json`'a yazılır; bir sonraki açılışta DHT/mDNS keşfini beklemeden bunlara doğrudan bağlanmayı dener, böylece yeniden başlatma sonrası bağlantı gözle görülür şekilde hızlanır.
-7. **Seviyeli, boyut sınırlı tanılama günlüğü** (`log.go`) — TUI'yi hiç etkilemeden (stdout'a değil), `[bilgi]`/`[uyarı]`/`[hata]` seviyeleriyle yaşam döngüsü olaylarını ve hataları `~/.and-arama-motoru/gunluk.log`'a yazar — "neden hiç sonuç yok" gibi sorunları teşhis etmek için. Dosya 5 MB'ı aşınca otomatik olarak `.old`'a döndürülüp sıfırdan başlanır, uzun süre açık kalan bir işlemde sınırsız büyümez. Kullanılan kütüphanelerin kendi günlükleri de (standart `log` paketi ve libp2p'nin go-log'u) terminal yerine bu dosyaya gider. Önceden Windows'ta mDNS'in sanal ağ arayüzleri için tekrarladığı "Failed to set multicast interface" uyarıları tam ekran arayüzün üstüne yazılıp ekranı bozuyordu; bu zararsız uyarı artık günlüğe yalnızca bir kez yazılır.
-8. **Sıralı, doğru kapanış** (`main.go`) — Ctrl+C/kapatma sinyali önce tüm arka plan goroutine'lerine dur der ve GERÇEKTEN durmalarını bekler (bilinen eş listesinin son bir kez kaydedilmesi dahil), ancak ONDAN SONRA ağ/veritabanı kaynaklarını kapatır — ters sırada yapmak, hâlâ çalışan bir işlemin kapalı bir kaynağı kullanmaya çalışmasına ya da kapanış anındaki kaydın hiç yapılamamasına yol açabilirdi.
-9. **Bağlantı açma** (`links.go`) — sonuç detayında geçen `http(s)://` bağlantıları otomatik bulunup numaralandırılır ve OSC 8 terminal hyperlink dizisiyle **gerçekten fare ile tıklanabilir** hale getirilir (Windows Terminal, VS Code'un tümleşik terminali, iTerm2, çoğu modern Linux terminali destekler — tıklanınca terminal url'yi doğrudan kendisi açar). Bunu desteklemeyen terminaller için de `o` (ilki) ya da `1`-`9` tuşlarıyla işletim sisteminin varsayılan tarayıcısında açma imkânı vardır (AND'ın DeltaX eklentisindeki `klasoruAc` ile aynı desen). Yalnızca http(s) şemaları tanınır — `file://`, `javascript:` gibi başka şemalar kasıtlı olarak reddedilir; içerik güvenilmeyen eşlerden geldiğinden bu önemli bir güvenlik sınırı.
-10. **Betiklenebilir CLI modu** (`cli.go`) — `-search "sorgu"` bayrağı TUI'yi ve ağı HİÇ açmadan yerel indekste arar, sonuçları stdout'a yazıp çıkar (`-json` ile makine tarafından okunabilir çıktı, `-tip` ile tür filtresi, `-limit` ile sonuç sayısı, `-sayfa` ile sayfalama). Sonuç sıfırsa ve bir "şunu mu demek istediniz?" adayı bulunursa, `stdout`'u (ör. `| jq`) bozmadan `stderr`'e yazılır.
-11. **Panik kalkanı** — içerik ağdaki GÜVENİLMEYEN eşlerden geldiğinden (bkz. yukarıdaki güvenlik ilkesi), ayrıştırma/işleme mantığındaki beklenmeyen bir kenar durumu artık TÜM PROGRAMI çökertmez: hem TUI'nin `Update` döngüsü hem de içerik/sorgu işleyen tüm arka plan goroutine'leri (`recoverGoroutine`) bir panik kalkanıyla sarılıdır — bir panik olursa günlüğe yazılıp yoksayılır, program çalışmaya devam eder.
-12. **Ayarlanabilir günlük seviyesi ve TTL** (`main.go`) — `-log-level` ile tanılama günlüğünün ayrıntı düzeyi (`hata`/`uyari`/`bilgi`), `-ttl` ile "ağda ara"nın varsayılan atlama sayısı (1-5) çalışma zamanında ayarlanabilir.
-13. **Yazara göre arama — "bu yazarın diğer içerikleri"** (`index.go`, `search.go`) — sonuç detayında `a` tuşu, seçili sonucun yazar anahtarına (spoofable YazarAd değil, gerçek kimlik) filtrelenmiş bir aramaya geçer; bu filtre anahtar kelime GEREKTİRMEZ — boş bırakılırsa o yazarın tüm içeriği en yeniden eskiye listelenir (gerçek arama motorlarındaki "yazar sayfası" davranışı). Hem yerel indekste hem "ağda ara"da (ağ protokolü de yazar filtresini taşır) çalışır; `ctrl+y` ile temizlenir. CLI'da karşılığı `-yazar <anahtar>` (`-search` olmadan bile tek başına kullanılabilir).
-14. **Performans: WAL modu ve bağlantı havuzu** (`index.go`) — SQLite, AND'ın kendi `internal/storage`'ıyla aynı gerekçeyle WAL günlük modunda ve tek bağlantıya sabitlenmiş (`SetMaxOpenConns(1)`) çalışır: sürekli gelen gossip yazımlarıyla arama sorguları arasındaki kilit çekişmesini azaltır. `bilinen(tip)` üzerine bir indeks eklendi — sync'te her yeni eşe gönderilen "bilinen ID" listesi artık tam tablo taraması yapmıyor.
-15. **Çökme-güvenli dosya yazımı** (`fsutil.go`) — `kimlik.json` ve `bilinen_peerler.json`, yarım/bozuk bırakılabilecek doğrudan bir yazma yerine, geçici dosya + atomik yeniden adlandırma (`atomicYaz`) ile yazılır; işlem tam yazma sırasında kesintiye uğrarsa (güç kesintisi, kill) dosya ya tamamen eskisi ya da tamamen yenisiyle kalır.
-16. **AND ile aynı görsel dil ve gerçek bir tema sistemi** (`view.go`, `tema.go`) — AND'ın ortak tasarım sistemi `internal/ui` burada bağımsız olarak tekrarlanır (program ayrı bir Go modülü olduğu için paketi import edemez): AND'ın varsayılan "Klasik" temasıyla aynı ANSI 256 kod noktaları, aynı blok harfli "AND" logosu, seçili satırda tam genişlik zemin ve `▌` vurgu çubuğu, `━`/`─` doluluk çubukları ve tek satırlık `✓`/`✗` bildirimleri. Her ekranın altındaki satır artık eski tek satırlık durum çubuğu değil, AND'daki gibi "tuş açıklama" çiftlerinden oluşan bir kısayol satırıdır; sığmayan çift bölünmeden alt satıra geçer. Uzun satırlar (alıntılar, bağlantılar, paylaşım kodları) ekran genişliğine göre kırpılır ya da sarılır, çerçeve hiçbir genişlikte taşmaz. AND gibi **terminalin tamamını kullanır**: her ekran tam ekran bir çerçevenin içindedir (üst kenarda `AND` rozeti, tema adı ve sürüm), kısayol satırı ve bildirimler her zaman en alttadır, açılış ekranı çerçevenin ortasında durur. Sonuç gövdesi, kartlar ve giriş kutuları en fazla 100 sütun genişlikte kalır; Durum ekranının kartları geniş terminallerde iki sütuna dizilir. Renkler sabit değildir: program açılışta **AND'da seçili temayı** okur, kendi `~/.and-arama-motoru/tema.json`'u varsa o önceliklidir (bkz. [Tema](#tema)).
-17. **Kişisel site sayfaları da aranabilir** (`site.go`) — AND'ın kişisel site özelliğinin (`internal/site`) bağımsız bir yeniden uygulaması: forum/sohbetle AYNI güvenlik disipliniyle (ed25519 imza, sanal olmayan gerçek kimlik) sayfaları indeksler, ama forum post/yanıtlarının "yaz-bir-kez" doğasından FARKLI olarak DEĞİŞEBİLİR bir içerik türü olduğunu bilir: aynı yazar/slug yeniden yayınlandığında indeksteki eski sürümün üzerine yazılır (silinip yeniden eklenmez), geç gelen (replay) bir eski sürüm ise elimizdeki daha yeniyi asla ezmez.
-18. **Google/Yandex tarzı gelişmiş sorgu sözdizimi** (`index.go`'nun `ftsSorguOlustur`'u) — `"tam ifade"` (bitişik eşleşme), `-hariç` (sonuçlardan dışlama), `terim1 OR terim2` (ikisinden biri) desteklenir; hiçbiri kullanılmazsa çıktı eski davranışla bayt bayt aynıdır (geriye dönük uyumlu). FTS5'in kendi mini sorgu diline enjeksiyon mümkün değildir — her terim kaçırılıp kendi tırnaklı literal'i içine sarılır.
-19. **"Şunu mu demek istediniz?" yazım önerisi** (`yazimonerisi.go`) — yeni bir bağımlılık GEREKTİRMEZ: SQLite FTS5'in `fts5vocab` uzantısıyla indeksteki tüm benzersiz terimleri okuyup elle yazılmış bir Levenshtein (düzenleme mesafesi) fonksiyonuyla en yakın bilinen terimi bulur. Yalnızca arama SIFIR sonuç döndürdüğünde tetiklenir; TUI'de `ctrl+d` ile öneriyi doğrudan uygulayabilirsin.
-20. **Sayfalama** (`index.go`, `model.go`) — hem yerel aramada (`pgup`/`pgdown`) hem CLI'da (`-sayfa`) sonuçlar sayfa sayfa gezilebilir; ekstra bir `COUNT(*)` sorgusu koşturmadan "sonraki sayfa var mı" bilgisini vermek için her sayfa istenen sayıdan bir fazla satır çekilip son satır atılır.
-21. **Arama konsolu istatistikleri** (`index.go`'nun `TipDagilimiAl`/`EnAktifYazarlarAl`/`GunlukIcerikTrendiAl`'ı) — Durum ekranı, Google Search Console/Yandex Webmaster'a benzer şekilde içerik türü dağılımını, en aktif yazarları ve son 14 günün günlük içerik trendini gösterir. Bu sorgular yalnızca Durum ekranına GİRİLDİĞİNDE bir kez koşturulur (mevcut 2 saniyelik durum tazelemesinde DEĞİL) — `SetMaxOpenConns(1)` ile tek bağlantıya sabitlenmiş veritabanında gereksiz yük oluşturmamak için.
-22. **Kişisel site sayfaları için paylaşım kodu** (`index.go`'nun `SiteSayfasiBul`'u, "Kodla Git" ekranı) — bir site sayfasının kişisel siteler için zaten var olan kimliği (`yazarAnahtarı/slug`) artık Sonuç Detayı'nda **seçilebilir bir kod** olarak gösterilir (kopyalayıp birine mesajla/mailla gönderebilirsin). Alıcı bu kodu ana menüdeki "Kodla Git" ekranına yapıştırıp `enter`'a basınca (ya da CLI'da `-site <kod>` ile) sayfayı — o yazarı önce forumda/sohbette "tesadüfen bulmayı BEKLEMEDEN" — doğrudan açabilir. CLI'daki `-site` bayrağı YEREL bir sorgu olarak kalır (ağa çıkmaz, betiklenebilirliğin öngörülebilir/hızlı kalması için); TUI'deki "Kodla Git" ekranı ise madde 25'te açıklanan ağ geri düşümüne sahiptir. **Önemli sınır:** bu, yalnızca AND ya da AND Arama Motoru çalıştıran ve aynı P2P ağına bağlı kişiler arasında işler — gerçek bir web adresi/tarayıcı linki DEĞİLDİR (P2P mimarisinde bunun için ayrı, daha büyük bir HTTP köprüsü gerekir, kapsam dışıdır).
-23. **Sıralama modu: Alaka ⇄ Yeni** (`index.go`'nun `SiralamaModu`/`AraGelismisSirali`'si, Ara ekranının `ctrl+r`'ı) — varsayılan (Alaka) sıralama sütun ağırlıklı `bm25()` + tazelik boostunu kullanmaya devam eder; `ctrl+r` bunu YOK SAYIP sonuçları saf kronolojik (en yeniden eskiye) sıralayan bir moda geçirir. `AraGelismis`'in dış imzası (mevcut çağıranlar: CLI, testler) KORUNUR — yeni `AraGelismisSirali` bunun üzerine ekstra bir parametre ekleyen bir üst kümedir.
-24. **Kayıtlı arama / "takip et"** (`index.go`'nun "Kayıtlı arama takibi" bölümü, Ara ekranının `ctrl+t`'si, yeni "Takip Edilenler" ekranı) — geçerli sorgu/tür/yazar kombinasyonunu YEREL bir deftere kaydeder; bundan sonra forum/sohbet/site gossip'inden **gerçekten yeni** bir kayıt bu takibe uyduğunda (aynı `ftsSorguOlustur`/FTS5 MATCH mantığı, "bu kayıt sorgu X ile eşleşir mi" sorusu için YENİDEN KULLANILIR) bir sayaç artar; Ana Menü'de "Takip Edilenler (N)" rozeti olarak görünür. Tamamen yerel bir defterdir — ağa hiçbir şey yayınlanmaz, salt-okunur eş ilkesini bozmaz.
-25. **Hedefli P2P sorgu** (`search.go`'nun `aramaTekEsIstegi`'si, Sonuç Detayı'nın `t` tuşu) — bir ağ sonucunun `KaynakPeer`'ını, TÜM eşlere yayılan `ctrl+n`'in aksine TEK bir hedef olarak (TTL=1, ileri iletim yok) sorgular; "bu eşin güncel indeksinde başka ne var" diye kontrol etmek için. Aynı `/and-arama-motoru/1.0.0` protokolünü ve TEK boğaz noktasındaki (`aramaIstekGonderRaw`) imza doğrulamasını kullanır, ayrı bir protokol GEREKTİRMEZ.
-26. **Eş güven göstergesi** (`search.go`'nun `esGuvenDefteri`'si, Durum ekranı) — bu düğümün DOĞRUDAN sorguladığı her eşin kaç geçerli/geçersiz imzalı sonuç döndürdüğünü, süreç ömürlü bellek-içi bir defterde izler ve Durum ekranında en çok etkileşimde bulunulan 5 eşi listeler. Bu bir ENGELLEME mekanizması DEĞİLDİR (güvenlik zaten `dogrulaAgSonucu`'nun kendisiyle sağlanır) — yalnızca "hangi eşler şüpheli davranıyor" diye görsel bir ipucudur; diske yazılmaz, her yeniden başlatmada sıfırlanır.
-27. **"Kodla Git" ağa düşsün** (`model.go`'nun `agdaSiteAraCmd`'si) — bir paylaşım kodu YEREL indekste bulunamadığında (ve bağlı eş varsa), TUI otomatik olarak kodun yazar anahtarını hedefleyen bir ağ sorgusu (madde 5'teki AYNI arama protokolü, `Metin=""` + `Tip=TipSite` + `YazarKey`) tetikler ve tam `KaynakID` eşleşmesini arar — henüz bu düğüme senkronize OLMAMIŞ ama ağda hâlâ mevcut bir sayfa da bu şekilde bulunabilir. Bulunan sayfa (zaten imza doğrulamasından geçmiş olduğundan) güvenle yerel indekse de kalıcılaştırılır.
-28. **Site haritası** (`model.go`'nun "Kodla Git" ekranı) — "Kodla Git"e `yazarAnahtarı/slug` yerine yalnızca `yazarAnahtarı` (hiç `/` içermeyen bir girdi) yapıştırırsan, TEK bir sayfa yerine o yazarın TÜM site sayfaları (`index.go`'nun `yazarinTumIcerigi`'si YENİDEN KULLANILIR) Ara ekranında TipSite filtresiyle listelenir; oradan `ctrl+n` ile aynı yazarın ağdaki diğer sayfalarını da arayabilirsin.
-29. **Sayfa içi çapraz bağlantı** (`links.go`'nun `siteBaglantilariBul`'u, Sonuç Detayı'nın `g` tuşu) — bir site sayfası gövdesinde geçen `and-site://` bağlantıları (bkz. madde 22) artık `http(s)://` bağlantıları gibi ayrıca listelenip OSC 8 ile tıklanabilir kılınır; `g` tuşu, protokol kaydı GEREKMEDEN, uygulama İÇİNDEN ilk iç bağlantıya gider (yerelde yoksa madde 27'deki AYNI ağ geri düşümüyle). Kişisel bir "wiki" gibi sayfadan sayfaya gezinmeyi sağlar.
-30. **Paylaşım kodu için QR kod** (`qr.go`, Sonuç Detayı'nın `k` tuşu) — bir site sayfasının `and-site://` bağlantısını, `k` tuşuna basınca terminalde yarım blok karakterleriyle (▀▄█) taranabilir bir QR koda çevirir (`skip2/go-qrcode`, saf Go — CGO gerektirmez); kodu bir cihaza kopyala-yapıştır yapmak yerine telefonla doğrudan okutmak için.
-31. **`and-site://` protokol kaydı artık Linux'ta da var** (`protokol_linux.go`) — Windows'un (`protokol_windows.go`, HKCU registry) yanı sıra Linux masaüstü ortamları için `xdg-mime`/`.desktop` dosyası mekanizmasıyla (yalnızca `$HOME/.local/share/applications` altına, kök yetkisi GEREKMEZ) `-protokol-kaydet`/`-protokol-kaldir` artık Linux'ta da çalışır. macOS için bu hâlâ eksik — Launch Services (`lsregister`) çıplak bir ikiliyi değil, `CFBundleURLTypes` bildiren gerçek bir `.app` paketini kayıt birimi olarak kabul eder; bu, `go build`'in tek bir ikili üretmesinin ötesinde ayrı bir paketleme adımı gerektirir, kapsam dışı bırakıldı.
-32. **Düzenlenmiş site sayfaları da senkronla gelir** (`site.go`'nun `siteSyncIstek.KnownVersions`'ı, `index.go`'nun `SiteSurumleriAl`'ı) — site sync isteği artık yalnızca bilinen slug'ları değil, elimizdeki her sayfanın sürümünü (`UpdatedAt`, nanosaniye hassasiyetinde) de taşır; AND'ın sürüm farkına duyarlı yanıtlayıcısı (`internal/site/sync.go`) bilinen bir slug'ı, elindeki sürüm DAHA YENİYSE yine gönderir. Önceden bir sayfanın düzenlenmiş hali bu düğüme senkronla hiç ulaşmazdı — yalnızca o an canlı gossip'i görmüşsek indekslenirdi. Bu alanı tanımayan eski bir AND sürümü onu yok sayar (eski davranış); istek AND'ın 1 MB'lık istek sınırını aşacak kadar büyürse sürümler düşürülüp eski biçimde gönderilir (yeni sayfalar kaybedilmesin diye).
-33. **Ağdan gelen metin terminale temizlenerek basılır; arama protokolü yükseltmeye karşı sınırlıdır** (`guvenlik.go`, `search.go`) — imzalı bir içerik yalnızca KİMİN yazdığını kanıtlar, ne yazdığının zararsız olduğunu değil. Başlık, gövde, ad, kategori ve paylaşım kodları ekrana (ve `-search` komut satırı çıktısına) basılmadan önce terminal kaçış dizilerinden (pano yazan OSC 52, bağlantıyı yönlendiren OSC 8, imleç oynatan CSI), C0/C1 kontrol karakterlerinden ve yazı yönü karakterlerinden temizlenir; tıklanabilir bağlantı adresinde kontrol karakteri varsa bağlantı hiç oluşturulmaz. Temizlik depolamada değil ekranda yapılır — kayıtlar başka eşlere imzalarıyla aktarıldığından metni değiştirmek imza doğrulamasını bozardı. Arama protokolünde: sorgular yalnızca bu protokolü konuşan eşlere gönderilir (bağlı eşlerin çoğu genel DHT düğümüdür), başka bir eşin sorgusu tek atlamada en fazla 8 eşe iletilir, aynı anda en fazla 16 gelen sorgu işlenir, sorgu metni 256 karakterle, gönderenin bildirdiği bitiş zamanı bu düğümün zaman aşımıyla sınırlanır ve geçersiz yazar anahtarı ya da içerik türü taşıyan istekler reddedilir. Arama sunucusu artık herhangi bir eşe bağlanmadan ÖNCE kaydedilir, böylece eşler bu düğümün arama motoru olduğunu ilk tanışmada öğrenir.
+1. **Its own identity** (`identity.go`) — with the same derivation scheme AND uses (BIP39 mnemonic → ed25519 key) but completely independent of the user's actual AND identity; generated on the first run and saved to `~/.and-arama-motoru/kimlik.json`.
+2. **Network layer** (`network.go`) — its own libp2p host; the same peer discovery mechanism as AND: a DHT built on the public IPFS bootstrap peers (rendezvous: `and-community/1.0.0`) + mDNS on the local network (`and-community-mdns`).
+3. **Content intake** (`forum.go`, `chat.go`, `site.go`) — subscribes to AND's forum (the `github.com/lucian95511/and/forum` topic), chat (the `.../chat` topic) and personal site (the `.../site/1.0.0` topic) GossipSub broadcasts; it verifies the ed25519 signature of every post/reply/message/page with **exactly the same payload format** as AND itself — nothing unsigned or tampered with is indexed. With every newly connected peer it also collects the history retroactively by speaking AND's sync protocols (`/and/sync/1.0.0`, `/and/chatsync/1.0.0`, `/and/sitesync/1.0.0`). UNLIKE forum posts and chat messages, site pages CAN CHANGE (they change completely when the same author/slug is published again) — so instead of the write-once `Ekle`, `Depo.EkleYaGuncelle` with "newest wins" upsert semantics is used.
+4. **Local index** (`index.go`) — SQLite FTS5, accent-insensitive search for Turkish; its own separate database file (`~/.and-arama-motoru/arama_motoru.db`), it never touches AND's `forum.db`. Ranking combines a column-weighted `bm25()` (a title match is worth much more than a body match) with a freshness boost — among equally relevant results, newer content moves slightly ahead. Results come with an excerpt (snippet) that highlights the matching term; a reply result also shows the title/category of the topic it belongs to (if the topic has already been synced).
+5. **Its own P2P search protocol — MULTI-HOP** (`search.go`) — a SEPARATE libp2p protocol of this program (`/and-arama-motoru/1.0.0`): you can send a query directly over a stream to peers that run another copy of this program and get results from their own indexes ("search the network", `ctrl+n`). Unlike AND's DM channel there is no size limit (the full body is carried), and the sender's identity is known from the connection itself (in a way that can't be faked). A query isn't limited to DIRECTLY connected peers: unless its own TTL (3 hops by default) is used up, every node also forwards the query to its own peers, collects the answers and returns a single combined result (the classic "flood & aggregate" P2P search pattern) — so content in the index of a node a few hops away on the network can be found too. The same query circulating endlessly or being repeated needlessly is prevented by processing a shared query ID only once on every node (see `sorguOnbellek`). Every result is labelled with the peer ID of the node that ACTUALLY indexed it (carried unchanged by intermediate nodes) — you know the real source regardless of how many hops away it came from.
+6. **Known peer list** (`peers.go`) — the addresses of the peers you are currently connected to are periodically written to `~/.and-arama-motoru/bilinen_peerler.json`; on the next start it tries to connect to them directly without waiting for DHT/mDNS discovery, which makes reconnecting after a restart noticeably faster.
+7. **Levelled, size-limited diagnostic log** (`log.go`) — without affecting the TUI at all (not to stdout), it writes lifecycle events and errors with the levels `[bilgi]`/`[uyarı]`/`[hata]` (info/warning/error) to `~/.and-arama-motoru/gunluk.log` — to diagnose problems such as "why are there no results at all". When the file exceeds 5 MB it is rotated to `.old` automatically and starts from scratch, so it doesn't grow without bounds in a long-running process. The libraries' own logs (the standard `log` package and libp2p's go-log) go to this file instead of the terminal as well. On Windows, the "Failed to set multicast interface" warnings that mDNS repeated for virtual network interfaces used to be written over the full-screen interface and break the screen; this harmless warning is now written to the log only once.
+8. **Ordered, correct shutdown** (`main.go`) — Ctrl+C/a shutdown signal first tells all background goroutines to stop and waits for them to REALLY stop (including saving the known peer list one last time), and only THEN closes the network/database resources — doing it in the reverse order could make a still-running operation try to use a closed resource, or make the save at shutdown fail entirely.
+9. **Opening links** (`links.go`) — `http(s)://` links in a result's details are found and numbered automatically and made **really clickable with the mouse** with the OSC 8 terminal hyperlink sequence (supported by Windows Terminal, VS Code's integrated terminal, iTerm2 and most modern Linux terminals — when clicked, the terminal opens the url itself). For terminals that don't support this, `o` (the first one) or the `1`-`9` keys open them in the operating system's default browser (the same pattern as `klasoruAc` in AND's DeltaX plugin). Only http(s) schemes are recognised — other schemes such as `file://` or `javascript:` are deliberately rejected; since the content comes from untrusted peers, this is an important security boundary.
+10. **Scriptable CLI mode** (`cli.go`) — the `-search "query"` flag searches the local index WITHOUT opening the TUI or the network at all, writes the results to stdout and exits (machine-readable output with `-json`, a type filter with `-tip`, the number of results with `-limit`, paging with `-sayfa`). If there are zero results and a "did you mean?" candidate is found, it is written to `stderr` so that `stdout` (e.g. `| jq`) stays intact.
+11. **Panic shield** — because content comes from UNTRUSTED peers on the network (see the security principle above), an unexpected edge case in the parsing/processing logic no longer crashes THE WHOLE PROGRAM: both the TUI's `Update` loop and all background goroutines that process content/queries (`recoverGoroutine`) are wrapped in a panic shield — if a panic happens, it is logged and ignored, and the program keeps running.
+12. **Adjustable log level and TTL** (`main.go`) — the detail level of the diagnostic log (`hata`/`uyari`/`bilgi`, i.e. error/warning/info) can be set with `-log-level`, and the default number of hops for "search the network" (1-5) with `-ttl`, at run time.
+13. **Search by author — "this author's other content"** (`index.go`, `search.go`) — in a result's details, the `a` key switches to a search filtered by the selected result's author key (the real identity, not the spoofable YazarAd/author name); this filter DOESN'T NEED a keyword — if left empty, all of that author's content is listed from newest to oldest (the "author page" behaviour of real search engines). It works both in the local index and in "search the network" (the network protocol carries the author filter too); `ctrl+y` clears it. Its CLI counterpart is `-yazar <key>` (usable on its own, even without `-search`).
+14. **Performance: WAL mode and connection pool** (`index.go`) — SQLite runs in WAL journal mode, pinned to a single connection (`SetMaxOpenConns(1)`), for the same reason as AND's own `internal/storage`: it reduces lock contention between the constant gossip writes and search queries. An index on `bilinen(tip)` was added — the "known IDs" list sent to every new peer during sync no longer does a full table scan.
+15. **Crash-safe file writes** (`fsutil.go`) — `kimlik.json` and `bilinen_peerler.json` are written with a temporary file + atomic rename (`atomicYaz`) instead of a direct write that could be left half-written/corrupt; if the process is interrupted right in the middle of writing (power cut, kill), the file stays either completely old or completely new.
+16. **The same visual language as AND and a real theme system** (`view.go`, `tema.go`) — AND's shared design system `internal/ui` is repeated here independently (this program is a separate Go module, so it can't import the package): the same ANSI 256 code points as AND's default "Klasik" (Classic) theme, the same block-letter "AND" logo, a full-width background and a `▌` accent bar on the selected row, `━`/`─` fill bars and one-line `✓`/`✗` notices. The line at the bottom of every screen is no longer the old one-line status bar but, as in AND, a hint line made of "key description" pairs; a pair that doesn't fit moves to the next line without being split. Long lines (excerpts, links, share codes) are cut or wrapped to the screen width, and the frame never overflows at any width. Like AND, it **uses the whole terminal**: every screen is inside a full-screen frame (the `AND` badge, the theme name and the version on the top edge), the hint line and notices are always at the bottom, and the splash screen sits in the middle of the frame. Result bodies, cards and input boxes stay at most 100 columns wide; the cards on the Status screen are laid out in two columns on wide terminals. The colours are not fixed: at startup the program reads **the theme selected in AND**, and its own `~/.and-arama-motoru/tema.json` takes priority if it exists (see [Theme](#theme)).
+17. **Personal site pages are searchable too** (`site.go`) — an independent re-implementation of AND's personal site feature (`internal/site`): it indexes pages with the SAME security discipline as forum/chat (ed25519 signature, real identity, not a pseudonym), but it knows that UNLIKE the "write-once" nature of forum posts/replies, this is a content type that CAN CHANGE: when the same author/slug is published again, the old version in the index is overwritten (not deleted and re-added), and an old version that arrives late (replay) never overwrites a newer one we already have.
+18. **Google/Yandex-style advanced query syntax** (`ftsSorguOlustur` in `index.go`) — `"exact phrase"` (adjacent match), `-exclude` (exclude from the results) and `term1 OR term2` (either one) are supported; if none of them is used, the output is byte for byte the same as the old behaviour (backward compatible). Injection into FTS5's own mini query language is not possible — every term is escaped and wrapped in its own quoted literal.
+19. **"Did you mean?" spelling suggestions** (`yazimonerisi.go`) — needs NO new dependency: it reads all unique terms in the index with SQLite FTS5's `fts5vocab` extension and finds the closest known term with a hand-written Levenshtein (edit distance) function. It is triggered only when a search returns ZERO results; in the TUI you can apply the suggestion directly with `ctrl+d`.
+20. **Paging** (`index.go`, `model.go`) — results can be browsed page by page both in the local search (`pgup`/`pgdown`) and in the CLI (`-sayfa`); to tell whether there is a next page without running an extra `COUNT(*)` query, every page fetches one row more than requested and drops the last row.
+21. **Search console statistics** (`TipDagilimiAl`/`EnAktifYazarlarAl`/`GunlukIcerikTrendiAl` in `index.go`) — like Google Search Console/Yandex Webmaster, the Status screen shows the content type breakdown, the most active authors and the daily content trend of the last 14 days. These queries run only once WHEN the Status screen is ENTERED (NOT in the existing 2-second status refresh) — so as not to put needless load on a database pinned to a single connection with `SetMaxOpenConns(1)`.
+22. **Share codes for personal site pages** (`SiteSayfasiBul` in `index.go`, the "Open by Code" screen) — the ID that a site page already has for personal sites (`authorKey/slug`) is now shown in the Result Details as a **selectable code** (you can copy it and send it to someone by message/mail). When the recipient pastes this code into the "Open by Code" screen on the main menu and presses `enter` (or uses `-site <code>` in the CLI), they can open the page directly — WITHOUT WAITING to "come across" that author in the forum/chat first. The `-site` flag in the CLI stays a LOCAL query (it doesn't go to the network, so that scripting stays predictable/fast); the "Open by Code" screen in the TUI has the network fallback described in item 27. **Important limit:** this works only between people who run AND or the AND Search Engine and are connected to the same P2P network — it is NOT a real web address/browser link (a P2P architecture would need a separate, larger HTTP bridge for that, which is out of scope).
+23. **Sort mode: Relevance ⇄ Newest** (`SiralamaModu`/`AraGelismisSirali` in `index.go`, `ctrl+r` on the Search screen) — the default (Relevance) ranking keeps using the column-weighted `bm25()` + freshness boost; `ctrl+r` switches to a mode that IGNORES it and sorts results purely chronologically (newest to oldest). The external signature of `AraGelismis` (current callers: the CLI, the tests) is KEPT — the new `AraGelismisSirali` is a superset that adds an extra parameter on top of it.
+24. **Saved searches / "follow"** (the "Kayıtlı arama takibi" section in `index.go`, `ctrl+t` on the Search screen, the new "Followed" screen) — saves the current query/type/author combination in a LOCAL ledger; from then on, whenever a **really new** record from forum/chat/site gossip matches this follow (the same `ftsSorguOlustur`/FTS5 MATCH logic is REUSED for the question "does this record match query X"), a counter goes up; it shows on the Main Menu as a "Followed (N)" badge. It is a completely local ledger — nothing is published to the network, and the read-only peer principle is not broken.
+25. **Targeted P2P query** (`aramaTekEsIstegi` in `search.go`, the `t` key in the Result Details) — queries the `KaynakPeer` (source peer) of a network result as a SINGLE target (TTL=1, no forwarding), unlike `ctrl+n`, which spreads to ALL peers; to check "what else is in this peer's current index". It uses the same `/and-arama-motoru/1.0.0` protocol and the signature verification at the SINGLE choke point (`aramaIstekGonderRaw`), and NEEDS no separate protocol.
+26. **Peer trust indicator** (`esGuvenDefteri` in `search.go`, the Status screen) — tracks, in a process-lifetime in-memory ledger, how many validly/invalidly signed results every peer queried DIRECTLY by this node returned, and lists the 5 peers interacted with most on the Status screen. This is NOT a BLOCKING mechanism (security is already provided by `dogrulaAgSonucu` itself) — it is only a visual hint about "which peers behave suspiciously"; it is not written to disk and resets on every restart.
+27. **"Open by Code" falls back to the network** (`agdaSiteAraCmd` in `model.go`) — when a share code is not found in the LOCAL index (and there are connected peers), the TUI automatically triggers a network query (the SAME search protocol as in item 5, `Metin=""` + `Tip=TipSite` + `YazarKey`) targeting the code's author key and looks for an exact `KaynakID` match — a page that has NOT yet been synced to this node but still exists on the network can be found this way too. The page found (having already passed signature verification) is safely persisted to the local index as well.
+28. **Site map** (the "Open by Code" screen in `model.go`) — if you paste only an `authorKey` (an input without any `/`) instead of `authorKey/slug` into "Open by Code", ALL site pages of that author (`yazarinTumIcerigi` in `index.go` is REUSED) are listed on the Search screen with the TipSite filter instead of a SINGLE page; from there you can search the network for the same author's other pages with `ctrl+n`.
+29. **In-page cross links** (`siteBaglantilariBul` in `links.go`, the `g` key in the Result Details) — `and-site://` links in the body of a site page (see item 22) are now listed separately like `http(s)://` links and made clickable with OSC 8; the `g` key goes to the first internal link from INSIDE the application, WITHOUT needing the protocol registration (with the SAME network fallback as in item 27 if it isn't available locally). It lets you move from page to page like a personal "wiki".
+30. **QR code for share codes** (`qr.go`, the `k` key in the Result Details) — pressing `k` turns a site page's `and-site://` link into a scannable QR code drawn in the terminal with half-block characters (▀▄█) (`skip2/go-qrcode`, pure Go — no CGO needed); to scan the code with a phone instead of copy-pasting it to a device.
+31. **The `and-site://` protocol registration now exists on Linux too** (`protokol_linux.go`) — besides Windows (`protokol_windows.go`, the HKCU registry), `-protokol-kaydet`/`-protokol-kaldir` now also work on Linux desktop environments through the `xdg-mime`/`.desktop` file mechanism (only under `$HOME/.local/share/applications`, NO root rights needed). This is still missing for macOS — Launch Services (`lsregister`) accepts as the unit of registration not a bare binary but a real `.app` bundle that declares `CFBundleURLTypes`; that needs a separate packaging step beyond `go build` producing a single binary, and was left out of scope.
+32. **Edited site pages arrive through sync too** (`siteSyncIstek.KnownVersions` in `site.go`, `SiteSurumleriAl` in `index.go`) — the site sync request now carries not only the known slugs but also the version (`UpdatedAt`, with nanosecond precision) of every page we have; AND's version-aware responder (`internal/site/sync.go`) still sends a known slug if its version is NEWER. Previously the edited version of a page never reached this node through sync — it was indexed only if we happened to see the live gossip at that moment. An older AND version that doesn't know this field ignores it (the old behaviour); if the request grows large enough to exceed AND's 1 MB request limit, the versions are dropped and it is sent in the old form (so that new pages aren't lost).
+33. **Text from the network is sanitised before it reaches the terminal; the search protocol is limited against amplification** (`guvenlik.go`, `search.go`) — signed content only proves WHO wrote it, not that what they wrote is harmless. Titles, bodies, names, categories and share codes are cleaned of terminal escape sequences (OSC 52, which writes to the clipboard; OSC 8, which redirects links; CSI, which moves the cursor), C0/C1 control characters and text-direction characters before they are printed on the screen (and in the `-search` command-line output); if a clickable link's address contains a control character, the link is not created at all. The cleaning is done on the screen, not in storage — records are passed on to other peers with their signatures, so changing the text would break signature verification. In the search protocol: queries are sent only to peers that speak this protocol (most connected peers are generic DHT nodes), another peer's query is forwarded to at most 8 peers per hop, at most 16 incoming queries are processed at once, the query text is limited to 256 characters, the deadline announced by the sender is limited to this node's own timeout, and requests that carry an invalid author key or content type are rejected. The search server is now registered BEFORE connecting to any peer, so that peers learn that this node is a search engine at the very first contact.
 
-## Gereksinimler
+## Requirements
 
-- **Go 1.26 veya üzeri** (kaynaktan derlemek için — `go.mod`'daki sürüm)
-- **İşletim sistemi:** Windows, Linux ya da macOS (libp2p ve `modernc.org/sqlite` üçü de saf Go/CGO'suz olduğundan çapraz derleme dahil sorunsuz çalışır)
-- **Ağ erişimi:** çıkış (outbound) bağlantılara izin veren bir internet bağlantısı — DHT önyükleme ve eş keşfi için gereklidir; yalnızca yerel ağdaki eşlerle konuşmak istersen mDNS tek başına yeterlidir
-- **Disk:** yalnızca indekslediğin içerik kadar (tipik kullanımda birkaç on MB'lık bir SQLite dosyası)
-- CGO/harici derleyici **gerekmez** — tüm bağımlılıklar saf Go'dur
+- **Go 1.26.4 or later** (to build from source — the version in `go.mod`; Go 1.21 and later download the required toolchain on their own)
+- **Operating system:** Windows, Linux or macOS (libp2p and `modernc.org/sqlite` are all pure Go/CGO-free, so it works without problems, cross-compilation included)
+- **Network access:** an internet connection that allows outbound connections — needed for the DHT bootstrap and peer discovery; if you only want to talk to peers on your local network, mDNS alone is enough
+- **Disk:** only as much as the content you index (an SQLite file of a few tens of MB in typical use)
+- CGO/an external compiler is **not needed** — all dependencies are pure Go
 
-## Kurulum ve çalıştırma
+## Installation and running
+
+To build it, AND's source folder must sit in the neighbouring folder (`../AND`): this project takes
+the small `protokol` and `dil` packages it shares with AND from there (the `replace` in `go.mod`).
+Clone the two repositories side by side into the same folder:
 
 ```bash
+git clone https://github.com/AND-community/AND.git
+git clone https://github.com/AND-community/and-arama-motoru.git
+cd and-arama-motoru
+
 go build -o and-arama-motoru .
 ./and-arama-motoru
 
@@ -125,85 +152,124 @@ go build -o and-arama-motoru.exe .
 .\and-arama-motoru.exe
 ```
 
-Derlemek için AND'ın kaynak klasörü yan klasörde (`../AND`) durmalıdır: bu proje yalnızca AND'la paylaşılan küçük `protokol` paketini oradan alır (`go.mod`'daki `replace`). Çalışırken AND'la hiçbir bağlantı/ortam değişkeni gerekmez — bağımsız çalışır.
+While it runs, it needs no connection to AND and no environment variables — it runs independently.
 
-### Komut satırı seçenekleri
+### Command-line options
 
 ```
--version         sürüm bilgisini yazdır ve çık
--veri-dir <yol>  veri dizini (varsayılan: $ARAMA_MOTORU_VERI_DIR ya da ~/.and-arama-motoru)
--log-level <s>   günlük ayrıntı düzeyi: hata|uyari|bilgi (varsayılan: bilgi)
--ttl <n>         "ağda ara" için varsayılan atlama (TTL) sayısı, 1-5 (varsayılan: 3)
+-version         print version information and exit
+-veri-dir <path> data directory (default: $ARAMA_MOTORU_VERI_DIR or ~/.and-arama-motoru)
+-log-level <s>   log detail level: hata|uyari|bilgi (error|warning|info; default: bilgi)
+-ttl <n>         default number of hops (TTL) for "search the network", 1-5 (default: 3)
 
--search <sorgu>  yerel indekste ara, sonuçları yazdır ve çık (TUI/ağ açılmaz)
--tip <t>         -search ile: sonuçları türe göre sınırla (konu|yanit|sohbet|site)
--yazar <anahtar> yalnızca bu yazar anahtarına ait sonuçlar; -search boşsa bile
-                 tek başına o yazarın tüm içeriğini listeler
--limit <n>       -search ile: en fazla kaç sonuç (varsayılan: 20)
--sayfa <n>       -search ile: sayfa numarası, 1'den başlar (varsayılan: 1)
--site <kod>      bir site paylaşım kodunu (yazarAnahtarı/slug) yerel indekste
-                 ara, sayfayı yazdır ve çık (TUI/ağ açılmaz) — bkz. aşağıdaki
-                 "Site sayfası paylaşımı"
--json            -search/-site ile: sonucu JSON olarak yazdır
--protokol-kaydet  and-site:// bağlantılarını bu programla açacak şekilde
-                  işletim sistemine kaydet (Windows ve Linux) ve çık
--protokol-kaldir  and-site:// bağlantı kaydını kaldır (Windows ve Linux) ve çık
+-search <query>  search the local index, print the results and exit (no TUI/network)
+-tip <t>         with -search: limit results to a type (konu|yanit|sohbet|site =
+                 topic|reply|chat|site)
+-yazar <key>     only results of this author key; even with an empty -search it
+                 lists all of that author's content on its own
+-limit <n>       with -search: at most this many results (default: 20)
+-sayfa <n>       with -search: page number, starting at 1 (default: 1)
+-site <code>     look up a site share code (authorKey/slug) in the local index,
+                 print the page and exit (no TUI/network) — see "Sharing site
+                 pages" below
+-json            with -search/-site: print the result as JSON
+-protokol-kaydet  register this program with the operating system to open
+                  and-site:// links (Windows and Linux) and exit
+-protokol-kaldir  remove the and-site:// link registration (Windows and Linux)
+                  and exit
 ```
 
-Sürüm, derleme zamanında `-ldflags "-X main.Version=vX.Y.Z"` ile ezilebilir (varsayılan `v0.1.0`); isteğe bağlı olarak `-X main.BuildCommit=...` ve `-X main.BuildDate=...` de doldurulabilir, doluysa `-version` çıktısında (Go sürümü/OS/mimariyle birlikte) gösterilirler. `-h`/`-help` çıktısı Genel/Arama/Site paylaşımı/Ağ olarak kategorilere ayrılmıştır.
+Flag names and values stay Turkish in every interface language (scripts depend on them).
 
-Örnek — betiklenebilir arama:
+The version can be overridden at build time with `-ldflags "-X main.Version=vX.Y.Z"` (default
+`v0.1.0`); optionally `-X main.BuildCommit=...` and `-X main.BuildDate=...` can be filled in too, and
+if set they are shown in the `-version` output (together with the Go version/OS/architecture). The
+`-h`/`-help` output is grouped into General/Search/Site sharing/Network categories.
+
+Example — scriptable search:
 
 ```bash
 ./and-arama-motoru -search "merhaba" -json -limit 5 | jq '.[].baslik'
 ```
 
-### Site sayfası paylaşımı
+### Sharing site pages
 
-Kişisel site sayfalarının gerçek bir web adresi yoktur (P2P ağda böyle bir kavram yok) — ama her sayfanın zaten `yazarAnahtarı/slug` biçiminde bir kimliği var, bu da **paylaşım kodu** olarak kullanılabilir. Bir sayfanın Sonuç Detayı ekranında bu kod "Kod" etiketiyle gösterilir; fare ile seçip kopyalayabilir, ya da `c` tuşuna basarak doğrudan sistem panosuna kopyalayabilirsin (OSC 52 terminal protokolüyle — SSH üzerinden bile YEREL panona kopyalar; desteklemeyen terminallerde sessizce yok sayılır). Kodu alan kişi:
+Personal site pages have no real web address (there is no such concept on a P2P network) — but
+every page already has an ID in the form `authorKey/slug`, which can be used as a **share code**. In
+a page's Result Details screen this code is shown with the label "Code"; you can select and copy it
+with the mouse, or press `c` to copy it straight to the system clipboard (with the OSC 52 terminal
+protocol — it copies to your LOCAL clipboard even over SSH; terminals that don't support it silently
+ignore it). The person who receives the code:
 
 ```bash
 # CLI:
 ./and-arama-motoru -site "a3f9…92c1/hakkimda"
 
-# ya da TUI'de: Ana Menü → "Kodla Git" → kodu yapıştır → enter
+# or in the TUI: Main Menu → "Open by Code" → paste the code → enter
 ```
 
-**Sınır:** bu yalnızca AND/AND Arama Motoru çalıştıran kişiler için çalışır — bir tarayıcıda açılabilecek gerçek bir web linki değildir. Alıcının o sayfayı zaten (forum/sohbet/senkronizasyon yoluyla) yerel indeksine almış olması GEREKMEZ: "Kodla Git" ekranı, kod yerelde bulunamazsa ve bağlı bir eş varsa otomatik olarak ağda da arar ("Kodla Git ağa düşsün" — bkz. Mimari'nin 27. maddesi); CLI'daki `-site` bayrağı ise betiklenebilirliğin hızlı/öngörülebilir kalması için YEREL aramada kalır.
+**Limit:** this works only for people who run AND/the AND Search Engine — it is not a real web link
+that can be opened in a browser. The recipient DOESN'T NEED to have the page in their local index
+already (through the forum/chat/sync): if the code isn't found locally and there is a connected
+peer, the "Open by Code" screen automatically searches the network too ("Open by Code falls back to
+the network" — see item 27 of the Architecture); the `-site` flag in the CLI stays with the LOCAL
+search so that scripting stays fast/predictable.
 
-Bir sayfa kodu yerine yalnızca `yazarAnahtarı` (hiç `/` içermeyen bir girdi) yapıştırırsan, "Kodla Git" o yazarın TÜM site sayfalarını ("site haritası") listeler — bkz. Mimari'nin 28. maddesi.
+If you paste only an `authorKey` (an input without any `/`) instead of a page code, "Open by Code"
+lists ALL site pages of that author (the "site map") — see item 28 of the Architecture.
 
-#### Tıklanabilir bağlantı olarak (and-site://)
+#### As a clickable link (and-site://)
 
-Paylaşım kodu, aynı zamanda `and-site://<yazarAnahtarı>/<slug>` biçiminde özel bir URI şemasına da sarılır — Sonuç Detayı ekranında "Link" satırında OSC 8 ile tıklanabilir olarak gösterilir (destekleyen terminallerde fare ile tıklanabilir/seçilebilir). Bunu işletim sisteminin GERÇEKTEN tıklanabilir bir bağlantı olarak tanıması (ör. bir sohbet uygulamasında ya da tarayıcı adres çubuğunda) için bir kere kaydettirmen gerekir:
+The share code is also wrapped in a custom URI scheme of the form `and-site://<authorKey>/<slug>` —
+it is shown clickable with OSC 8 on the "Link" row of the Result Details screen (it can be clicked/
+selected with the mouse in terminals that support it). For the operating system to recognise it as
+a REALLY clickable link (e.g. in a chat app or in a browser's address bar), you need to register it
+once:
 
 ```bash
-# Windows/Linux — yalnızca geçerli kullanıcı için (yönetici/kök hakkı gerekmez):
+# Windows/Linux — only for the current user (no administrator/root rights needed):
 ./and-arama-motoru -protokol-kaydet
 
-# Kaydı kaldırmak için:
+# To remove the registration:
 ./and-arama-motoru -protokol-kaldir
 ```
 
-Kaydettikten sonra bir `and-site://…` bağlantısına tıklamak, bu programı o kodla (`-site` bayrağıyla tamamen aynı şekilde) başlatır: TUI/ağ açılmaz, sayfa doğrudan yazdırılır. **Windows'ta** `HKEY_CURRENT_USER` altına, **Linux'ta** `$HOME/.local/share/applications` altına bir `.desktop` dosyası + `xdg-mime` ile kaydedilir. **macOS için henüz uygulanmadı** — Launch Services (`lsregister`), çıplak bir komut satırı ikilisini değil, `CFBundleURLTypes` bildiren gerçek bir `.app` paketini kayıt birimi olarak kabul eder; bu, ayrı bir paketleme adımı gerektirir, kapsam dışı bırakıldı. Bu platformda `-site` bayrağı, "Kodla Git" ekranı ve sayfa içi `and-site://` bağlantılarındaki `g` tuşu (bkz. Mimari'nin 29. maddesi) olduğu gibi çalışmaya devam eder, yalnızca "linke tıklayınca otomatik açılma" kolaylığı eksiktir.
+After registering, clicking an `and-site://…` link starts this program with that code (exactly like
+the `-site` flag): no TUI/network is opened, the page is printed directly. **On Windows** it is
+registered under `HKEY_CURRENT_USER`, **on Linux** with a `.desktop` file under
+`$HOME/.local/share/applications` + `xdg-mime`. **Not implemented for macOS yet** — Launch Services
+(`lsregister`) accepts as the unit of registration not a bare command-line binary but a real `.app`
+bundle that declares `CFBundleURLTypes`; that needs a separate packaging step and was left out of
+scope. On that platform the `-site` flag, the "Open by Code" screen and the `g` key on in-page
+`and-site://` links (see item 29 of the Architecture) keep working as they are; only the convenience
+of "opening automatically when the link is clicked" is missing.
 
-Bu, yukarıdaki temel sınırı KALDIRMAZ: hâlâ yalnızca AND/AND Arama Motoru kurulu VE protokolü kaydettirmiş VE o içeriği zaten kendi indeksine almış biri için işler — gerçek bir web sunucusuna/DNS'e dayanmaz.
+This DOESN'T REMOVE the basic limit above: it still works only for someone who has AND/the AND
+Search Engine installed AND has registered the protocol AND already has that content in their own
+index — it doesn't rely on a real web server/DNS.
 
-### Gelişmiş sorgu sözdizimi
+### Advanced query syntax
 
-Arama kutusu (hem TUI'de hem `-search`'te) Google/Yandex'e benzer üç ek söz dizimini anlar — hiçbiri kullanılmazsa davranış eskisiyle aynıdır:
+The search box (both in the TUI and in `-search`) understands three extra syntaxes similar to
+Google/Yandex — if none of them is used, the behaviour is the same as before:
 
 ```bash
-./and-arama-motoru -search '"tam ifade"'      # bitişik eşleşme, prefix değil
-./and-arama-motoru -search 'elma -armut'      # "armut" geçen sonuçlar dışlanır
-./and-arama-motoru -search 'kedi OR köpek'    # ikisinden biri (BÜYÜK harf OR)
+./and-arama-motoru -search '"exact phrase"'   # adjacent match, not a prefix
+./and-arama-motoru -search 'apple -pear'      # results containing "pear" are excluded
+./and-arama-motoru -search 'cat OR dog'       # either one (upper-case OR)
 ```
 
-### Tema
+### Theme
 
-Program, **AND'da seçili temayı kendiliğinden izler**: kendi `tema.json`'u yoksa açılışta AND'ın `theme.json` dosyasını okur (`AND_DATA_DIR` ayarlıysa orada, değilse AND'ın varsayılan veri dizininde) ve aynı renkleri kullanır. AND'da Ayarlar → Temalar'dan tema değiştirdiysen, Arama Motoru bir sonraki açılışta aynı temayla açılır. AND hiç kurulu değilse ya da tema seçilmemişse varsayılan renkler AND'ın kendi "Klasik" temasıyla birebir eşleşir.
+The program **follows the theme selected in AND by itself**: if it has no `tema.json` of its own, it
+reads AND's `theme.json` at startup (in `AND_DATA_DIR` if that is set, otherwise in AND's default
+data directory) and uses the same colours. If you changed the theme in AND in Settings → Themes, the
+Search Engine opens with the same theme on its next start. If AND isn't installed at all or no theme
+was selected, the default colours match AND's own "Klasik" (Classic) theme exactly.
 
-Arama Motoru'na AND'dan farklı bir tema vermek istersen `~/.and-arama-motoru/tema.json`'u elle oluştur. Bu dosya varsa her zaman önceliklidir. Yalnızca değiştirmek istediğin alanları yaz, geri kalanı varsayılanında kalır:
+If you want to give the Search Engine a different theme from AND, create
+`~/.and-arama-motoru/tema.json` by hand. If this file exists, it always takes priority. Write only
+the fields you want to change; the rest keep their defaults:
 
 ```json
 {
@@ -221,87 +287,111 @@ Arama Motoru'na AND'dan farklı bir tema vermek istersen `~/.and-arama-motoru/te
 }
 ```
 
-Varsayılan değerler (AND'ın Klasik teması): `accent` 63, `accent2` 86, `ok` 78, `warn` 214, `err` 203, `muted` 245, `sel_bg` 57, `sel_fg` 255, `rol` 33, `panel_bg` 236.
+The default values (AND's Classic theme): `accent` 63, `accent2` 86, `ok` 78, `warn` 214, `err` 203,
+`muted` 245, `sel_bg` 57, `sel_fg` 255, `rol` 33, `panel_bg` 236.
 
-AND'ın yerleşik temalarının değerleri aşağıda; AND'da seçili temadan farklı bir yerleşik temayı yalnızca Arama Motoru'nda kullanmak istersen bunları `tema.json`'a yazman yeterli:
+The values of AND's built-in themes are below; if you want to use a built-in theme other than the
+one selected in AND only in the Search Engine, writing them to `tema.json` is enough:
 
-| AND teması | `accent` | `sel_bg` | `sel_fg` | `accent2` | `rol` |
+| AND theme | `accent` | `sel_bg` | `sel_fg` | `accent2` | `rol` |
 |---|---|---|---|---|---|
-| Turkuaz | 80 | 23 | 255 | 216 | 141 |
-| Gece Moru | 99 | 55 | 255 | 86 | 75 |
-| Kehribar | 214 | 94 | 230 | 180 | 117 |
-| Orman | 114 | 22 | 255 | 223 | 117 |
+| Turkuaz (Turquoise) | 80 | 23 | 255 | 216 | 141 |
+| Gece Moru (Night Purple) | 99 | 55 | 255 | 86 | 75 |
+| Kehribar (Amber) | 214 | 94 | 230 | 180 | 117 |
+| Orman (Forest) | 114 | 22 | 255 | 223 | 117 |
 | Mono | 255 | 240 | 255 | 252 | 250 |
 
-Değerler lipgloss'un kabul ettiği herhangi bir renk dizgesi olabilir: ANSI 256 kod noktası (`"63"`) ya da `"#RRGGBB"` true-color hex. `tema_adi` doluysa çerçevenin üst kenarında, sürüm numarasının yanında görünür. Program her açılışta bu dosyayı okur; dosya bozuksa sessizce varsayılan temaya döner (hata vermez).
+The values can be any colour string that lipgloss accepts: an ANSI 256 code point (`"63"`) or a
+`"#RRGGBB"` true-colour hex. If `tema_adi` (theme name) is filled in, it appears on the top edge of
+the frame next to the version number. The program reads this file on every start; if the file is
+corrupt, it silently falls back to the default theme (without an error).
 
-### Diller
+### Languages
 
-Arama Motoru AND'ın altı dilinde açılır: Türkçe, English, Deutsch, Español, Français, Русский. Dili kendisi seçmez, **AND'da seçili dili izler**: önce `AND_DIL` ortam değişkeni, sonra AND'ın veri dizinindeki `dil.json` (AND'da Ayarlar → Dil ya da giriş ekranında `F2`). İkisi de yoksa Türkçe açılır. Dil açılışta okunur; AND'da dil değiştirdiysen Arama Motoru bir sonraki açılışta yeni dille açılır. Belirli bir dili denemek için: `AND_DIL=en and-arama-motoru`.
+The Search Engine opens in AND's six languages: Turkish, English, German, Spanish, French and
+Russian. It doesn't choose a language itself but **follows the language selected in AND**: first the
+`AND_DIL` environment variable, then `dil.json` in AND's data directory (Settings → Language in AND,
+or `F2` on the login screen). If neither exists, it opens in Turkish. The language is read at
+startup; if you changed the language in AND, the Search Engine opens with the new language on its
+next start. To try a specific language: `AND_DIL=en and-arama-motoru`.
 
-Çeviriler TUI'yi, `-h` yardımını, `-search`/`-site` çıktısını ve hata mesajlarını kapsar. Şunlar çevrilmez:
+The translations cover the TUI, the `-h` help, the `-search`/`-site` output and the error messages.
+These are not translated:
 
-- Bayrak adları ve değerleri (`-tip konu`, `-log-level bilgi`), `-json` çıktısının alanları ve `gunluk.log`: bunları betikler ve hata ayıklama okur.
-- Forum kategorileri ağa Türkçe gider, ekranda ise etkin dilde görünür.
+- Flag names and values (`-tip konu`, `-log-level bilgi`), the fields of the `-json` output and `gunluk.log`: scripts and debugging read them.
+- Forum categories travel over the network in Turkish and are shown in the active language on the screen.
 
-Çeviriler AND'ın `dil` paketini kullanır (`replace ../AND` ile). AND'ın kendi kataloğunda olan metinler ("Durum", "Peer ID", kategori ve tema adları) oradan gelir; Arama Motoru'na özgü olanlar `ceviri.json`'dadır. Testler iki şeyi denetler:
+The translations use AND's `dil` package (through `replace ../AND`). Texts that are already in AND's
+own catalog ("Durum", "Peer ID", category and theme names) come from there; those specific to the
+Search Engine are in `ceviri.json`. The tests check two things:
 
-- `TestCeviriKapsami`: kullanılan her metnin her dilde çevirisi olduğunu ve biçim fiillerinin (`%s`, `%d`, `%w`) korunduğunu. `DIL_ISKELET=<dosya> go test -run TestCeviriKapsami` eksikleri iskelet olarak yazar.
-- `TestEkranlarHerDilde`: her ekranın her dilde 80×24 ve 120×40 boyutlarında çizildiğini, çevrilmeden kalan Türkçe metin olmadığını ve satırların taşmadığını ya da kırpılmadığını. `ARAMA_EKRAN_DOKUM=<dizin>` ekranları göz ile incelemek için düz metin olarak yazar.
+- `TestCeviriKapsami`: that every text used has a translation in every language and that the format verbs (`%s`, `%d`, `%w`) are kept. `DIL_ISKELET=<file> go test -run TestCeviriKapsami` writes the missing ones as a skeleton.
+- `TestEkranlarHerDilde`: that every screen is drawn in every language at 80×24 and 120×40, that no untranslated Turkish text is left and that no line overflows or is cut off. `ARAMA_EKRAN_DOKUM=<directory>` writes the screens as plain text for visual review.
 
-## Kullanım
+## Usage
 
-Herhangi bir ekranda `f1`'e basmak, bu tablodaki TÜM kısayolları ve gelişmiş sorgu sözdizimini uygulama İÇİNDE gösteren bir yardım ekranı açar (`esc` ile bulunduğun ekrana geri döner, yazmakta olduğun sorgu/kod kaybolmaz). `f1` bilerek metin üretmeyen bir tuş: Arama/Kodla Git kutularına yazarken kısayolun kendisi asla sorguya karışmaz.
+Pressing `f1` on any screen opens a help screen that shows ALL shortcuts in this table and the
+advanced query syntax INSIDE the application (`esc` returns to the screen you were on, and the
+query/code you were typing isn't lost). `f1` is deliberately a key that doesn't produce text: while
+you type in the Search/Open by Code boxes, the shortcut itself never ends up in the query.
 
-| Ekran | Açıklama |
+| Screen | Description |
 |-------|----------|
-| Ara | Her tuş vuruşunda yerel indekste anında ara; `tab` ile içerik türüne göre filtrele (Tümü/Konu/Yanıt/Sohbet/Site); `ctrl+n` ile ağda (çok atlamalı) sor; `ctrl+r` ile sıralamayı değiştir (Alaka ⇄ Yeni); `ctrl+t` ile geçerli aramayı takibe al; `ctrl+y` ile aktif yazar filtresini temizle; `pgup`/`pgdown` ile sayfalar arasında gez; sonuç sıfırsa ve bir "şunu mu demek istediniz?" önerisi varsa `ctrl+d` ile uygula |
-| Kodla Git | Birinden aldığın bir site paylaşım kodunu (`yazarAnahtarı/slug`) yapıştırıp `enter` ile doğrudan o sayfaya git (yerelde yoksa, bağlı eş varsa otomatik olarak ağda da arar); yalnızca `yazarAnahtarı` yapıştırırsan o yazarın tüm site sayfalarını (site haritası) listeler — bkz. [Site sayfası paylaşımı](#site-sayfası-paylaşımı) |
-| Takip Edilenler | "Takip et" ile kaydedilen aramaları listeler; her satırda okunmamış yeni eşleşme sayısı görünür; `enter` ile bir aramayı yükleyip Ara ekranına geç (rozeti de sıfırlar), `d` ile sil |
-| Sonuç Detayı | `a` ile seçili sonucun yazarına filtrelenmiş bir aramaya geç ("bu yazarın diğer içerikleri"); ağ sonuçlarında `t` ile o eşi doğrudan hedefle; site sayfalarında "Kod" satırı paylaşım kodunu gösterir (`c` ile panoya kopyalar, `k` ile QR kodunu göster/gizle), "Link" satırı ise aynı kodun tıklanabilir `and-site://` bağlantısını gösterir; gövdede geçen `and-site://` iç bağlantılarda `g` ile gez — bkz. [Site sayfası paylaşımı](#site-sayfası-paylaşımı) |
-| Durum | Kendi peer ID'n, bağlı eş sayısı, indeksteki kayıt sayısı; ayrıca içerik türü dağılımı, en aktif yazarlar, son 14 günün günlük içerik trendini ve doğrudan sorgulanan eşlerin güven göstergesini gösteren "arama konsolu" paneli |
+| Search | Searches the local index instantly with every keystroke; `tab` filters by content type (All/Topic/Reply/Chat/Site); `ctrl+n` asks the network (multi-hop); `ctrl+r` changes the sorting (Relevance ⇄ Newest); `ctrl+t` follows the current search; `ctrl+y` clears the active author filter; `pgup`/`pgdown` move between pages; if there are zero results and there is a "did you mean?" suggestion, `ctrl+d` applies it |
+| Open by Code | Paste a site share code (`authorKey/slug`) you received from someone and go directly to that page with `enter` (if it isn't available locally and there is a connected peer, it searches the network automatically too); if you paste only an `authorKey`, it lists all site pages of that author (the site map) — see [Sharing site pages](#sharing-site-pages) |
+| Followed | Lists the searches saved with "follow"; every row shows the number of unread new matches; `enter` loads a search and switches to the Search screen (also resetting the badge), `d` deletes it |
+| Result Details | `a` switches to a search filtered by the selected result's author ("this author's other content"); on network results `t` targets that peer directly; on site pages the "Code" row shows the share code (`c` copies it to the clipboard, `k` shows/hides its QR code), and the "Link" row shows the clickable `and-site://` link of the same code; `g` follows the internal `and-site://` links in the body — see [Sharing site pages](#sharing-site-pages) |
+| Status | Your own peer ID, the number of connected peers, the number of records in the index; plus a "search console" panel that shows the content type breakdown, the most active authors, the daily content trend of the last 14 days and the trust indicator of the peers queried directly |
 
-## Veri dizini dosyaları
+## Data directory files
 
-| Dosya | İçerik |
+| File | Contents |
 |-------|--------|
-| `kimlik.json` | Bu düğümün BIP39 mnemonic'i (ağ kimliği) |
-| `arama_motoru.db` | SQLite FTS5 arama indeksi |
-| `bilinen_peerler.json` | Hızlı yeniden bağlanma için son bilinen eş adresleri |
-| `tema.json` | *(isteğe bağlı)* Özel renk teması — bkz. [Tema](#tema) |
-| `gunluk.log` | Tanılama günlüğü |
+| `kimlik.json` | This node's BIP39 mnemonic (network identity) |
+| `arama_motoru.db` | SQLite FTS5 search index |
+| `bilinen_peerler.json` | Last known peer addresses for fast reconnecting |
+| `tema.json` | *(optional)* Custom colour theme — see [Theme](#theme) |
+| `gunluk.log` | Diagnostic log |
 
-## Kapsam ve sınırlar
+## Scope and limits
 
-- **Yalnızca okuyucu bir eştir** — post/mesaj/site sayfası oluşturmaz, moderasyon zincirini (founder/moderatör sertifikaları, `mod_delete`) uygulamaz, başka eşlerin forum/sohbet/site senkronizasyon isteklerine yanıt vermez (yalnızca kendi arama protokolüne yanıt verir).
-- **"Ağda ara" en fazla `aramaVarsayilanTTL` (varsayılan 3) atlama öteye ulaşır** — sonsuza kadar yayılmaz (kasıtlı bir sınır: hem trafiği makul tutmak hem de bir sorgunun ağda sonsuza kadar dolaşmasını önlemek için), ve yalnızca bu AYNI programın başka bir kopyasını çalıştıran eşler yanıt verebilir (AND'ın kendisi bu protokolü konuşmaz).
-- **NAT/relay/hole-punching desteği AND'ınkinden daha sınırlı** (bkz. `network.go`'nun doc yorumu) — sıkı bir NAT arkasındaysan giden bağlantılar yine de çalışır, ama gelen "ağda ara" sorgularına ulaşılabilirlik AND kadar güvenilir olmayabilir.
-- **İmza doğrulama mantığı AND'ın kaynak kodundan elle transkript edildi** (import edilemediği için) — `forum.go`/`chat.go`'nun doc yorumlarında bu açıkça belirtilir; testler kendi içindeki tutarlılığı (imzala→doğrula, kurcalama tespiti) kanıtlar.
-- **Kademlia DHT keşfi, tüm Kademlia tabanlı sistemlerin (IPFS dahil) paylaştığı bilinen bir zayıflığa açıktır** ([GO-2024-3218](https://pkg.go.dev/vuln/GO-2024-3218) / CVE-2023-26248): kötü niyetli düğümler DHT'yi manipüle ederek belirli içeriğin bulunmasını zorlaştırabilir ("içerik sansürü"). Bu, `go-libp2p-kad-dht` kütüphanesinin PROTOKOL SEVİYESİNDE bir sınırıdır — henüz bir düzeltmesi yok. Etkisi bu programda kısmen azaltılır: keşif yalnızca DHT'ye bağlı değildir, mDNS (yerel ağ) ve bilinen-eş listesi (`peers.go`) de bağımsız keşif yolları sağlar; ayrıca AND'ın kendisi de AYNI kütüphaneyi kullandığından bu risk zaten ekosistemin tamamının paylaştığı, bu programa özgü olmayan bir durumdur.
-- **Hedefli P2P sorgu (`t` tuşu), hedef eşin adresini bu düğümün peerstore'unda bulmayı gerektirir** — çok atlamalı bir yayılma zincirinde yalnızca DOLAYLI olarak görülmüş (hiç doğrudan bağlanılmamış) bir eş hedeflenirse dial başarısız olabilir; bu durumda normal bir "stream açılamadı" hatası gösterilir.
-- **Eş güven göstergesi (Durum ekranı) süreç ömürlüdür** — diske yazılmaz, her yeniden başlatmada sıfırlanır ve bir engelleme mekanizması DEĞİLDİR, yalnızca görsel bir ipucudur (asıl güvenlik `dogrulaAgSonucu`'nun imza doğrulamasıyla sağlanır).
-- **Kayıtlı arama takibi ("takip et"), yalnızca bu düğümün GÖRDÜĞÜ içeriği değerlendirir** — arka planda ağı proaktif olarak taramaz; bir eşleşme, ancak ilgili içerik gossip/senkronizasyon yoluyla normal şekilde bu düğüme ulaştığında sayılır.
+- **It is a read-only peer** — it doesn't create posts/messages/site pages, doesn't apply the moderation chain (founder/moderator certificates, `mod_delete`) and doesn't answer other peers' forum/chat/site sync requests (it answers only its own search protocol).
+- **"Search the network" reaches at most `aramaVarsayilanTTL` (3 by default) hops away** — it doesn't spread forever (a deliberate limit: both to keep the traffic reasonable and to stop a query from circulating on the network forever), and only peers that run another copy of this SAME program can answer (AND itself doesn't speak this protocol).
+- **NAT/relay/hole-punching support is more limited than AND's** (see the doc comment of `network.go`) — if you are behind a strict NAT, outgoing connections still work, but being reachable for incoming "search the network" queries may not be as reliable as with AND.
+- **The signature verification logic was transcribed by hand from AND's source code** (because it can't be imported) — the doc comments of `forum.go`/`chat.go` say so explicitly; the tests prove its internal consistency (sign→verify, tamper detection).
+- **Kademlia DHT discovery is exposed to a known weakness shared by all Kademlia-based systems (including IPFS)** ([GO-2024-3218](https://pkg.go.dev/vuln/GO-2024-3218) / CVE-2023-26248): malicious nodes can manipulate the DHT and make specific content harder to find ("content censorship"). This is a PROTOCOL-LEVEL limit of the `go-libp2p-kad-dht` library — there is no fix yet. In this program its impact is partly reduced: discovery doesn't rely only on the DHT; mDNS (local network) and the known peer list (`peers.go`) provide independent discovery paths; and since AND itself uses the SAME library, this risk is shared by the whole ecosystem and isn't specific to this program.
+- **The targeted P2P query (the `t` key) needs the target peer's address to be in this node's peerstore** — if a peer that was seen only INDIRECTLY in a multi-hop chain (never connected to directly) is targeted, dialling may fail; in that case a normal "stream couldn't be opened" error is shown.
+- **The peer trust indicator (Status screen) lives as long as the process** — it is not written to disk, resets on every restart and is NOT a blocking mechanism, only a visual hint (the actual security is provided by the signature verification in `dogrulaAgSonucu`).
+- **Saved-search follows ("follow") evaluate only the content this node SEES** — it doesn't scan the network proactively in the background; a match is counted only when the relevant content reaches this node normally through gossip/sync.
 
-## Ekosistem
+## Ecosystem
 
-AND Arama Motoru, "AND Proje" ekosisteminin üç bağımsız parçasından biridir — üçü de **aynı ağı** (aynı GossipSub konuları, aynı Ed25519 imza biçimi, aynı senkronizasyon protokolleri) konuşan ama birbirinden bağımsız çalışan, ayrı programlardır:
+The AND Search Engine is one of the three independent parts of the AND ecosystem — all three are
+separate programs that speak **the same network** (the same GossipSub topics, the same Ed25519
+signature format, the same sync protocols) but run independently of each other:
 
-| Proje | Ne işe yarar |
+| Project | What it does |
 |-------|--------------|
-| **AND** | Ağın kendisini oluşturan asıl P2P terminal forum/sohbet uygulaması — bir düğüm olmadan ağda içerik yayınlanamaz |
-| **AND Arama Motoru** *(bu proje)* | Ağdaki içeriği bağımsız olarak indeksleyip aratan salt-okunur bir eş |
-| **and-vscode** | AND'ın eklenti API'si üzerinden VS Code içinde canlı Forum/DM/Sohbet/Ağ/Site paneli sunan bir editör uzantısı — kişisel site sayfaları editörde düzenlenip yayınlanır, paylaşım kodları buradaki "Kodla Git" ile birebir uyumludur |
+| **[AND](https://github.com/AND-community/AND)** | The actual P2P terminal forum/chat application that forms the network itself — content can't be published on the network without a node |
+| **AND Search Engine** *(this project)* | A read-only peer that indexes and searches the content on the network independently |
+| **[and-vscode](https://github.com/AND-community/AND/tree/main/and-vscode)** | An editor extension that offers a live Forum/DM/Chat/Network/Site panel inside VS Code through AND's plugin API — personal site pages are edited and published in the editor, and share codes are fully compatible with "Open by Code" here |
 
-Aynı aileden olduklarını gösteren ortak noktalar: aynı ANSI 256 renk paleti ve aynı "AND" blok-harf logosu, aynı BIP-39/Ed25519 kimlik modeli, aynı GossipSub/senkronizasyon protokolleri. Detaylar için ana projenin [README.md](../AND/README.md) dosyasındaki "Ekosistem" bölümüne bak.
+What shows that they belong to the same family: the same ANSI 256-colour palette and the same "AND"
+block-letter logo, the same BIP-39/Ed25519 identity model, the same GossipSub/sync protocols. For
+details, see the [Ecosystem](https://github.com/AND-community/AND#ecosystem) section of the main
+project's README.
 
-## Katkı
+## Contributing
 
-Hata bildirimi, özellik önerisi ve kod katkısı için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasına bak.
+See [CONTRIBUTING.md](CONTRIBUTING.md) (in Turkish) for bug reports, feature suggestions and code
+contributions.
 
-## Güvenlik
+## Security
 
-Bir güvenlik açığı bulduysan lütfen herkese açık bir issue **açma** — [SECURITY.md](SECURITY.md) dosyasındaki bildirim sürecini izle.
+If you found a security vulnerability, please **don't** open a public issue — follow the reporting
+process in [SECURITY.md](SECURITY.md) (in Turkish).
 
-## Lisans
+## License
 
-Bu proje [GNU Affero General Public License v3.0](LICENSE) ile lisanslanmıştır — AND'ın kendisiyle aynı lisans.
+This project is licensed under the [GNU Affero General Public License v3.0](LICENSE) — the same
+license as AND itself.
